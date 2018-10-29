@@ -65,6 +65,7 @@ if ( form ) {
     payment_method: flw_rave_options.method,
     PBFPubKey: flw_rave_options.pbkey,
     txref: txref,
+    payment_plan: flw_rave_options.pplan,
     onclose: function() {
       redirectTo( redirectUrl );
     },

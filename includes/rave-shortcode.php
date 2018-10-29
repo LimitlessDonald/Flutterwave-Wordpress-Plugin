@@ -108,6 +108,7 @@
           'method'    => $admin_settings->get_option_value( 'method' ),
           'pbkey'     => $admin_settings->get_option_value( 'public_key' ),
           'title'     => $admin_settings->get_option_value( 'modal_title' ),
+          'pplan'     => $admin_settings->get_option_value( 'payment_plan' ),
         );
 
         wp_enqueue_script( 'flwpbf_inline_js', $flw_pay_class->get_api_base_url() . 'flwv3-pug/getpaidx/api/flwpbf-inline.js', array(), '1.0.0', true );

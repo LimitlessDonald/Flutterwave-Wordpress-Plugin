@@ -161,6 +161,16 @@
               <p class="description">(Optional) default: NG</p>
             </td>
           </tr>
+          <!-- Payment Plan -->
+          <tr valign="top">
+            <th scope="row">
+              <label for="flw_rave_options[payment_plan]"><?php _e( 'Payment Plan ID', 'rave-pay' ); ?></label>
+            </th>
+            <td class="forminp forminp-text">
+              <input class="regular-text code" type="text" name="flw_rave_options[payment_plan]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'payment_plan' ) ); ?>" />
+              <p class="description">(Optional) - Create your payment plan from your Rave dashboard and use the ID here. default: ""</p>
+            </td>
+          </tr>
 
           <!-- Styling -->
           <tr valign="top">
