@@ -3,7 +3,7 @@
  - **Contributors:** bosunolanrewaju
  - **Tags:** rave, payment form, payment gateway, bank account, credit card, debit card, nigeria, kenya, international, mastercard, visa
  - **Requires at least:** 4.4
- - **Tested up to:** 4.6
+ - **Tested up to:** 4.9.8
  - **Stable tag:** 0.1.2
  - **License:** [MIT](https://github.com/bosunolanrewaju/rave-payment-forms/blob/master/LICENSE)
 
@@ -18,13 +18,15 @@ Accept Credit card, Debit card and Bank account payment directly on your WordPre
 
 #### Take donations and payments easily and directly on your site
 
-Signup for an account [here](https://ravepay.co)
+Signup for an account [here](https://rave.flutterwave.com)
 
 Rave is available in:
 
 * __Nigeria__
 * __Ghana__
 * __Kenya__
+* __Uganda__
+* __Tanzania__
 
 
 
@@ -59,6 +61,7 @@ To configure the plugin, go to __Rave > Settings__ from the left menu.
 ![Rave Settings Screenshot](https://cloud.githubusercontent.com/assets/8383666/21610555/f1b32abc-d1c8-11e6-8d53-e77c9e35a6c7.png)
 
 * __Pay Button Public Key__ - Enter your public key which can be retrieved from "Pay Buttons" page on your Rave account dashboard.
+* __Recurring Payments__ - To enable recurring payments/subscription for your users, click the Enable Recurring Payment 'checkbox' to enable it. Go to your Rave Dashboard, navigate to 'Payment Plans' and click the 'Create Payment Plan' button to create a payment plan with an interval. The intervals accepted for this plugin are WEEKLY, MONTHLy, QUARTERLY, ANNUALLY/YEARLY.
 * __Modal Title__ - (Optional) customize the title of the Pay Modal. Default is FLW PAY.
 * __Modal Description__ - (Optional) customize the description on the Pay Modal. Default is FLW PAY MODAL.
 * __Modal Logo__ - (Optional) customize the logo on the Pay Modal. Enter a full url (with 'http'). Default is Rave logo.

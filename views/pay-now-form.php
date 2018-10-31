@@ -42,6 +42,21 @@
 
     <?php endif; ?>
 
+    <?php if ( !empty( $atts['recurring_payment'] ) ) : ?>
+
+      <label class="pay-now"><?php _e( 'Recurring Payment', 'rave-pay' ) ?></label>
+      <select class="flw-form-select" id="flw-payment-plan" required>
+        <option value="">-- Select Interval --</option>
+        <?php 
+          foreach($atts['paymentplans'] as $key => $value){
+            if ($atts['paymentplansenable'][$key] == 'yes')
+              echo '<option value="'.$key.'">'.$value.'</option>';
+          }
+        ?>
+      </select><br>
+
+    <?php endif; ?>
+
     <?php if (empty($atts['currency'])) : ?>
       <label class="pay-now"><?php _e('Currency', 'rave-pay'); ?></label>
       <?php if (!empty($atts['custom_currency'])){ ?>
@@ -50,7 +65,7 @@
         <?php foreach ($currencies as $currency): ?>
           <option value="<?php echo $currency ?>"><?php echo $currency ?></option>
         <?php endforeach; ?>
-        </select>
+      </select>
 
       <?php } else{ ?>
 

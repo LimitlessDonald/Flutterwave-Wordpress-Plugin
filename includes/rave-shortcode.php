@@ -64,7 +64,20 @@
           'custom_currency' => [],
           'email'     => $email,
           'country'   => $admin_settings->get_option_value('country'),
-          'currency'  => $admin_settings->get_option_value('currency')
+          'currency'  => $admin_settings->get_option_value('currency'),
+          'recurring_payment'  => $admin_settings->get_option_value('recurring_payment'),
+          'paymentplans' => [
+            $admin_settings->get_option_value('recurring_payment_weekly') => 'WEEKLY',
+            $admin_settings->get_option_value('recurring_payment_monthly') => 'MONTHLY',
+            $admin_settings->get_option_value('recurring_payment_quarterly') => 'QUARTERLY',
+            $admin_settings->get_option_value('recurring_payment_annually') => 'ANNUALLY',
+          ],
+          'paymentplansenable' => [
+            $admin_settings->get_option_value('recurring_payment_weekly') => $admin_settings->get_option_value('recurring_payment_weekly_enable'),
+            $admin_settings->get_option_value('recurring_payment_monthly') => $admin_settings->get_option_value('recurring_payment_monthly_enable'),
+            $admin_settings->get_option_value('recurring_payment_quarterly') => $admin_settings->get_option_value('recurring_payment_quarterly_enable'),
+            $admin_settings->get_option_value('recurring_payment_annually') => $admin_settings->get_option_value('recurring_payment_annually_enable'),
+          ]
         ), $attr );
 
         $this->load_js_files();
@@ -108,7 +121,6 @@
           'method'    => $admin_settings->get_option_value( 'method' ),
           'pbkey'     => $admin_settings->get_option_value( 'public_key' ),
           'title'     => $admin_settings->get_option_value( 'modal_title' ),
-          'pplan'     => $admin_settings->get_option_value( 'payment_plan' ),
         );
 
         wp_enqueue_script( 'flwpbf_inline_js', $flw_pay_class->get_api_base_url() . 'flwv3-pug/getpaidx/api/flwpbf-inline.js', array(), '1.0.0', true );
