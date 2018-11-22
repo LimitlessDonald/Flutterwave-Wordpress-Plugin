@@ -27,6 +27,7 @@ if ( form ) {
   var firstname = formData.firstname || jQuery(form).find('#flw-first-name').val();
   var lastname = formData.lastname || jQuery(form).find('#flw-last-name').val();
   var formCurrency = formData.currency || jQuery(form).find('#flw-currency').val();
+  var paymentplanID = jQuery(form).find('#flw-payment-plan').val();
   var txref   = 'WP_' + form.id.toUpperCase() + '_' + new Date().valueOf();
   var setCountry; //set country
 
@@ -65,6 +66,7 @@ if ( form ) {
     payment_method: flw_rave_options.method,
     PBFPubKey: flw_rave_options.pbkey,
     txref: txref,
+    payment_plan: paymentplanID,
     onclose: function() {
       redirectTo( redirectUrl );
     },

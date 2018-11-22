@@ -64,7 +64,20 @@
           'custom_currency' => [],
           'email'     => $email,
           'country'   => $admin_settings->get_option_value('country'),
-          'currency'  => $admin_settings->get_option_value('currency')
+          'currency'  => $admin_settings->get_option_value('currency'),
+          'recurring_payment'  => $admin_settings->get_option_value('recurring_payment'),
+          'paymentplans' => [
+            $admin_settings->get_option_value('recurring_payment_weekly') => 'WEEKLY',
+            $admin_settings->get_option_value('recurring_payment_monthly') => 'MONTHLY',
+            $admin_settings->get_option_value('recurring_payment_quarterly') => 'QUARTERLY',
+            $admin_settings->get_option_value('recurring_payment_annually') => 'ANNUALLY',
+          ],
+          'paymentplansenable' => [
+            $admin_settings->get_option_value('recurring_payment_weekly') => $admin_settings->get_option_value('recurring_payment_weekly_enable'),
+            $admin_settings->get_option_value('recurring_payment_monthly') => $admin_settings->get_option_value('recurring_payment_monthly_enable'),
+            $admin_settings->get_option_value('recurring_payment_quarterly') => $admin_settings->get_option_value('recurring_payment_quarterly_enable'),
+            $admin_settings->get_option_value('recurring_payment_annually') => $admin_settings->get_option_value('recurring_payment_annually_enable'),
+          ]
         ), $attr );
 
         $this->load_js_files();
