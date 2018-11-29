@@ -72,7 +72,8 @@
 
       public function column_amount( $item ) {
         $amount = get_post_meta( $item->ID, '_flw_rave_payment_amount', true );
-        return number_format( $amount, 2 );
+        // return number_format( $amount, 2 );
+        return $amount;
       }
 
       /**
