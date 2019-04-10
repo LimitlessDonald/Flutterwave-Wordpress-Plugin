@@ -131,6 +131,8 @@
 
         $txn = json_decode( $this->_fetchTransaction( $flw_ref, $secret_key ) );
 
+        // print_r($txn);
+
         if ( ! empty($txn->data) && $this->_is_successful( $txn->data ) ) {
           $status =  $txn->data->status;
           $args   =  array(
@@ -144,7 +146,7 @@
           if ( ! is_wp_error( $payment_record_id )) {
 
             $post_meta = array(
-              '_flw_rave_payment_amount'   => $txn->data->amount,
+              '_flw_rave_payment_amount'   => $_POST['currency'].' '.$txn->data->amount,
               '_flw_rave_payment_fullname' => $_POST['customer']['fullName'],//$txn->data->customer->fullName,
               '_flw_rave_payment_customer' => $_POST['customer']['email'],
               '_flw_rave_payment_status'   => $status,
