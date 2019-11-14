@@ -75,6 +75,7 @@
           <option value="NGN">NGN</option>
           <option value="USD">USD</option>
           <option value="KES">KES</option>
+          <option value="UGX">UGX</option>
           <option value="EUR">EUR</option>
           <option value="GBP">GBP</option>
         </select>
@@ -83,6 +84,12 @@
       <?php if ($atts['country'] == "KE") : ?>
         <select class="flw-form-select" id="flw-currency" required>
           <option value="KES">KES</option>
+        </select>
+      <?php endif; ?>
+
+      <?php if ($atts['country'] == "UG") : ?>
+        <select class="flw-form-select" id="flw-currency" required>
+          <option value="UGX">KES</option>
         </select>
       <?php endif; ?>
 
@@ -104,6 +111,7 @@
           <option value="NGN">NGN</option>
           <option value="USD">USD</option>
           <option value="KES">KES</option>
+          <option value="UGX">UGX</option>
           <option value="GHS">GHS</option>
           <option value="EUR">EUR</option>
           <option value="ZAR">ZAR</option>

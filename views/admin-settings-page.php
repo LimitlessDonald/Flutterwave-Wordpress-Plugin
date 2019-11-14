@@ -198,6 +198,7 @@
                 <option value="GBP" <?php selected( $currency, 'GBP' ) ?>>GBP</option>
                 <option value="EUR" <?php selected($currency, 'EUR') ?>>EUR</option>
                 <option value="ZAR" <?php selected($currency, 'ZAR') ?>>ZAR</option>
+                <option value="UGX" <?php selected($currency, 'UGX') ?>>UGX</option>
               </select>
               <p class="description">(Optional) default: NGN</p>
             </td>
@@ -214,6 +215,7 @@
                 <option value="GH" <?php selected( $country, 'GH' ) ?>>GH: Ghana</option>
                 <option value="KE" <?php selected($country, 'KE') ?>>KE: Kenya</option>
                 <option value="ZA" <?php selected($country, 'ZA') ?>>ZA: South Africa</option>
+                <option value="UG" <?php selected($country, 'UG') ?>>UG: Uganda</option>
                 <option value="US" <?php selected( $country, 'US' ) ?>>All (Worldwide)</option>
               </select>
               <p class="description">(Optional) default: NG</p>
