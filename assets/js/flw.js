@@ -46,8 +46,7 @@ if ( form ) {
       break;
     case 'ZAR':
       setCountry = 'ZA';
-      break;
-  
+      break; 
     default:
       setCountry = 'NG';
       break;
