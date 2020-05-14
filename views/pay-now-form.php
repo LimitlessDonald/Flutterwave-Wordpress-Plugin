@@ -100,12 +100,7 @@
           <option value="USD">USD</option>
         </select>
       <?php endif; ?>
-
-      <?php if ($atts['country'] == "ZA") : ?>
-        <select class="flw-form-select" id="flw-currency" required>
-          <option value="ZAR">ZAR</option>
-        </select>
-      <?php endif; ?>
+      
       <?php if ($atts['country'] == "ZA") : ?>
         <select class="flw-form-select" id="flw-currency" required>
           <option value="ZAR">ZAR</option>
