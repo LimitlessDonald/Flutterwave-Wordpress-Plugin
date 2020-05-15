@@ -78,6 +78,7 @@
           <option value="UGX">UGX</option>
           <option value="EUR">EUR</option>
           <option value="GBP">GBP</option>
+          <option value="AUD">AUD</option>
         </select>
       <?php endif; ?>
 
@@ -99,7 +100,7 @@
           <option value="USD">USD</option>
         </select>
       <?php endif; ?>
-
+      
       <?php if ($atts['country'] == "ZA") : ?>
         <select class="flw-form-select" id="flw-currency" required>
           <option value="ZAR">ZAR</option>
@@ -116,6 +117,7 @@
           <option value="EUR">EUR</option>
           <option value="ZAR">ZAR</option>
           <option value="GBP">GBP</option>
+          <option value="AUD">AUD</option>
         </select>
       <?php endif; ?>
 

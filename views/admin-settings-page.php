@@ -199,6 +199,7 @@
                 <option value="EUR" <?php selected($currency, 'EUR') ?>>EUR</option>
                 <option value="ZAR" <?php selected($currency, 'ZAR') ?>>ZAR</option>
                 <option value="UGX" <?php selected($currency, 'UGX') ?>>UGX</option>
+                <option value="AUD" <?php selected($currency, 'AUD') ?>>AUD</option>
               </select>
               <p class="description">(Optional) default: NGN</p>
             </td>
