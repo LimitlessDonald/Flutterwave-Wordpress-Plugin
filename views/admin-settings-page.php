@@ -64,64 +64,7 @@
               <p class="description">(Optional) default: Card and Account</p>
             </td>
           </tr>
-          <!-- Payment Plan -->
-          <tr valign="top">
-            <th scope="row">
-              <label for="flw_rave_options[modal_desc]"><?php _e( 'Enable Recurring Payment', 'rave-pay' ); ?></label>
-            </th>
-            <td class="forminp forminp-checkbox">
-              <fieldset>
-                <?php $recurring_payment = esc_attr( $admin_settings->get_option_value( 'recurring_payment' ) ); ?>
-                <label>
-                  <input type="checkbox" name="flw_rave_options[recurring_payment]" <?php checked( $recurring_payment, 'yes' ); ?> value="yes" />
-                  <?php _e( 'Enable Recurring Payment (Optional)', 'rave-pay' ); ?>
-                </label>
-              </fieldset>
-              <table> <!-- Differrent payment plans and their ID -->
-                <tr> <!-- for weekly -->
-                  <td>
-                    <input type="text" name="flw_rave_options[recurring_payment_weekly]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'recurring_payment_weekly' ) ); ?>" placeholder="payment-plan ID"><br>
-                    <small>(Add the ID for the weekly interval here)</small>
-                  </td>
-                  <td>
-                    <?php $pp_weekly = esc_attr( $admin_settings->get_option_value( 'recurring_payment_weekly_enable' ) ); ?>
-                    <input type="checkbox" name="flw_rave_options[recurring_payment_weekly_enable]" <?php checked( $pp_weekly, 'yes' ); ?> value="yes" /><?php _e( 'Enable Weekly', 'rave-pay' ); ?>
-                  </td>
-                </tr>
-                <tr> <!-- for monthly -->
-                  <td>
-                    <input type="text" name="flw_rave_options[recurring_payment_monthly]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'recurring_payment_monthly' ) ); ?>" placeholder="payment-plan ID"><br>
-                    <small>(Add the ID for the monthly interval here)</small>
-                  </td>
-                  <td>
-                    <?php $pp_monthly = esc_attr( $admin_settings->get_option_value( 'recurring_payment_monthly_enable' ) ); ?>
-                    <input type="checkbox" name="flw_rave_options[recurring_payment_monthly_enable]" <?php checked( $pp_monthly, 'yes' ); ?> value="yes" /><?php _e( 'Enable Monthly', 'rave-pay' ); ?>
-                  </td>
-                </tr>
-                <tr> <!-- for quarterly -->
-                  <td>
-                    <input type="text" name="flw_rave_options[recurring_payment_quarterly]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'recurring_payment_quarterly' ) ); ?>" placeholder="payment-plan ID"><br>
-                    <small>(Add the ID for the quarterly interval here)</small>
-                  </td>
-                  <td>
-                    <?php $pp_quarterly = esc_attr( $admin_settings->get_option_value( 'recurring_payment_quarterly_enable' ) ); ?>
-                    <input type="checkbox" name="flw_rave_options[recurring_payment_quarterly_enable]" <?php checked( $pp_quarterly, 'yes' ); ?> value="yes" /><?php _e( 'Enable Quarterly', 'rave-pay' ); ?>
-                  </td>
-                </tr>
-                <tr> <!-- for annually -->
-                  <td>
-                    <input type="text" name="flw_rave_options[recurring_payment_annually]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'recurring_payment_annually' ) ); ?>" placeholder="payment-plan ID"><br>
-                    <small>(Add the ID for the annually interval here)</small>
-                  </td>
-                  <td>
-                    <?php $pp_annually = esc_attr( $admin_settings->get_option_value( 'recurring_payment_annually_enable' ) ); ?>
-                    <input type="checkbox" name="flw_rave_options[recurring_payment_annually_enable]" <?php checked( $pp_annually, 'yes' ); ?> value="yes" /><?php _e( 'Enable Annually', 'rave-pay' ); ?>
-                  </td>
-                </tr>
-              </table>
-              <p class="description"><b>NOTE:</b> Create your payment plans (<a href="https://ravesandbox.flutterwave.com/dashboard/payments/plans" target="_blank">Test</a> & <a href="https://rave.flutterwave.com/dashboard/payments/plans" target="_blank">Live</a>) for each intervals stated above if desired and add the payment plan ID to the fields above tied to the interval created. Click the 'checkbox' to enable it for users to see.</p>
-            </td>
-          </tr>
+
           <!-- Modal title -->
           <tr valign="top">
             <th scope="row">
@@ -172,6 +115,15 @@
               <p class="description">(Optional) Full URL (with 'http') to redirect to for failed transactions. default: ""</p>
             </td>
           </tr>
+          <!-- Failed Redirect URL -->
+          <tr valign="top">
+            <th scope="row">
+              <label for="flw_rave_options[donation_payment_plan]"><?php _e( 'Donation Plan Id', 'rave-pay' ); ?></label>
+            </th>
+            <td class="forminp forminp-text">
+              <input class="regular-text code" type="text" name="flw_rave_options[donation_payment_plan]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'donation_payment_plan' ) ); ?>" />
+            </td>
+          </tr>
           <!-- Pay Button Text -->
           <tr valign="top">
             <th scope="row">
@@ -198,8 +150,6 @@
                 <option value="GBP" <?php selected( $currency, 'GBP' ) ?>>GBP</option>
                 <option value="EUR" <?php selected($currency, 'EUR') ?>>EUR</option>
                 <option value="ZAR" <?php selected($currency, 'ZAR') ?>>ZAR</option>
-                <option value="UGX" <?php selected($currency, 'UGX') ?>>UGX</option>
-                <option value="AUD" <?php selected($currency, 'AUD') ?>>AUD</option>
               </select>
               <p class="description">(Optional) default: NGN</p>
             </td>
@@ -216,7 +166,6 @@
                 <option value="GH" <?php selected( $country, 'GH' ) ?>>GH: Ghana</option>
                 <option value="KE" <?php selected($country, 'KE') ?>>KE: Kenya</option>
                 <option value="ZA" <?php selected($country, 'ZA') ?>>ZA: South Africa</option>
-                <option value="UG" <?php selected($country, 'UG') ?>>UG: Uganda</option>
                 <option value="US" <?php selected( $country, 'US' ) ?>>All (Worldwide)</option>
               </select>
               <p class="description">(Optional) default: NG</p>

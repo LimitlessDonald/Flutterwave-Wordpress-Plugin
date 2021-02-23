@@ -3,9 +3,9 @@ Contributors: flutterwave
 Tags: rave, payment form, payment gateway, bank account, credit card, debit card, nigeria, kenya, international, mastercard, visa
 Donate link: http://rave.flutterwave.com/
 Requires at least: 4.4
-Tested up to: 4.8
+Tested up to: 5.4.0
 Requires PHP: 5.4
-Stable tag: 1.0.1
+Stable tag: 1.0.3
 License: MIT
 License URI: https://github.com/Flutterwave/rave-payment-forms/blob/master/LICENSE
 
@@ -96,6 +96,11 @@ or
 
 [flw-pay-button amount="1290" use_current_user_email="yes" custom_currency= "NGN, GBP, USD" ]
 
+or
+
+Donation page shortcode:
+
+[flw-donation-page]
 
 * b. Visual Composer
 The shortcode can be added via Visual Composer elements.
@@ -167,6 +172,7 @@ A: We allow you use shortcodes to append multiple currencies to the form shown t
 
 == Changelog ==
 v 1.0.1
+* Recurring payments now enabled.
 
 v 1.0.0
 
@@ -174,3 +180,4 @@ v 1.0.0
 v1.0.1 - 12-02-2018
 * This version doesn't redirect after failure, it allows the customer try payment again.
 * This version allows you use multiple currencies on the Wordpress payment form.
+* This version now has recurring payments.
