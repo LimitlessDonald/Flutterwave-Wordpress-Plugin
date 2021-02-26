@@ -119,11 +119,11 @@
 
         add_menu_page(
           __( 'Rave Settings Page', 'rave-pay' ),
-          'Rave',
+          'Flutterwave',
           'manage_options',
           'rave-payment-forms',
           array( $this, 'flw_rave_admin_setting_page' ),
-          FLW_DIR_URL . 'assets/images/rave-icon.jpg',
+          FLW_DIR_URL . 'assets/images/flutterwave-icon.png',
           58
         );
 

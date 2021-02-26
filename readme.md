@@ -3,7 +3,7 @@
  - **Contributors:** bosunolanrewaju, Flutterwave
  - **Tags:** rave, payment form, payment gateway, bank account, credit card, debit card, nigeria, kenya, international, mastercard, visa
  - **Requires at least:** 4.4
- - **Tested up to:** 4.9.8
+ - **Tested up to:** 5.4.0
  - **Stable tag:** 0.1.2
  - **License:** [MIT](https://github.com/bosunolanrewaju/rave-payment-forms/blob/master/LICENSE)
 
@@ -52,8 +52,13 @@ Rave is available in:
 
 For FTP manual installation, [check here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
-
-
+### Donation form 
+*  Install Blank Slate plugin to create a blank page.
+*  Create a new page
+*  Enter the Short code ```[flw-donation-page]```
+*  Click the Flutterwave option
+*  Enter the donation plan id ( monthly plan)
+*  
 ### Configure the plugin
 To configure the plugin, go to __Rave > Settings__ from the left menu.
 

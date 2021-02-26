@@ -22,6 +22,7 @@
 
         add_action( 'wp_enqueue_scripts', array( $this, 'load_css_files' ) );
         add_shortcode( 'flw-pay-button', array( $this, 'pay_button_shortcode' ) );
+        add_shortcode( 'flw-donation-page', array( $this, 'donation_page_shortcode' ) );
 
       }
 
@@ -49,7 +50,13 @@
        */
       public function pay_button_shortcode( $attr, $content="" ) {
 
+        if(!is_array($attr)){
+          $attr = [];
+        }
+
         global $admin_settings;
+        global $payment_forms;
+        global $payment_plans_settings;
 
         if ( ! $admin_settings->is_public_key_present() ) return;
 
@@ -59,26 +66,70 @@
           $attr['logo'] = $this->get_logo_url($attr);
         }
 
-        $atts = shortcode_atts( array(
+        global $extra_fields;
+        $extra_fields = explode(",", $payment_forms->get_option_value('extra_field_1'));
+        $extra_fields_checkbox = explode(",", $payment_forms->get_option_value('extra_field_2'));
+
+        // getting the selected payment plan name
+        if($payment_plans_settings->get_option_value('recurring_payment_plan_1_enable') === 'yes' && $payment_plans_settings->get_option_value('recurring_payment_plan_1')){
+           $plan_name_1 = $payment_plans_settings->get_payment_plan_name($payment_plans_settings->get_option_value('recurring_payment_plan_1'));
+          }else{
+            $plan_name_1 = "";
+          }
+        
+        if($payment_plans_settings->get_option_value('recurring_payment_plan_2_enable') === 'yes' && $payment_plans_settings->get_option_value('recurring_payment_plan_2')){
+          $plan_name_2 = $payment_plans_settings->get_payment_plan_name($payment_plans_settings->get_option_value('recurring_payment_plan_2'));
+         }else{
+           $plan_name_2 = "";
+         }
+
+         if($payment_plans_settings->get_option_value('recurring_payment_plan_3_enable') === 'yes' && $payment_plans_settings->get_option_value('recurring_payment_plan_3')){
+          $plan_name_3 = $payment_plans_settings->get_payment_plan_name($payment_plans_settings->get_option_value('recurring_payment_plan_3'));
+         }else{
+          $plan_name_3 = "";
+         }
+
+         if($payment_plans_settings->get_option_value('recurring_payment_plan_4_enable') === 'yes' && $payment_plans_settings->get_option_value('recurring_payment_plan_4')){
+          $plan_name_4 = $payment_plans_settings->get_payment_plan_name($payment_plans_settings->get_option_value('recurring_payment_plan_4'));
+         }else{
+          $plan_name_4 = "";
+         }
+
+        $main_option_default = array(
           'amount'    => '',
           'custom_currency' => [],
           'email'     => $email,
           'country'   => $admin_settings->get_option_value('country'),
           'currency'  => $admin_settings->get_option_value('currency'),
-          'recurring_payment'  => $admin_settings->get_option_value('recurring_payment'),
+          'recurring_payment'  => $payment_plans_settings->get_option_value('recurring_payment'),
+          'extra_count' => count($extra_fields),
+          'extra_checkbox_count' => count($extra_fields_checkbox),
           'paymentplans' => [
-            $admin_settings->get_option_value('recurring_payment_weekly') => 'WEEKLY',
-            $admin_settings->get_option_value('recurring_payment_monthly') => 'MONTHLY',
-            $admin_settings->get_option_value('recurring_payment_quarterly') => 'QUARTERLY',
-            $admin_settings->get_option_value('recurring_payment_annually') => 'ANNUALLY',
+            $payment_plans_settings->get_option_value('recurring_payment_plan_1') => $plan_name_1,
+            $payment_plans_settings->get_option_value('recurring_payment_plan_2') => $plan_name_2,
+            $payment_plans_settings->get_option_value('recurring_payment_plan_3') => $plan_name_3,
+            $payment_plans_settings->get_option_value('recurring_payment_plan_4') => $plan_name_4,
           ],
           'paymentplansenable' => [
-            $admin_settings->get_option_value('recurring_payment_weekly') => $admin_settings->get_option_value('recurring_payment_weekly_enable'),
-            $admin_settings->get_option_value('recurring_payment_monthly') => $admin_settings->get_option_value('recurring_payment_monthly_enable'),
-            $admin_settings->get_option_value('recurring_payment_quarterly') => $admin_settings->get_option_value('recurring_payment_quarterly_enable'),
-            $admin_settings->get_option_value('recurring_payment_annually') => $admin_settings->get_option_value('recurring_payment_annually_enable'),
+            $payment_plans_settings->get_option_value('recurring_payment_plan_1') => $payment_plans_settings->get_option_value('recurring_payment_plan_1_enable'),
+            $payment_plans_settings->get_option_value('recurring_payment_plan_2') => $payment_plans_settings->get_option_value('recurring_payment_plan_2_enable'),
+            $payment_plans_settings->get_option_value('recurring_payment_plan_3') => $payment_plans_settings->get_option_value('recurring_payment_plan_3_enable'),
+            $payment_plans_settings->get_option_value('recurring_payment_plan_4') => $payment_plans_settings->get_option_value('recurring_payment_plan_4_enable'),
           ]
-        ), $attr );
+          );
+
+          foreach ($extra_fields as $key => $value) {
+            $attr[$value] = '';
+            $main_option_default[$value] = '';
+          }
+          foreach ($extra_fields_checkbox as $key => $value) {
+            $attr[$value] = '';
+            $main_option_default[$value] = '';
+          }
+
+        $atts = shortcode_atts( $main_option_default , $attr );
+
+
 
         $this->load_js_files();
 
@@ -91,14 +142,57 @@
 
       }
 
+            /**
+       * Generates Donation page from shortcode
+       *
+       * @param  array $attr Array of attributes from the shortcode
+       *
+       * @return string      Pay Now button html content
+       */
+      public function donation_page_shortcode( $attr, $content="" ) {
+
+        global $admin_settings;
+        global $payment_forms;
+        global $payment_plans_settings;
+
+        wp_register_style('flw_donation_css', FLW_DIR_URL . 'assets/css/flw-donation.css');
+        if ( ! $admin_settings->is_public_key_present() ) return;
+
+        $this->load_js_files();
+
+        ob_start();
+        
+        $this->render_donation_page();
+        $form = ob_get_contents();
+        ob_end_clean();
+
+        return $form;
+
+      }
+
       public function render_payment_form( $atts, $btn_text ) {        
 
         $data_attr = '';
         foreach ($atts as $att_key => $att_value) {
-          $data_attr .= ' data-' . $att_key . '="' . $att_value . '"';
+
+          if(!is_array($att_value)){
+            $data_attr .= ' data-' . $att_key . '="' . $att_value . '"';   
+          }
+
+
         }
 
         include( FLW_DIR_PATH . 'views/pay-now-form.php' );
+
+      }
+
+
+      public function render_donation_page(){
+        
+        wp_enqueue_style( 'flw_donation_css');
+        // wp_enqueue_style( 'flw_donation_css', FLW_DIR_URL . 'assets/css/flw-donation.css', false );
+        include( FLW_DIR_PATH . 'views/donation-payment.php' );
+
 
       }
 
@@ -125,6 +219,7 @@
 
         wp_enqueue_script( 'flwpbf_inline_js', $flw_pay_class->get_api_base_url() . 'flwv3-pug/getpaidx/api/flwpbf-inline.js', array(), '1.0.0', true );
         wp_enqueue_script( 'flw_js', FLW_DIR_URL . 'assets/js/flw.js', array( 'flwpbf_inline_js', 'jquery' ), '1.0.0', true );
+        wp_enqueue_script( 'flwdonation_js', FLW_DIR_URL . 'assets/js/flw-donation.js', array( 'jquery' ), '1.0.0', true );
 
         wp_localize_script( 'flw_js', 'flw_rave_options', $args );
 

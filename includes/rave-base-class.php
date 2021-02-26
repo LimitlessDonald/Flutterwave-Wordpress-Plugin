@@ -49,6 +49,8 @@
 
         require_once( FLW_DIR_PATH . 'includes/rave-shortcode.php' );
         require_once( FLW_DIR_PATH . 'includes/rave-admin-settings.php' );
+        require_once( FLW_DIR_PATH . 'includes/rave-payment-plans.php' );
+        require_once( FLW_DIR_PATH . 'includes/rave-admin-forms.php' );
         require_once( FLW_DIR_PATH . 'includes/rave-payment-list-class.php' );
         require_once( FLW_DIR_PATH . 'includes/vc-elements/simple-vc-pay-now-form.php' );
 
@@ -67,11 +69,15 @@
 
         global $admin_settings;
         global $payment_list;
+        global $payment_forms;
+        global $payment_plans_settings;
 
         new FLW_Rave_Shortcode;
 
         $admin_settings = FLW_Rave_Admin_Settings::get_instance();
         $payment_list   = FLW_Rave_Payment_List::get_instance();
+        $payment_forms = FLW_Rave_Payment_Form::get_instance();
+        $payment_plans_settings = FLW_Rave_Payment_Plan::get_instance();
 
         if ( is_admin() ) {
           FLW_Tinymce_Plugin::get_instance();
@@ -129,9 +135,11 @@
         $flw_ref = $_POST['flwRef'];
         $secret_key = $admin_settings->get_option_value( 'secret_key' );
 
-        $txn = json_decode( $this->_fetchTransaction( $flw_ref, $secret_key ) );
+        // echo json_encode(['message' => 'Hello mate']);
 
-        // print_r($txn);
+        // exit();
+
+        $txn = json_decode( $this->_fetchTransaction( $flw_ref, $secret_key ) );
 
         if ( ! empty($txn->data) && $this->_is_successful( $txn->data ) ) {
           $status =  $txn->data->status;
@@ -146,7 +154,7 @@
           if ( ! is_wp_error( $payment_record_id )) {
 
             $post_meta = array(
-              '_flw_rave_payment_amount'   => $_POST['currency'].' '.$txn->data->amount,
+              '_flw_rave_payment_amount'   => $txn->data->amount,
               '_flw_rave_payment_fullname' => $_POST['customer']['fullName'],//$txn->data->customer->fullName,
               '_flw_rave_payment_customer' => $_POST['customer']['email'],
               '_flw_rave_payment_status'   => $status,
@@ -187,7 +195,7 @@
           'body' => array(
             'flw_ref' => $flw_ref,
             'SECKEY' => $sckey ),
-          'sslverify' => false
+          // 'sslverify' => false
         );
 
         $response = wp_remote_post( $url, $args );
