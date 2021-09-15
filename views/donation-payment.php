@@ -38,7 +38,7 @@ $donation_details = $admin_settings->get_option_value( 'donation_details' );
             <div class="contact_top_right">
 
                 <span class="">
-                    <a href="tel:09067985861"><?php  echo $donation_phone; ?></a>
+                    <a href="tel:<?php  echo $donation_phone; ?>"><?php  echo $donation_phone; ?></a>
                 </span>
 
             </div>
