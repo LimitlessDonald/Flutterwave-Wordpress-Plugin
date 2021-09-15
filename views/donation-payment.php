@@ -18,6 +18,7 @@ echo '<script> var donation_plan = '.$admin_settings->get_option_value( 'donatio
 $donation_phone  = $admin_settings->get_option_value( 'donation_phone' );
 $donation_heading = $admin_settings->get_option_value( 'donation_title' );
 $donation_details = $admin_settings->get_option_value( 'donation_desc' );
+$donation_merchant_name = $admin_settinggs->get_option_value('donation_merchant_name');
 
 ?>
 
@@ -53,7 +54,7 @@ $donation_details = $admin_settings->get_option_value( 'donation_desc' );
             <div class="donation__section">
 
                 <div class="donation__section__left">
-                    <p><?php echo $donation_heading; ?></p>
+                    <p><?php echo $donation_merchant_name; ?></p>
                      <h1 class="donation__section__left__header"><?php echo $donation_heading; ?></h1> 
                      <p class="donation__section__left__description"><?php echo $donation_details; ?></p> 
                     <div class="donation__section__left__learn-more-link"><!---->
