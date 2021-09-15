@@ -16,8 +16,8 @@
 echo '<script> var donation_plan = '.$admin_settings->get_option_value( 'donation_payment_plan' ).'; pp = donation_plan;</script>';
 
 $donation_phone  = $admin_settings->get_option_value( 'donation_phone' );
-$donation_heading = $admin_settings->get_option_value( 'donation_heading' );
-$donation_details = $admin_settings->get_option_value( 'donation_details' );
+$donation_heading = $admin_settings->get_option_value( 'donation_title' );
+$donation_details = $admin_settings->get_option_value( 'donation_desc' );
 
 ?>
 
