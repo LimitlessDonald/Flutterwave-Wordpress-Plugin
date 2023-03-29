@@ -104,7 +104,10 @@
 
       public function register_form_settings() {
         //register our settings
-        register_setting( 'form-settings-group', 'extra_form_options' );
+        register_setting( 'form-settings-group', 'extra_form_options', [
+			'type' => 'string',
+	        'sanitize_callback' => 'sanitize_text_field'
+        ] );
 
       }
 
