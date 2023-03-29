@@ -15,6 +15,11 @@
 //   }
 echo '<script> var donation_plan = '.$admin_settings->get_option_value( 'donation_payment_plan' ).'; pp = donation_plan;</script>';
 
+$donation_phone  = $admin_settings->get_option_value( 'donation_phone' );
+$donation_heading = $admin_settings->get_option_value( 'donation_title' );
+$donation_details = $admin_settings->get_option_value( 'donation_desc' );
+$donation_merchant_name = $admin_settings->get_option_value('donation_merchant_name');
+
 ?>
 
 <body>
@@ -34,7 +39,7 @@ echo '<script> var donation_plan = '.$admin_settings->get_option_value( 'donatio
             <div class="contact_top_right">
 
                 <span class="">
-                    <a href="tel:09067985861">09067985861</a>
+                    <a href="tel:<?php  echo $donation_phone; ?>"><?php  echo $donation_phone; ?></a>
                 </span>
 
             </div>
@@ -49,9 +54,9 @@ echo '<script> var donation_plan = '.$admin_settings->get_option_value( 'donatio
             <div class="donation__section">
 
                 <div class="donation__section__left">
-                    <p>Bajoski Software development</p>
-                     <h1 class="donation__section__left__header">test donation</h1> 
-                     <p class="donation__section__left__description">Donate please</p> 
+                    <p><?php echo $donation_merchant_name; ?></p>
+                     <h1 class="donation__section__left__header"><?php echo $donation_heading; ?></h1> 
+                     <p class="donation__section__left__description"><?php echo $donation_details; ?></p> 
                     <div class="donation__section__left__learn-more-link"><!---->
                     </div>
                 </div>

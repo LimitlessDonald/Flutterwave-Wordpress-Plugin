@@ -20,6 +20,14 @@
        * @var array
        */
       protected $options;
+      /**
+       * @var array|mixed|string
+       */
+      private $existing_payment_plans;
+      /**
+       * @var FLW_Rave_Api
+       */
+      private $flutterwave_api;
 
       function __construct(){
 
@@ -31,11 +39,13 @@
 
         $this->init_settings();
         $this->_include_files();
-        $this->existing_payment_plans = (array_key_exists('data', $this->flutterwave_api->get_existing_payment_plans()))?$this->flutterwave_api->get_existing_payment_plans()['data']['paymentplans']:$this->flutterwave_api->get_existing_payment_plans()['message'] ;
+        $this->existing_payment_plans = [];
 
-    
-        //$this->existing_payment_plans = [];
-        
+        $currentSettings = get_option( 'flw_rave_options' );
+
+        if(!empty($currentSettings) && !empty($currentSettings['secret_key'])) {
+            $this->existing_payment_plans = $this->flutterwave_api->get_existing_payment_plans()['data'];
+        }
       }
 
             /**

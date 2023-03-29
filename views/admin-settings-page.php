@@ -95,6 +95,36 @@
               <p class="description">(Optional) - Full URL (with 'http') to the custom logo. default: Rave logo</p>
             </td>
           </tr>
+          <!--  Donation Title -->
+          <tr valign="top">
+            <th scope="row">
+              <label for="flw_rave_options[donation_title]"><?php _e( 'Donation Title', 'rave-pay' ); ?></label>
+            </th>
+            <td class="forminp forminp-text">
+              <input class="regular-text code" type="text" name="flw_rave_options[donation_title]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'donation_title' ) ); ?>" />
+              <p class="description">(Optional) default: Donation Title</p>
+            </td>
+          </tr>
+          <!--  Donation Description -->
+          <tr valign="top">
+            <th scope="row">
+              <label for="flw_rave_options[donation_desc]"><?php _e( 'Donation Description', 'rave-pay' ); ?></label>
+            </th>
+            <td class="forminp forminp-text">
+              <input class="regular-text code" type="text" name="flw_rave_options[donation_desc]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'donation_desc' ) ); ?>" />
+              <p class="description">(Optional) default: Donation Desc</p>
+            </td>
+          </tr>
+          <!--  Donation Phone -->
+          <tr valign="top">
+            <th scope="row">
+              <label for="flw_rave_options[donation_phone]"><?php _e( 'Donation Phone', 'rave-pay' ); ?></label>
+            </th>
+            <td class="forminp forminp-text">
+              <input class="regular-text code" type="text" name="flw_rave_options[donation_phone]" value="<?php echo esc_attr( $admin_settings->get_option_value( 'donation_phone' ) ); ?>" />
+              <p class="description">(Optional) default: 08000000000</p>
+            </td>
+          </tr>
           <!-- Successful Redirect URL -->
           <tr valign="top">
             <th scope="row">
