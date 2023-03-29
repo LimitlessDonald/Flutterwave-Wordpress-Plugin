@@ -18,7 +18,7 @@ echo '<script> var donation_plan = '.$admin_settings->get_option_value( 'donatio
 $donation_phone  = $admin_settings->get_option_value( 'donation_phone' );
 $donation_heading = $admin_settings->get_option_value( 'donation_title' );
 $donation_details = $admin_settings->get_option_value( 'donation_desc' );
-$donation_merchant_name = $admin_settinggs->get_option_value('donation_merchant_name');
+$donation_merchant_name = $admin_settings->get_option_value('donation_merchant_name');
 
 ?>
 
