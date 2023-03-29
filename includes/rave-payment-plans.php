@@ -44,7 +44,7 @@
         $currentSettings = get_option( 'flw_rave_options' );
 
         if(!empty($currentSettings) && !empty($currentSettings['secret_key'])) {
-            $this->existing_payment_plans = $this->flutterwave_api->get_existing_payment_plans()['data']['payment_plans'];
+            $this->existing_payment_plans = $this->flutterwave_api->get_existing_payment_plans()['data'];
         }
       }
 
