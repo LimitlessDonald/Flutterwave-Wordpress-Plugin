@@ -1,25 +1,29 @@
 <?php
-  /*
-  Plugin Name: Flutterwave Payment Forms
-  Plugin URI: http://flutterwave.com/
-  Description: Flutterwave payment gateway forms, accept local and international payments securely.
-  Version: 1.0.3
-  Author: Flutterwave, Bosun Olanrewaju, Chigbo Ezejiugo, Olaobaju Abraham
-  Author URI: https://twitter.com/theflutterwave
-  Copyright: © 2016 Flutterwave Technology Solutions
-  License: MIT License
-  */
+/*
+ Plugin Name: Flutterwave Payments
+ Plugin URI: http://flutterwave.com/
+ Description: Flutterwave payment gateway forms, accept local and international payments securely.
+ Version: 1.0.5
+ Requires at least: 5.2
+ Requires PHP: 7.4
+ Author: Flutterwave Developers
+ Author URI: https://developer.flutterwave.com/
+ Copyright: Â© 2023 Flutterwave Technology Solutions
+ License: MIT License
+ Text Domain: flw-payment-forms
+ */
 
-  
 
-  if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
   }
 
-
-
   if ( ! defined( 'FLW_PAY_PLUGIN_FILE' ) ) {
     define( 'FLW_PAY_PLUGIN_FILE', __FILE__ );
+  }
+
+  if( ! defined( 'FLW_PAY_VERSION' ) ) {
+    define( 'FLW_PAY_VERSION', '1.0.5' );
   }
 
   // Plugin folder path
@@ -42,12 +46,8 @@
     global $pagenow, $typenow;
     
     if( get_current_screen()->base == 'flutterwave_page_rave-payment-plan-form'){
-      // toplevel_page_rave-payment-forms
-      // print_r(get_current_screen());
-      // echo get_current_screen()->base;//
-      // exit();
       wp_enqueue_style('flutterwave_css', plugins_url('assets/css/styleCSS/public/paymentPlan.css', __FILE__));
-      wp_enqueue_script('flutterwave_javascript', plugins_url('assets/js/paymentplan.js', __FILE__), array('jquery'), '1.0.0',true);
+      wp_enqueue_script('flutterwave_javascript', plugins_url('assets/js/paymentplan.js', __FILE__), array('jquery'), FLW_PAY_VERSION ,true);
     }
   }
 

@@ -1,36 +1,55 @@
-=== Rave Payment Forms ===
+=== Flutterwave Payments ===
 Contributors: flutterwave
-Tags: rave, payment form, payment gateway, bank account, credit card, debit card, nigeria, kenya, international, mastercard, visa
+Tags: rave, payment form, payment gateway, bank account, credit card, debit card, nigeria, kenya, international, mastercard, visa, flutterwave
 Donate link: http://rave.flutterwave.com/
 Requires at least: 4.4
-Tested up to: 5.4.0
-Requires PHP: 5.4
-Stable tag: 1.0.3
+Tested up to: 6.0
+Requires PHP: 7.4
+Stable tag: 1.0.5
 License: MIT
 License URI: https://github.com/Flutterwave/rave-payment-forms/blob/master/LICENSE
 
-Accept Credit card, Debit card and Bank account payment directly on your WordPress site with the Rave payment gateway.
-
-
-
+Accept Credit card, Debit card and Bank account payment directly on your WordPress site with the Flutterwave Payments Plugin.
 
 == Description ==
+Accept Credit card, Debit card and Bank account payment directly on your store with the official Flutterwave Plugin for WordPress.
 
-Signup for a live rave account at https://rave.flutterwave.com and a sandbox account on https://ravesandbox.flutterwave.com
+= Plugin Features =
 
-Please see our Terms of service here: http://bit.ly/2GH9oTy
+* Collections: Card, Account, Mobile money, Bank Transfers, USSD, Barter, 1voucher.
+* Recurring payments: Tokenization and Subscriptions.
+* Split payments: Split payments between multiple recipients.
 
-For more information on the data we collect please view our privacy policy here: http://bit.ly/2HcQUv7
+= Requirements =
 
-Rave is available in:
+1. Flutterwave for business [API Keys](https://developer.flutterwave.com/docs/integration-guides/authentication)
+2. Supported PHP version: 5.6.0 - 7.4.0
 
-* Nigeria
-* Ghana
-* Kenya
-* South Africa
-* North America and Europe (USD, GBP, EUR)
+== Installation ==
 
-= Configuration options = 
+= Automatic Installation =
+
+* Login to your WordPress Dashboard.
+* Click on "Plugins > Add New" from the left menu.
+* In the search box type Flutterwave Payments.
+* Click on Install Now on Flutterwave Payments to install the plugin on your site.
+* Confirm the installation.
+* Activate the plugin.
+* Go to "Rave > Settings" from the left menu to configure the plugin.
+
+
+= Manual Installation =
+
+* Download the plugin zip file.
+* Login to your WordPress Admin. Click on \"Plugins > Add New\" from the left menu.
+* Click on the \"Upload\" option, then click \"Choose File\" to select the zip file you downloaded. Click \"OK\" and \"Install Now\" to complete the installation.
+* Activate the plugin.
+* Go to \"Rave > Settings\" from the left menu to configure the plugin.
+* For FTP manual installation, check here.
+
+For FTP manual installation, [check here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
+
+= Configuration options =
 
 * Pay Button Public Key (live/Test) - Enter your public key which can be retrieved from Settings > API on your Rave account dashboard.
 * Pay Button Secret Key (live/Test) - Enter your secret key which can be retrieved from Settings > API on your Rave account dashboard.
@@ -96,81 +115,61 @@ or
 
 [flw-pay-button amount="1290" use_current_user_email="yes" custom_currency= "NGN, GBP, USD" ]
 
-or
-
-Donation page shortcode:
-
-[flw-donation-page]
 
 * b. Visual Composer
 The shortcode can be added via Visual Composer elements.
-On Visual Composer Add Element dialog, click on "Rave Forms" and select the type of form you want to include on your page. 
+On Visual Composer Add Element dialog, click on "Rave Forms" and select the type of form you want to include on your page.
 
 
 On the "Form Settings" dialog, fill in the form attributes and click "Save Changes".
 
-Payment Form successfully added to the page. 
+Payment Form successfully added to the page.
+
+= Best Practices =
+1. When in doubt about a transaction, always check the Flutterwave Dashboard to confirm the status of a transaction.
+2. Always ensure you keep your API keys securely and privately. Do not share with anyone
+3. Ensure you change from the default secret hash on the Wordpress admin and apply same on the Flutterwave Dashboard
+4. Always ensure you install the most recent version of the Flutterwave Wordpress plugin
+
+= Debugging Errors =
+
+We understand that you may run into some errors while integrating our plugin. You can read more about our error messages [here](https://developer.flutterwave.com/docs/integration-guides/errors).
+
+For `authorization` and `validation` error responses, double-check your API keys and request. If you get a `server` error, kindly engage the team for support.
 
 
-= Transaction List =
-All the payments made through the forms to Rave can be accessed on Rave > Transactions page.
+= Support =
 
+For additional assistance using this library, contact the developer experience (DX) team via [email](mailto:developers@flutterwavego.com) or on [slack](https://bit.ly/34Vkzcg).
 
-= TODO =
-* Add advanced forms to include customization where user can choose what fields to add to the form.
-* Multiple Pay Button integrations.
+You can also follow us [@FlutterwaveEng](https://twitter.com/FlutterwaveEng) and let us know what you think ðŸ˜Š.
 
-= Suggestions / Contributions =
-For issues, suggestions and feature request, click here. To contribute, fork the repo, add your changes and modifications, then create a pull request.
+= Contribution guidelines =
 
+We love to get your input. Read more about our community contribution guidelines [here](/CONTRIBUTING.md)
 
+= License =
 
-== Installation ==
-
-Automatic Installation
-
-* Login to your WordPress Dashboard.
-* Click on "Plugins > Add New" from the left menu.
-* In the search box type Rave Payment Forms.
-* Click on Install Now on Rave Payment Forms to install the plugin on your site.
-* Confirm the installation.
-* Activate the plugin.
-* Go to "Rave > Settings" from the left menu to configure the plugin.
-
-
-Manual Installation
-
-* Download the plugin zip file.
-* Login to your WordPress Admin. Click on \"Plugins > Add New\" from the left menu.
-* Click on the \"Upload\" option, then click \"Choose File\" to select the zip file you downloaded. Click \"OK\" and \"Install Now\" to complete the installation.
-* Activate the plugin.
-* Go to \"Rave > Settings\" from the left menu to configure the plugin.
-* For FTP manual installation, check here.
-
-= Configure the plugin =
-To configure the plugin, go to Rave > Settings from the left menu.
-
-== Frequently Asked Questions ==
-Q: How do I get my Test public and secret keys ?
-A: To get your test public and secret key visit this page to see how: https://flutterwavedevelopers.readme.io/v2.0/docs/api-keys
-
-Q: How do I move from test to production on the plugin ?
-A: You need to toggle the go live check box by clicking on it, you also need to make sure your live keys have been added to the rave configuration page on wordpress.
-
-Q: How do I charge my customers in multiple currencies ?
-A: We allow you use shortcodes to append multiple currencies to the form shown to your customers simple embed with the currency shortcode style above.
+By contributing to the Flutterwave WooCommerce, you agree that your contributions will be licensed under its [MIT license](/LICENSE).
 
 == Screenshots ==
 
 1. To configure the plugin, go to Rave > Settings from the left menu.
 2. On Visual Composer Add Element dialog, click on "Rave Forms" and select the type of form you want to include on your page.
-3. On the "Form Settings" dialog, fill in the form attributes and click "Save Changes". 
+3. On the "Form Settings" dialog, fill in the form attributes and click "Save Changes".
 4. Payment Form successfully added to the page.
 5. All the payments made through the forms to Rave can be accessed on Rave > Transactions page.
 
 
 
 == Changelog ==
+v1.0.3
+* This version allows you to add additional fields to the form.
+* This version allow you to set default values to fields.
+* This version allows you to hid fields "By appending '-h' to the name of the field".
+* This version now allow for mobile money option in UGx,TZS,GHS respectively
+v1.0.2
+*Recuring payment section add under "Payment Plan"
 v 1.0.1
 * Recurring payments now enabled.
 

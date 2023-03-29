@@ -1,43 +1,51 @@
-# Rave Payment Forms
+<p align="center">
+    <img title="Flutterwave" height="200" src="https://flutterwave.com/images/logo/full.svg" width="50%"/>
+</p>
 
- - **Contributors:** bosunolanrewaju, Flutterwave
- - **Tags:** rave, payment form, payment gateway, bank account, credit card, debit card, nigeria, kenya, international, mastercard, visa
- - **Requires at least:** 4.4
- - **Tested up to:** 5.4.0
- - **Stable tag:** 0.1.2
- - **License:** [MIT](https://github.com/bosunolanrewaju/rave-payment-forms/blob/master/LICENSE)
+# Flutterwave Payments
 
-Take donations and payments for services on your WordPress site using Rave.
+## Introduction
 
+The WordPress Plugin makes it very easy and quick to add Flutterwave Payment options on your eCommerce site, Donation Page or a list of Payment Subscriptions you want your clients to subscribe to.
+
+Take donations and payments for services on your WordPress site using Flutterwave.
 
 
 ## Description
 
 
-Accept Credit card, Debit card and Bank account payment directly on your WordPress site with the Rave payment gateway.
+Available features include:
 
-#### Take donations and payments easily and directly on your site
+- Collections: Card, Account, Mobile money, Bank Transfers, USSD, Barter, NQR.
+- Recurring payments: Tokenization and Subscriptions.
+- Split payments: Split payments between multiple recipients.
 
-Signup for an account [here](https://rave.flutterwave.com)
+## Table of Contents
 
-Rave is available in:
+1. [Requirements](#requirements)
+2. [Installation](#installation)
+3. [Initialization](#initialization)
+4. [Best Practices](#best-practices)
+5. [Debugging Errors](#debugging-errors)
+6. [Support](#support)
+7. [Contribution guidelines](#contribution-guidelines)
+9. [License](#)
+10. [Changelog](#)
 
-* __Nigeria__
-* __Ghana__
-* __Kenya__
-* __Uganda__
-* __Tanzania__
 
+## Requirements
 
+1. Flutterwave for business [API Keys](https://developer.flutterwave.com/docs/integration-guides/authentication)
+2. Supported PHP version: 7.4 or higher
+3. For Elementor: Elementor version: 2.8.0 or higher
 
 ## Installation
-
 
 ### Automatic Installation
 *   Login to your WordPress Dashboard.
 *   Click on "Plugins > Add New" from the left menu.
-*   In the search box type __Rave Payment Forms__.
-*   Click on __Install Now__ on __Rave Payment Forms__ to install the plugin on your site.
+*   In the search box type __Flutterwave Payments__.
+*   Click on __Install Now__ on __Flutterwave Payments__ to install the plugin on your site.
 *   Confirm the installation.
 *   Activate the plugin.
 *   Go to "Rave > Settings" from the left menu to configure the plugin.
@@ -52,13 +60,25 @@ Rave is available in:
 
 For FTP manual installation, [check here](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 
-### Donation form 
-*  Install Blank Slate plugin to create a blank page.
-*  Create a new page
-*  Enter the Short code ```[flw-donation-page]```
-*  Click the Flutterwave option
-*  Enter the donation plan id ( monthly plan)
-*  
+## Best Practices
+
+- When in doubt about a transaction, always check the Flutterwave Dashboard to confirm the status of a transaction.
+- Always ensure you keep your API keys securely and privately. Do not share with anyone.
+- Ensure you change from the default secret hash on the Wordpress admin and apply same on the Flutterwave Dashboard.
+- Always ensure you install the most recent version of the Flutterwave WooCommerce plugin.
+
+## Debugging Errors
+
+We understand that you may run into some errors while integrating our plugin. You can read more about our error messages [here](https://developer.flutterwave.com/docs/integration-guides/errors).
+
+For `authorization` and `validation` error responses, double-check your API keys and request. If you get a `server` error, kindly engage the team for support.
+
+## Support
+
+For additional assistance using this library, contact the developer experience (DX) team via [email](mailto:developers@flutterwavego.com) or on [slack](https://bit.ly/34Vkzcg).
+
+You can also follow us [@FlutterwaveEng](https://twitter.com/FlutterwaveEng) and let us know what you think ðŸ˜Š.
+
 ### Configure the plugin
 To configure the plugin, go to __Rave > Settings__ from the left menu.
 
@@ -118,17 +138,16 @@ With attributes and button text: _email_, _amount_
 The shortcode can be added via Visual Composer elements.
 
 * On Visual Composer __Add Element__ dialog, click on "__Rave Forms__" and select the type of form you want to include on your page.
-![Visual Composer Screenshot 1](https://cloud.githubusercontent.com/assets/8383666/21606192/20887a10-d1ae-11e6-85f7-6f8771cb8688.png)
+  ![Visual Composer Screenshot 1](https://cloud.githubusercontent.com/assets/8383666/21606192/20887a10-d1ae-11e6-85f7-6f8771cb8688.png)
 ###
 
 * On the "Form Settings" dialog, fill in the form attributes and click "__Save Changes__".
-![Visual Composer Screenshot 2](https://cloud.githubusercontent.com/assets/8383666/21606210/381994b6-d1ae-11e6-8731-810be5550f55.png)
+  ![Visual Composer Screenshot 2](https://cloud.githubusercontent.com/assets/8383666/21606210/381994b6-d1ae-11e6-8731-810be5550f55.png)
 ###
 
 * Payment Form successfully added to the page.
-![Visual Composer Screenshot 3](https://cloud.githubusercontent.com/assets/8383666/21606217/46200ed2-d1ae-11e6-812b-7d5a2c1f6b43.png)
+  ![Visual Composer Screenshot 3](https://cloud.githubusercontent.com/assets/8383666/21606217/46200ed2-d1ae-11e6-812b-7d5a2c1f6b43.png)
 ###
-
 
 ## Transaction List ##
 
@@ -136,18 +155,12 @@ All the payments made through the forms to Rave can be accessed on __Rave > Tran
 
 ![Rave Transactions Screenshot](https://cloud.githubusercontent.com/assets/8383666/21606454/01022040-d1b0-11e6-8c61-755cea93ea14.png)
 
-##
-### TODO
-* Add advanced forms to include customization where user can choose what fields to add to the form.
-* Multiple Pay Button integrations.
-* More (that I can't think of ATM) - Suggestions and Feature request are highly welcome
+## Contribution guidelines
 
-### Suggestions / Contributions
+We love to get your input. Read more about our community contribution guidelines [here](/CONTRIBUTING.md)
 
-For issues, suggestions and feature request, [click here](https://github.com/bosunolanrewaju/rave-payment-forms/issues).
-To contribute, fork the repo, add your changes and modifications, then create a pull request.
+## License
 
+By contributing to the Rave WooCommerce Plugin, you agree that your contributions will be licensed under its [MIT license](/LICENSE).
 
-### License
-
-##### [MIT License](https://github.com/bosunolanrewaju/rave-payment-forms/blob/master/LICENSE)
+Copyright (c) Flutterwave Inc. 
