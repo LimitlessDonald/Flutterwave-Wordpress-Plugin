@@ -1,0 +1,29 @@
+{
+    "name": "flutterwavedev/wordpress",
+    "description": "WordPress plugin for Flutterwave for Business (F4B) v3 APIs",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Flutterwave\\Wordpress\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Flutterwave Developers",
+            "email": "developers@flutterwavego.com"
+        }
+    ],
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^2.3",
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "yoast/phpunit-polyfills": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "minimum-stability": "stable"
+}
