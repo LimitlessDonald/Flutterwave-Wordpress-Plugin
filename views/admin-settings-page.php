@@ -6,7 +6,7 @@
 <?php global $admin_settings; ?>
 
   <div class="wrap">
-    <h1>Rave Payment Forms Settings</h1>
+    <h1>Flutterwave Settings</h1>
     <form id="rave-pay" action="options.php" method="post" enctype="multipart/form-data">
       <?php settings_fields( 'flw-rave-settings-group' ); ?>
       <?php do_settings_sections( 'flw-rave-settings-group' ); ?>

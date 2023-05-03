@@ -7,8 +7,6 @@
 
   <div class="wrap">
 
-
-  
     <h1>Payment Forms</h1>
     <form id="rave-pay" action="options.php" method="post" enctype="multipart/form-data">
     <?php settings_fields( 'form-settings-group' ); ?>
