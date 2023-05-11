@@ -25,5 +25,9 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+  "require": {
+    "ext-json": "*",
+    "ext-openssl": "*"
+  }
 }

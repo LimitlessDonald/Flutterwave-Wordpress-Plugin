@@ -72,11 +72,13 @@
 		"url": "https://github.com/bajoski34/Woocommerce-v2/issues"
 	},
 	"files": [
+		"src",
 		"assets",
 		"i18n",
+		"views",
 		"build",
 		"includes",
-		"woocommerce-rave.php",
+		"flutterwave-payments.php",
 		"README.md",
 		"LICENSE",
 		"CHANGELOG.md",
