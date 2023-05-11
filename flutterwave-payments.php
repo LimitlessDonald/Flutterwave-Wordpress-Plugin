@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Plugin Name: Flutterwave Payments
  * Plugin URI: http://flutterwave.com/
  * Description: Flutterwave payment gateway forms, accept local and international payments securely.
@@ -16,7 +16,7 @@
  * Requires PHP:           7.4
  *
  * @package Flutterwave Payments
- */
+ **/
 
 declare(strict_types=1);
 
