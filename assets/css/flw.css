@@ -81,3 +81,11 @@
   color: #0a0;
   font-size: 1.5em;
 }
+
+.flw-mssing-api-keys {
+  color: #ff9b00;
+  font-size: 1.5em;
+  padding: .5em;
+  background: #f4f6f8;
+  text-align: center;
+}
