@@ -944,12 +944,6 @@ class FLW_WP_List_Table {
 		$columns = get_column_headers( $this->screen );
 		$default = $this->get_default_primary_column_name();
 
-		// If the primary column doesn't exist fall back to the
-		// first non-checkbox column.
-		if ( ! isset( $columns[ $default ] ) ) {
-			$default = WP_List_Table::get_default_primary_column_name();
-		}
-
 		/**
 		 * Filter the name of the primary column for the current list table.
 		 *

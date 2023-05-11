@@ -28,6 +28,13 @@ defined( 'ABSPATH' ) || exit;
       protected static $instance = null;
 
       /**
+       * Admin settings instance variable
+       *
+       * @var FLW_Admin_Settings|null $admin_settings
+       */
+      private ?FLW_Admin_Settings $admin_settings;
+
+      /**
        * Class construct
        */
       public function __construct() {
@@ -37,6 +44,8 @@ defined( 'ABSPATH' ) || exit;
           'plural'   => __( 'Payment Lists', 'rave-pay' ),
           'ajax'     => false
         ) );
+
+        $this->admin_settings = FLW_Admin_Settings::get_instance();
 
         add_filter( 'set-screen-option', array( $this, 'set_screen' ), 10, 3 );
         add_action( 'init', array( $this, 'add_payment_list_post_type' ) );
@@ -108,15 +117,12 @@ defined( 'ABSPATH' ) || exit;
        * @return array
        */
       function get_columns() {
-
-        global $admin_settings;
-
         $columns = array(
           'cb'      => '<input type="checkbox" />',
           'tx_ref'  => __( 'Transaction Ref', 'rave-pay' ),
           'customer' => __( 'Customer', 'rave-pay' ),
           'fullname' => __('Customer Fullname', 'rave-pay'),
-          'amount'  => __( 'Amount (' . $admin_settings->get_option_value( 'currency' ) . ')', 'rave-pay' ),
+          'amount'  => __( 'Amount (' . $this->admin_settings->get_option_value( 'currency' ) . ')', 'rave-pay' ),
           'status'  => __( 'Status', 'rave-pay' ),
           'date'    => __( 'Date', 'rave-pay' ),
         );
@@ -174,11 +180,11 @@ defined( 'ABSPATH' ) || exit;
       public function add_to_menu() {
 
         $hook = add_submenu_page(
-          'rave-payment-forms',
-          __( 'Rave Transaction List', 'rave-pay' ),
-          __( 'Transactions', 'rave-pay' ),
+          'flutterwave-payments',
+          __( 'Transaction List', 'flutterwave-payments' ),
+          __( 'Transactions', 'flutterwave-payments' ),
           'manage_options',
-          'flw_payment_list',
+          'flutterwave-payments-transactions',
           array( $this, 'payment_list_table')
         );
 
