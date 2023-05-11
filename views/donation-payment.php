@@ -1,23 +1,19 @@
 <?php
+/**
+ * Donation Payment Form
+ *
+ * @package Flutterwave Payment
+ */
 
-  if ( ! defined( 'ABSPATH' ) ) { exit; }
+defined( 'ABSPATH' ) || exit;
+$admin_settings = FLW_Admin_Settings::get_instance();
+$form_id = Flutterwave_Payments::gen_rand_string();
 
-  global $payment_forms;
-    global $admin_settings;
-  $form_id = FLW_Rave_Pay::gen_rand_string();
-
-//   if (!empty($atts['custom_currency'])) {
-//     if (preg_match('/^[a-z\d]* [a-z\d]*$/', $atts['custom_currency'])) {
-//       $currencies = explode(", ", $atts['custom_currency']);
-//     } else{
-//       $currencies = explode(",", $atts['custom_currency']);
-//     }
-//   }
 echo '<script> var donation_plan = '.$admin_settings->get_option_value( 'donation_payment_plan' ).'; pp = donation_plan;</script>';
 
-$donation_phone  = $admin_settings->get_option_value( 'donation_phone' );
-$donation_heading = $admin_settings->get_option_value( 'donation_title' );
-$donation_details = $admin_settings->get_option_value( 'donation_desc' );
+$donation_phone         = $admin_settings->get_option_value( 'donation_phone' );
+$donation_heading       = $admin_settings->get_option_value( 'donation_title' );
+$donation_details       = $admin_settings->get_option_value( 'donation_desc' );
 $donation_merchant_name = $admin_settings->get_option_value('donation_merchant_name');
 
 ?>

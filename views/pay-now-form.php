@@ -1,29 +1,21 @@
 <?php
 
-  if ( ! defined( 'ABSPATH' ) ) { exit; }
+defined( 'ABSPATH' ) || exit;
 
-  global $payment_forms;
+$form_id = Flutterwave_Payments::gen_rand_string();
 
-  $form_id = FLW_Rave_Pay::gen_rand_string();
-
-  if (!empty($atts['custom_currency'])) {
-    if (preg_match('/^[a-z\d]* [a-z\d]*$/', $atts['custom_currency'])) {
-      $currencies = explode(", ", $atts['custom_currency']);
-    } else{
-      $currencies = explode(",", $atts['custom_currency']);
-    }
+if (!empty($atts['custom_currency'])) {
+  if (preg_match('/^[a-z\d]* [a-z\d]*$/', $atts['custom_currency'])) {
+    $currencies = explode(", ", $atts['custom_currency']);
+  } else{
+    $currencies = explode(",", $atts['custom_currency']);
   }
-
-
-
-
-
-
-
+}
 
 ?>
 
 <div>
+  <span class="flw-error"></span>
   <form id="<?php echo $form_id ?>" class="flw-simple-pay-now-form" <?php echo $data_attr; ?> >
     <div id="notice"></div>
     <?php if ( empty( $atts['email'] ) ) : ?>
@@ -54,41 +46,7 @@
 
     <?php endif; ?>
 
-
-<?php    if (!empty($atts['extra_count'] && $atts['extra_count'] > 1)) {
-
-$extra_fields = explode(",", $payment_forms->get_option_value('extra_field_1'));
-foreach ($extra_fields as $key => $value) {?>
-
-<?php if(array_key_exists($value, $atts) && empty( $atts[$value])){ ?>
-
-<label class="pay-now"><?php _e( $value, 'rave-pay' ); ?></label>
-<input class="flw-form-input-text" id="flw-meta" type="text" placeholder="<?php _e( $value, 'rave-pay' ); ?>" required /><br>
-
-<?php }}}?>
-
-<?php    if (!empty($atts['extra_checkbox_count'] && $atts['extra_checkbox_count'] > 1)) {
-
-$extra_fields_checkbox = explode(",", $payment_forms->get_option_value('extra_field_2'));
-foreach ($extra_fields_checkbox as $key => $value) {?>
-
-<?php if(array_key_exists($value, $atts) && empty( $atts[$value] )){ ?>
-
-<label class="pay-now"><?php _e( $value, 'rave-pay' ); ?></label>
-<input class="" id="flw-meta" type="checkbox" placeholder="<?php _e( $value, 'rave-pay' ); ?>" required /><br>
-
-<?php }}}?>
-
-
-    
-
-
-   
-    <?php 
-         
-        //  print_r($atts);
-    
-    if ( !empty( $atts['recurring_payment'] ) ) : ?>
+    <?php if ( !empty( $atts['recurring_payment'] ) ) : ?>
 
       <label class="pay-now"><?php _e( 'Recurring Payment', 'rave-pay' ) ?></label>
       <select class="flw-form-select" id="flw-payment-plan" required>

@@ -1,6 +1,11 @@
 <?php
+/**
+ * Payment List Table Class
+ *
+ * @package Flutterwave Payment
+ */
 
-  global $payment_list;
+  $payment_list = new FLW_Payment_List();
 
 ?>
 

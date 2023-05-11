@@ -1,6 +1,11 @@
 <?php
+/**
+ * Payment Plans Admin Page
+ *
+ * @package  Flutterwave\Payments\Admin
+ */
 
-  if ( ! defined( 'ABSPATH' ) ) { exit; }
+  defined( 'ABSPATH' ) || exit;
 
 ?>
 <?php global $payment_plans_settings; ?>
