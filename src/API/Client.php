@@ -8,10 +8,11 @@ final class Client {
 
     const BASE_URL = "https://api.flutterwave.com/";
     const VERSION = "v3";
-    private ?Client $instance = null;
+    private static ?Client $instance = null;
     private string $secret_key;
     private int $timeout;
     private array $headers;
+
 
     /**
      * Client Header controller.
@@ -47,7 +48,7 @@ final class Client {
         $wp_args['timeout'] = $this->timeout;
         $wp_args['body'] = \wp_json_encode( $data, JSON_UNESCAPED_SLASHES );
         $wp_args['headers'] = $this->headers;
-        if( !empty($data)) {
+        if( !empty($data) || $method === 'GET' ) {
             unset($wp_args['body']);
         }
 

@@ -15,10 +15,6 @@ final class Handler {
         if( isset( $error_hash_table[$response_status_code] ) && $error_hash_table[$response_status_code] !== 400 ) {
             throw new ApiException($error_hash_table[$response_status_code]);
         }
-
-        if( isset( $error_hash_table[$response_status_code] ) && $error_hash_table[$response_status_code] === 400 ) {
-            // TODO: Look at the response body and see if it matches 
-        }
     }
 
 
