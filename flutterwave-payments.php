@@ -18,30 +18,17 @@
  * @package Flutterwave Payments
  */
 
- declare(strict_types=1);
+declare(strict_types=1);
 
- defined( 'ABSPATH' ) || exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'FLW_PAY_PLUGIN_FILE' ) ) {
   define( 'FLW_PAY_PLUGIN_FILE', __FILE__ );
 }
 
-  if( ! defined( 'FLW_PAY_VERSION' ) ) {
-    define( 'FLW_PAY_VERSION', '1.0.5' );
-  }
-
-  // Plugin folder path
-  if ( ! defined( 'FLW_DIR_PATH' ) ) {
-    define( 'FLW_DIR_PATH', plugin_dir_path( __FILE__ ) );
-  }
-
-  //Plugin folder path
-  if ( ! defined( 'FLW_DIR_URL' ) ) {
-    define( 'FLW_DIR_URL', plugin_dir_url( __FILE__ ) );
-  }
-
-  require_once( FLW_DIR_PATH . 'includes/flutterwave-base-class.php' );
-
-  $flw_pay_class = FLW_Rave_Pay::get_instance();
+if( ! class_exists('Flutterwave_Payments')) {
+  require_once( dirname(FLW_PAY_PLUGIN_FILE ) . '/includes/class-flutterwave-payments.php' );
+  $flw_pay_class = Flutterwave_Payments::get_instance();
+}
 
 ?>

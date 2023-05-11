@@ -12,7 +12,7 @@
     /**
      * Main Plugin Class
      */
-    class FLW_Rave_Pay {
+    class Flutterwave_Payments {
 
       private $plugin_name = 'flutterwave-payments';
       private $api_base_url = 'https://api.flutterwave.com/';

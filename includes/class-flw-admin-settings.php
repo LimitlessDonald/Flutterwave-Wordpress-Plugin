@@ -7,12 +7,12 @@
     exit;
   }
 
-  if ( ! class_exists( 'FLW_Rave_Admin_Settings' ) ) {
+  if ( ! class_exists( 'FLW_Admin_Settings' ) ) {
 
     /**
     * Admin Settings class
     */
-    class FLW_Rave_Admin_Settings {
+    class FLW_Admin_Settings {
 
       /**
        * Class instance
@@ -59,11 +59,11 @@
       }
 
       /**
-       * Fetches admin option settings from the db
+       * Fetches admin option settings from the db.
        *
-       * @param  string $setting The option to fetch
+       * @param $attr
        *
-       * @return mixed           The value of the option fetched
+       * @return mixed           The value of the option fetched.
        */
       public function get_option_value( $attr ) {
 
@@ -118,22 +118,22 @@
       public function flw_rave_add_admin_menu() {
 
         add_menu_page(
-          __( 'Rave Settings Page', 'rave-pay' ),
+          __( 'Settings Page', 'flutterwave-payments' ),
           'Flutterwave',
           'manage_options',
           'rave-payment-forms',
-          array( $this, 'flw_rave_admin_setting_page' ),
-          FLW_DIR_URL . 'assets/images/flutterwave-icon.png',
+          array( __CLASS__, 'flw_rave_admin_setting_page' ),
+          FLW_DIR_URL . 'assets/images/old-logo.svg',
           58
         );
 
         add_submenu_page(
           'rave-payment-forms',
-          __( 'Rave Payment Forms Settings', 'rave-pay' ),
+          __( 'Flutterwave Payments Settings', 'flutterwave-payments' ),
           __( 'Settings', 'rave-pay' ),
           'manage_options',
           'rave-payment-forms',
-          array( $this, 'flw_rave_admin_setting_page' )
+          array( __CLASS__, 'flw_rave_admin_setting_page' )
         );
 
       }
@@ -142,9 +142,9 @@
        * Admin page content
        * @return void
        */
-      public function flw_rave_admin_setting_page() {
+      public static function flw_rave_admin_setting_page() {
 
-        include_once( FLW_DIR_PATH . 'views/admin-settings-page.php' );
+        include_once dirname(FLW_PAY_PLUGIN_FILE ). '/views/admin-settings-page.php';
 
       }
     }
