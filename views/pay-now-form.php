@@ -14,41 +14,41 @@ if (!empty($atts['custom_currency'])) {
 
 ?>
 
-<div>
+<div class="flutterwave-payment-form">
   <span class="flw-error"></span>
   <form id="<?php echo $form_id ?>" class="flw-simple-pay-now-form" <?php echo $data_attr; ?> >
     <div id="notice"></div>
     <?php if ( empty( $atts['email'] ) ) : ?>
 
-      <label class="pay-now"><?php _e( 'Email', 'rave-pay' ) ?></label>
-      <input class="flw-form-input-text" id="flw-customer-email" type="email" placeholder="<?php _e( 'Email', 'rave-pay' ) ?>" required /><br>
+      <label class="pay-now"><?php _e( 'Email', 'flutterwave-payments' ) ?></label>
+      <input class="flw-form-input-text" id="flw-customer-email" type="email" placeholder="<?php _e( 'Email', 'flutterwave-payments' ) ?>" required /><br>
 
     <?php endif; ?>
 
     <?php if ( empty( $atts['firstname'] ) ) : ?>
 
-      <label class="pay-now"><?php _e( 'First Name', 'rave-pay' ) ?> (Optional) </label>
-      <input class="flw-form-input-text" id="flw-first-name" type="text" placeholder="<?php _e( 'First Name', 'rave-pay' ) ?>" /><br>
+      <label class="pay-now"><?php _e( 'First Name', 'flutterwave-payments' ) ?> </label>
+      <input class="flw-form-input-text" id="flw-first-name" type="text" placeholder="<?php _e( 'First Name', 'flutterwave-payments' ) ?>" /><br>
 
     <?php endif; ?>
 
     <?php if ( empty( $atts['lastname'] ) ) : ?>
 
-      <label class="pay-now"><?php _e( 'Last Name', 'rave-pay' ) ?> (Optional) </label>
-      <input class="flw-form-input-text" id="flw-last-name" type="text" placeholder="<?php _e( 'Last Name', 'rave-pay' ) ?>" /><br>
+      <label class="pay-now"><?php _e( 'Last Name', 'flutterwave-payments' ) ?></label>
+      <input class="flw-form-input-text" id="flw-last-name" type="text" placeholder="<?php _e( 'Last Name', 'flutterwave-payments' ) ?>" /><br>
 
     <?php endif; ?>
 
     <?php if ( empty( $atts['amount'] ) ) : ?>
 
-      <label class="pay-now"><?php _e( 'Amount', 'rave-pay' ); ?></label>
-      <input class="flw-form-input-text" id="flw-amount" type="text" placeholder="<?php _e( 'Amount', 'rave-pay' ); ?>" required /><br>
+      <label class="pay-now"><?php _e( 'Amount', 'flutterwave-payments' ); ?></label>
+      <input class="flw-form-input-text" id="flw-amount" type="text" placeholder="<?php _e( 'Amount', 'flutterwave-payments' ); ?>" required /><br>
 
     <?php endif; ?>
 
     <?php if ( !empty( $atts['recurring_payment'] ) ) : ?>
 
-      <label class="pay-now"><?php _e( 'Recurring Payment', 'rave-pay' ) ?></label>
+      <label class="pay-now"><?php _e( 'Recurring Payment', 'flutterwave-payments' ) ?></label>
       <select class="flw-form-select" id="flw-payment-plan" required>
         <option value="">-- Select Interval --</option>
         <?php 
@@ -62,7 +62,7 @@ if (!empty($atts['custom_currency'])) {
     <?php endif; ?>
 
     <?php if (empty($atts['currency'])) : ?>
-      <label class="pay-now"><?php _e('Currency', 'rave-pay'); ?></label>
+      <label class="pay-now"><?php _e('Currency', 'flutterwave-payments'); ?></label>
       <?php if (!empty($atts['custom_currency'])){ ?>
 
       <select class="flw-form-select" id="flw-currency" required>
@@ -122,6 +122,6 @@ if (!empty($atts['custom_currency'])) {
     <br>
 
     <?php wp_nonce_field( 'flw-rave-pay-nonce', 'flw_sec_code' ); ?>
-    <button value="submit" class='flw-pay-now-button' href='#'><?php _e( $btn_text, 'rave-pay' ) ?></button>
+    <button value="submit" id="flw-pay-now-button" class='flw-pay-now-button' href='#'><?php _e( $btn_text, 'flutterwave-payments' ) ?></button>
   </form>
 </div>

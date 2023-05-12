@@ -5,13 +5,12 @@
  * @package Flutterwave Payment
  */
 
-  $payment_list = new FLW_Payment_List();
+  $payment_list = FLW_Payment_List::get_instance();
 
 ?>
 
 <div class="wrap">
   <h2>Flutterwave Transactions</h2>
-
   <div id="poststuff">
     <div id="post-body" class="metabox-holder">
       <div id="post-body-content">
