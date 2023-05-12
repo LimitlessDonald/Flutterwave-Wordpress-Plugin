@@ -46,12 +46,6 @@ final class Flutterwave_Payments {
     $this->define_constants();
     $this->_include_files();
     $this->_init();
-
-    add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-
-    add_action( 'wp_ajax_process_payment', array( $this, 'process_payment' ) );
-    add_action( 'wp_ajax_nopriv_process_payment', array( $this, 'process_payment' ) );
-
   }
 
   /**
@@ -81,7 +75,10 @@ final class Flutterwave_Payments {
     require_once( FLW_DIR_PATH . 'includes/class-flw-admin-settings.php' );
     require_once( FLW_DIR_PATH . 'includes/class-flw-payment-list.php' );
     require_once( FLW_DIR_PATH . 'includes/vc-elements/class-flw-vc-simple-form.php' );
+    require_once( FLW_DIR_PATH . 'src/Exception/ApiException.php');
+    require_once( FLW_DIR_PATH . 'src/API/Handler.php');
     require_once( FLW_DIR_PATH . 'src/API/Client.php' );
+    require_once( FLW_DIR_PATH . 'includes/api/class-flw-transaction-rest-route.php');
     require_once( FLW_DIR_PATH . 'includes/class-flw-shortcodes.php' );
 
     if ( is_admin() ) {
@@ -105,14 +102,23 @@ final class Flutterwave_Payments {
         //initialize shortcodes.
         FLW_Shortcodes::get_instance();
     }
-
     $this->_settings = FLW_Admin_Settings::get_instance();
+    FLW_Payment_List::get_instance();
     $this->api_client = Client::get_instance( $this->get_option( 'secret_key' ) );
 
     if ( is_admin() ) {
       // TODO: Introduce Advanced TinyMCE Plugin.
       FLW_Tinymce_Plugin::get_instance();
     }
+
+    // Initiate Endpoints
+    new FLW_Transaction_Rest_Route();
+
+    add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+    add_action( 'wp_ajax_process_payment', array( $this, 'process_payment' ) );
+    add_action( 'wp_ajax_nopriv_process_payment', array( $this, 'process_payment' ) );
+    add_action( 'wp_ajax_get_payment_url', array( $this, 'get_payment_url'));
+    add_action( 'wp_ajax_nopriv_get_payment_url', array( $this, 'get_payment_url' ) );
   }
 
   private function get_option( string $name ) {
@@ -125,16 +131,107 @@ final class Flutterwave_Payments {
    * @return void
    */
   public function admin_notices() {
-    $no_public_key = empty( $this->get_option('public_key') ?? '' );
-    $no_secret_key = empty( $this->get_option('secret_key') ?? '' );
+    $no_public_key = empty( $this->get_option( 'public_key' ) ?? '' );
+    $no_secret_key = empty( $this->get_option( 'secret_key' ) ?? '' );
 
     if ( $no_secret_key || $no_public_key ) {
       echo '<div class="updated"><p>';
-      echo  __( 'Flutterwave Payments is installed. - ', 'flutterwave-payments' );
+      echo __( 'Flutterwave Payments is installed. - ', 'flutterwave-payments' );
       echo "<a href=" . esc_url( add_query_arg( 'page', $this->plugin_name, admin_url( 'admin.php' ) ) ) . " class='button-primary'>" . __( 'Enter your Flutterwave "Pay Checkout" Public Key and Secret Key to start accepting payments', 'flutterwave-payments' ) . "</a>";
       echo '</p></div>';
     }
 
+  }
+
+  public function get_payment_url() {
+    check_ajax_referer( 'flw-rave-pay-nonce', 'flw_sec_code' );
+
+    $amount = sanitize_text_field($_POST['amount']);
+    $email = sanitize_email($_POST['customer']['email']);
+    $country = sanitize_text_field($_POST['country']);
+    $form_id = sanitize_text_field($_POST['form_id']);
+    $tx_ref = 'WP_'.$form_id. mt_rand( 20, 1500) .'_'. time();
+    $currency = sanitize_text_field($_POST['currency']);
+    $name = sanitize_text_field($_POST['customer']['name']);
+    $phone = (isset($_POST['customer']['phone_number'])) ? sanitize_text_field($_POST['customer']['phone_number']): null;
+    $payment_options = sanitize_text_field($_POST['payment_options']);
+    $title = get_bloginfo( 'name' );
+    $redirect_url = get_site_url() . '/wp-json/flutterwave-for-business/v1/verifytransaction';
+    $payment_type = (isset($_POST['payment_type']) && $_POST['payment_type'] !== 'once') ? sanitize_text_field($_POST['payment_type']) :  'once';
+    //check for payment type
+
+    $payload = array(
+        'tx_ref'          => $tx_ref,
+        'amount'          => $amount,
+        'currency'        => $currency,
+        'country'         => $country,
+        'redirect_url'    => $redirect_url,
+        'payment_options' => $payment_options,
+        'customer' => array(
+            'email'        => $email,
+            'phonenumber' => $phone,
+            'name'         => $name,
+        ),
+        'meta'            => array(
+            'form_id'     => $form_id,
+            'ip_address'  => $_SERVER['REMOTE_ADDR']
+        ),
+        'customizations'  => array(
+            'title'       => $title,
+            'description' => 'Payment for a donation or Funding',
+        ),
+    );
+
+    if($payment_type !== 'once') {
+      $key = $amount . $currency . "_" . $payment_type;
+      //check if the payment_plan exists in transient.
+      if(!get_transient( $key )) {
+
+        $plan_id = $this->generate_payment_plan([
+            'amount' => $amount,
+            'name' => 'donation_'.$amount.'_'. $payment_type,
+            'interval' => $payment_type
+        ]);
+
+        if ( ! is_wp_error( $plan_id )) {
+          echo wp_json_encode(
+              array(
+                  'status' => 'error',
+                  'message' => $plan_id->get_error_message()
+              )
+          );
+          die();
+        }
+
+        set_transient( $key, $plan_id);
+      } else {
+        $plan_id = get_transient( $key );
+      }
+      $payload['payment_plan'] = $plan_id;
+    }
+
+    $response =  $this->api_client->request('/payments', 'POST',
+      $payload
+    );
+
+    if( is_wp_error( $response ) ) {
+      echo wp_json_encode(
+          array(
+            'status' => 'error',
+            'message' => $response->get_error_message()
+          )
+      );
+      die();
+    }
+    $response  = json_decode(wp_remote_retrieve_body( $response ));
+    echo wp_json_encode(
+        array(
+            'status' => 'success',
+            'data' => $payload,
+            'url' => $response->data->link
+        )
+    );
+    die();
   }
 
   /**
@@ -186,7 +283,7 @@ final class Flutterwave_Payments {
         $redirect_url_key = 'success_redirect_url';
       }
 
-      echo json_encode(
+      echo wp_json_encode(
           array(
               'status' => $status,
               'redirect_url' => $admin_settings->get_option_value( $redirect_url_key )
@@ -195,7 +292,7 @@ final class Flutterwave_Payments {
       die();
     }
 
-    echo json_encode(
+    echo wp_json_encode(
         array(
             'status' => $res_data->status,
             'redirect_url' => $admin_settings->get_option_value( $redirect_url_key )
@@ -253,6 +350,20 @@ final class Flutterwave_Payments {
 
   }
 
+  protected function generate_payment_plan(array $data) {
+    // amount, name, interval,
+    $response =  $this->api_client->request('/payment-plans', 'POST',
+      $data
+    );
+    $body = json_decode(wp_remote_retrieve_body( $response ));
+
+    if ( ! is_wp_error( $response )) {
+      return $response;
+    }
+
+    return $body->data->id;
+  }
+
   /**
    * Gets the instance of this class
    *
@@ -267,7 +378,5 @@ final class Flutterwave_Payments {
     return self::$instance;
   }
 }
-
-
 
 ?>

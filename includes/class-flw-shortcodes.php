@@ -26,12 +26,14 @@ class FLW_Shortcodes {
   }
 
 	private static function check_settings_for_api_keys() {
-		$api_key_not_present = __('Your Site Administrator is yet to configure collection with Flutterwave. Try again later.', 'flutterwave-payments');
-
-		if(current_user_can( 'administrator' ) || current_user_can( 'editor' )) {
 			$api_key_not_present = __('Please configure Flutterwave Payments settings correctly. API keys are still missing.', 'flutterwave-payments');
-		}
 		return "<span class='flw-mssing-api-keys'> Note: ".$api_key_not_present . "</span>";
+	}
+
+	private static function check_redirect_urls() {
+			$api_key_not_present = __('Please configure Flutterwave Payments settings correctly. Redirect Urls are missing.', 'flutterwave-payments');
+
+			return "<span class='flw-mssing-api-keys'> Note: ".$api_key_not_present . "</span>";
 	}
 
 	public function __clone() {}
@@ -71,8 +73,12 @@ class FLW_Shortcodes {
   public static function pay_button_shortcode( $attr, $content ): string { //phpcs:ignore.
 	$admin_settings = FLW_Admin_Settings::get_instance();
 
-	if ( ! $admin_settings->is_public_key_present() ) {
+	if ( ! $admin_settings->is_public_key_present() && current_user_can( 'administrator' ) || current_user_can( 'editor' )  ) {
 		return self::check_settings_for_api_keys();
+	}
+
+	if( ! $admin_settings->are_redirect_urls_present() && current_user_can( 'administrator' ) || current_user_can( 'editor' ) ) {
+		return self::check_redirect_urls();
 	}
 
 	$shortcode  = new FLW_Shortcode_Payment_Form( (array) $attr, 'flw-pay-button' );
@@ -90,10 +96,16 @@ class FLW_Shortcodes {
    *
    * @return string      Pay Now button html content
    */
-  public function donation_page_shortcode( $attr, $content ): string {//phpcs:ignore.
+  public static function donation_page_shortcode( $attr, $content ): string {//phpcs:ignore.
+	  $admin_settings = FLW_Admin_Settings::get_instance();
 
-    wp_register_style('flw_donation_css', FLW_DIR_URL . 'assets/css/flw-donation.css');
-	self::check_settings_for_api_keys();
+	  if ( ! $admin_settings->is_public_key_present() && current_user_can( 'administrator' ) || current_user_can( 'editor' )  ) {
+		  return self::check_settings_for_api_keys();
+	  }
+
+	  if( ! $admin_settings->are_redirect_urls_present() && current_user_can( 'administrator' ) || current_user_can( 'editor' ) ) {
+		  return self::check_redirect_urls();
+	  }
 
 	$shortcode  = new FLW_Shortcode_Donation_Form( (array) $attr, 'flw-donation-page' );
 	$shortcode->load_scripts();

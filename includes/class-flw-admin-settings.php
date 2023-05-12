@@ -91,6 +91,14 @@ class FLW_Admin_Settings {
 
   }
 
+  public function are_redirect_urls_present() {
+	  $options = get_option( 'flw_rave_options' );
+
+	  if ( false == $options ) return false;
+
+	  return array_key_exists( 'failed_redirect_url', $options ) && ! empty( $options['failed_redirect_url'] ) && array_key_exists( 'success_redirect_url', $options ) && ! empty( $options['success_redirect_url'] );
+  }
+
   /**
    * Get the instance of the class
    *
@@ -115,7 +123,7 @@ class FLW_Admin_Settings {
   public function flw_rave_add_admin_menu() {
 
     add_menu_page(
-      __( 'Settings Page', 'flutterwave-payments' ),
+      __( 'Flutterwave Payments', 'flutterwave-payments' ),
       'Flutterwave',
       'manage_options',
       'flutterwave-payments',
@@ -129,7 +137,7 @@ class FLW_Admin_Settings {
       __( 'Flutterwave Payments Settings', 'flutterwave-payments' ),
       __( 'Settings', 'flutterwave' ),
       'manage_options',
-      'flutterwave-payments-settings',
+      'flutterwave-payments',
       array( __CLASS__, 'flw_rave_admin_setting_page' )
     );
 

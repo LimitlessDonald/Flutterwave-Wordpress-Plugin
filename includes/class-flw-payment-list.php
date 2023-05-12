@@ -7,11 +7,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if (!class_exists('WP_List_Table')) {
+//  require_once(ABSPATH . 'wp-admin/includes/screen.php');
+//  require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
   require_once( ABSPATH . 'wp-admin/includes/template.php');
   require_once( ABSPATH . 'wp-admin/includes/class-wp-screen.php');
-  if( ! class_exists( 'FLW_WP_List_Table' ) ) {
-    require_once( FLW_DIR_PATH . 'includes/wp-classes/class-wp-list-table.php' );
-  }
+}
+
+if( ! class_exists( 'FLW_WP_List_Table' ) ) {
+  require_once( FLW_DIR_PATH . 'includes/wp-classes/class-wp-list-table.php' );
+}
 
   if ( ! class_exists( 'FLW_Payment_List' ) ) {
 
@@ -40,8 +45,8 @@ defined( 'ABSPATH' ) || exit;
       public function __construct() {
 
         parent::__construct( array(
-          'singular' => __( 'Payment List', 'rave-pay' ),
-          'plural'   => __( 'Payment Lists', 'rave-pay' ),
+          'singular' => __( 'Payment List', 'flutterwave-payments' ),
+          'plural'   => __( 'Payment Lists', 'flutterwave-payments' ),
           'ajax'     => false
         ) );
 
@@ -60,7 +65,7 @@ defined( 'ABSPATH' ) || exit;
        *
        */
       public function no_items() {
-        _e( 'No payments have been made yet.', 'rave-pay' );
+        _e( 'No payments have been made yet.', 'flutterwave-payments' );
       }
 
       /**
@@ -119,12 +124,12 @@ defined( 'ABSPATH' ) || exit;
       function get_columns() {
         $columns = array(
           'cb'      => '<input type="checkbox" />',
-          'tx_ref'  => __( 'Transaction Ref', 'rave-pay' ),
-          'customer' => __( 'Customer', 'rave-pay' ),
-          'fullname' => __('Customer Fullname', 'rave-pay'),
-          'amount'  => __( 'Amount (' . $this->admin_settings->get_option_value( 'currency' ) . ')', 'rave-pay' ),
-          'status'  => __( 'Status', 'rave-pay' ),
-          'date'    => __( 'Date', 'rave-pay' ),
+          'tx_ref'  => __( 'Transaction Ref', 'flutterwave-payments' ),
+          'customer' => __( 'Customer', 'flutterwave-payments' ),
+          'fullname' => __('Customer Fullname', 'flutterwave-payments'),
+          'amount'  => __( 'Amount (' . $this->admin_settings->get_option_value( 'currency' ) . ')', 'flutterwave-payments' ),
+          'status'  => __( 'Status', 'flutterwave-payments' ),
+          'date'    => __( 'Date', 'flutterwave-payments' ),
         );
 
         return $columns;
@@ -259,8 +264,8 @@ defined( 'ABSPATH' ) || exit;
       public function add_payment_list_post_type() {
 
         $args = array(
-          'label'               => __( 'Payment Lists', 'rave-pay' ),
-          'description'         => __( 'Rave payment lists', 'rave-pay' ),
+          'label'               => __( 'Payment Lists', 'flutterwave-payments' ),
+          'description'         => __( 'Rave payment lists', 'flutterwave-payments' ),
           'supports'            => array( 'title', 'author', 'custom-fields', ),
           'hierarchical'        => false,
           'public'              => false,
