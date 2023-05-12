@@ -12,13 +12,9 @@ jQuery( function ( $ ) {
       let lastname = formData.lastname || $(form).find('#flw-last-name').val();
       let formCurrency = formData.currency || $(form).find('#flw-currency').val();
       let paymentplanID = $(form).find('#flw-payment-plan').val() ?? null;
-      let txref   = 'WP_' + form.attr('id').toUpperCase() + '_' + new Date().valueOf();
+      let formId = form.attr('id');
+      let txref   = 'WP_' + formId.toUpperCase() + '_' + new Date().valueOf();
       let setCountry; //set country
-
-
-      if (formCurrency === '') {
-        formCurrency = flw_pay_options.currency;
-      }
 
       //switch the country with form currency provided
       setCountry = flw_pay_options.countries[formCurrency] ? flw_pay_options.countries[formCurrency]: flw_pay_options.countries['NGN'];
@@ -28,11 +24,7 @@ jQuery( function ( $ ) {
       return {
         amount: amount,
         country: setCountry, //flw_pay_options.country,
-        currency: formCurrency,
-        meta: {
-          consumer_id: Math.random() + 10,
-          ip_address : "127.0.0.1",
-        },
+        currency: formCurrency ?? flw_pay_options.currency,
         customer: {
           email,
           phone_number: null,
@@ -41,23 +33,34 @@ jQuery( function ( $ ) {
         payment_options: flw_pay_options.method,
         public_key: flw_pay_options.public_key,
         tx_ref: txref,
-        onclose: function() {
-          // TODO: handle event when modal is closed before payment is completed.
-          redirectTo( redirect_url );
-        },
-        callback: function(res) {
-          sendPaymentRequestResponse( res, form );
-        },
         customizations: {
           title: flw_pay_options.title,
           description: flw_pay_options.desc,
           logo: flw_pay_options.logo,
         },
+        form_id: formId
       };
   };
 
-  const processCheckout = function(opts) {
-    FlutterwaveCheckout( opts );
+  const processCheckout = function(opts, form) {
+      let args  = {
+          action: 'get_payment_url',
+          flw_sec_code: $( form ).find( '#flw_sec_code' ).val(),
+      };
+
+      let dataObj = Object.assign( {}, args, opts);
+      $
+          .post( flw_pay_options.cb_url, dataObj )
+          .success( function( data ) {
+              let response  = JSON.parse( data );
+
+              if(response.status === 'error') {
+                  $('.flw-error').html(response.message ).attr('style', 'color:red');
+              } else{
+                  $.unblockUI();
+                  redirectTo(response.url);
+              }
+          })
   };
 
   /**
@@ -68,12 +71,12 @@ jQuery( function ( $ ) {
    * @return void
    */
   const sendPaymentRequestResponse = function( res, form ) {
-    var args  = {
+    let args  = {
       action: 'process_payment',
       flw_sec_code: $( form ).find( '#flw_sec_code' ).val(),
     };
 
-    var dataObj = Object.assign( {}, args, res.tx );
+    let dataObj = Object.assign( {}, args, res.tx );
 
     $
       .post( flw_pay_options.cb_url, dataObj )
@@ -121,10 +124,11 @@ jQuery( function ( $ ) {
 
     let form = $( this );
 
-
-
     form.on('submit', function (event) {
       event.preventDefault(); // Prevent the default form submission
+        let btn = form.find('button');
+      //gray the button.
+      btn.prop('disabled', true);
 
       let inputs = form.find('input[type="text"]');
       let isValid = true;
@@ -133,18 +137,23 @@ jQuery( function ( $ ) {
         let inputValue = $(this).val();
         if (typeof inputValue === 'string' && inputValue.trim() === '') {
           isValid = false;
-          return false; // Exit the loop if an empty value is found
+          $(this).attr('style', 'border-color: red');
+        } else {
+          $(this).attr('style', 'border-color: green');
         }
       });
 
-      if (!isValid) {
-        // TODO: Handle each case for each field.
-        $('.flw-error').html('Please fill all the form details.').attr('style', 'color:red');
+      if(isValid) {
+          let config = buildConfigObj( form );
+          console.log(config);
+          processCheckout( config, form );
       } else {
-        let config = buildConfigObj( form );
-        console.log(config);
-        processCheckout( config );
+          //unblur button.
+          btn.prop('disabled', false);
       }
+
+
+
     });
   });
 
