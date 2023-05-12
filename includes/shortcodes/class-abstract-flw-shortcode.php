@@ -87,6 +87,8 @@ abstract class Abstract_FLW_Shortcode {
 	protected static function get_supported_country(): array {
 		return array(
 			'NGN' => 'NG',
+			'EUR' => 'NG',
+			'GBP' => 'NG',
 			'USD' => 'US',
 			'KES' => 'KE',
 			'ZAR' => 'ZA',
@@ -95,6 +97,15 @@ abstract class Abstract_FLW_Shortcode {
 			'GHS' => 'GH',
 			'ZMW' => 'ZM',
 			'RWF' => 'RW',
+		);
+	}
+
+	protected static function get_payment_options(): array {
+		return array(
+			'both' => 'card,account',
+			'card' => 'card',
+			'account' => 'account',
+			'all' => 'card,account,ussd,qr,mpesa,banktransfer,mobilemoneyghana,mobilemoneyfranco,mobilemoneyuganda,mobilemoneyrwanda,mobilemoneyzambia,barter,credit',
 		);
 	}
 }

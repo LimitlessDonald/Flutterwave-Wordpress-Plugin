@@ -48,10 +48,14 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode{
 		$email = self::use_current_user_email( $attributes ) ? wp_get_current_user()->user_email : '';
 		$admin_payment_method = $this->settings->get_option_value( 'method' );
 		$payment_method = self::get_payment_options()[ $admin_payment_method ] ?? self::get_payment_options()[ 'all' ];
+		$custom_currency = '';
+		if( 'any' === $this->settings->get_option_value('currency')) {
+			$custom_currency .= "USD,KES,ZAR,GHS,TZS,EUR,NGN,GBP,UGX,RWF,ZMW";
+		}
 		return shortcode_atts(
 			array(
 				'amount' => 100,
-				'currency' => $this->settings->get_option_value('currency'),
+				'custom_currency' => $custom_currency,
 				'country' => $this->settings->get_option_value('country'),
 				'payment_method' => $payment_method,
 				'email' => $email,
@@ -63,15 +67,6 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode{
 
 	protected function parse_query_args(): array {
 		return array();
-	}
-
-	private static function get_payment_options(): array {
-		return array(
-			'both' => 'card,account',
-			'card' => 'card',
-			'account' => 'account',
-			'all' => 'card,account,ussd,qr,mpesa,banktransfer,mobilemoneyghana,mobilemoneyfranco,mobilemoneyuganda,mobilemoneyrwanda,mobilemoneyzambia,barter,credit',
-		);
 	}
 
 	public function render(): void {
@@ -90,7 +85,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode{
 	public function load_scripts(): void {
 		$settings = $this->settings;
 
-		$admin_payment_method = $this->settings->get_option_value( 'method' );
+		$admin_payment_method = $settings->get_option_value( 'method' );
 		$payment_method = self::get_payment_options()[ $admin_payment_method ] ?? self::get_payment_options()[ 'all' ];
 
 		$args = array(
@@ -105,11 +100,8 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode{
 			'countries' => self::get_supported_country()
 		);
 
-		wp_enqueue_script( 'flw_checkout_js', 'https://checkout.flutterwave.com/v3.js', array(), FLW_PAY_VERSION, true );
-		wp_enqueue_script( 'flw_pay_js', FLW_DIR_URL . 'assets/js/flw.js', array( 'flw_checkout_js', 'jquery' ), FLW_PAY_VERSION, true );
-
-		wp_enqueue_script( 'flwdonation_js', FLW_DIR_URL . 'assets/js/flw-donation.js', array( 'jquery' ), FLW_PAY_VERSION, true );
-
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'flw_pay_js', FLW_DIR_URL . 'assets/js/flw.js', array( 'jquery' ), FLW_PAY_VERSION, false );
 		wp_localize_script( 'flw_pay_js', 'flw_pay_options', $args );
 	}
 }
