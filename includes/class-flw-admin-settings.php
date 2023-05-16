@@ -48,9 +48,14 @@ class FLW_Admin_Settings {
 
 	}
 
-	private function init_settings() {
+	/**
+	 * Initialize Flutterwave Settings.
+	 *
+	 * @return void
+	 */
+	private function init_settings() : void {
 
-		if ( false == get_option( 'flw_rave_options' ) ) {
+		if ( false === get_option( 'flw_rave_options' ) ) {
 			update_option( 'flw_rave_options', array() );
 		}
 
@@ -59,18 +64,16 @@ class FLW_Admin_Settings {
 	/**
 	 * Fetches admin option settings from the db.
 	 *
-	 * @param $attr
+	 * @param $attr attributes for gateway.
 	 *
-	 * @return mixed           The value of the option fetched.
+	 * @return mixed The value of the option fetched.
 	 */
 	public function get_option_value( $attr ) {
 
 		$options = get_option( 'flw_rave_options' );
 
 		if ( array_key_exists( $attr, $options ) ) {
-
 			return $options[ $attr ];
-
 		}
 
 		return '';
@@ -85,7 +88,7 @@ class FLW_Admin_Settings {
 
 		$options = get_option( 'flw_rave_options' );
 
-		if ( false == $options ) {
+		if ( false === $options ) {
 			return false;
 		}
 
@@ -96,7 +99,7 @@ class FLW_Admin_Settings {
 	public function are_redirect_urls_present() {
 		$options = get_option( 'flw_rave_options' );
 
-		if ( false == $options ) {
+		if ( false === $options ) {
 			return false;
 		}
 
