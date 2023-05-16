@@ -91,6 +91,9 @@ cli wp theme install storefront --activate
 echo "Activating the Flutterwave Payments plugin..."
 cli wp plugin activate flutterwave-payments
 
+echo "Installing and Activating Transient Manager Plugin ..."
+cli wp plugin install transients-manager --activate
+
 echo
 echo "SUCCESS! You should now be able to access http://${SITE_URL}/wp-admin/"
 echo "You can login by using the username and password both as 'admin'"
