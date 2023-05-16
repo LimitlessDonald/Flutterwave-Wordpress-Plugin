@@ -51,12 +51,10 @@ jobs:
         uses: "ramsey/composer-install@v2"
       - name: Run PHPCS checks
         continue-on-error: true
-        run: vendor/bin/phpcs --ignore=*/tests/*,*/data/*,*/assets/* --report-full --report-checkstyle=./phpcs-report.xml
+        run: vendor/bin/phpcs --ignore=*/tests/*,*/data/*,*/assets/* --report-full .
       - name: Git Blame
         continue-on-error: true
         run: vendor/bin/phpcs  -s --report=gitblame --ignore=*/tests/*,*/data/*,*/assets/* .
-      - name: Show PHPCS results in PR
-        run: cs2pr ./phpcs-report.xml
       - name: Run WordPress Checks
         continue-on-error: true
         run: composer run standards:check
