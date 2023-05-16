@@ -59,7 +59,7 @@ $settings = FLW_Admin_Settings::get_instance();
 			</th>
 			<td class="forminp forminp-text">
 			  <p class="description">
-			  <?php _e('Please copy this webhook URL and paste on the webhook section on your dashboard', 'flutterwave-payments' ) ;?><strong style="color: red"><pre><code><?php echo get_site_url().'/wp-json/flutterwave/v1/webhook' ;?></code></pre></strong><a href="https://app.flutterwave.com/dashboard/settings/webhooks" target="_blank">Flutterwave Account</a>
+			  <?php _e( 'Please copy this webhook URL and paste on the webhook section on your dashboard', 'flutterwave-payments' ); ?><strong style="color: red"><pre><code><?php echo get_site_url() . '/wp-json/flutterwave/v1/webhook'; ?></code></pre></strong><a href="https://app.flutterwave.com/dashboard/settings/webhooks" target="_blank">Flutterwave Account</a>
 			  </p>
 			</td>
 		  </tr>

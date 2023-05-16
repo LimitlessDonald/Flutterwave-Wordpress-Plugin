@@ -140,13 +140,13 @@ final class Flutterwave_Payments {
 
 		// get flutterwave integration options.
 
-		$services = array( 
-			ExchangeRateService::class
+		$services = array(
+			ExchangeRateService::class,
 		);
 
 		$registry = FLW_Thirdparty_Integrations::get_instance();
 		$registry::register( $services );
-		
+
 	}
 
 	private function get_option( string $name ) {
@@ -172,12 +172,12 @@ final class Flutterwave_Payments {
 	}
 
 	private static function generate_payment_hash( array $payment_data ) {
-		$data_to_join  = array(
+		$data_to_join = array(
 			'amount'     => $payment_data['amount'],
 			'currency'   => $payment_data['currency'],
 			'email'      => $payment_data['email'],
 			'tx_ref'     => $payment_data['tx_ref'],
-			'secret_key' => (FLW_Admin_Settings::get_instance())->get_option_value('secret_key'),
+			'secret_key' => ( FLW_Admin_Settings::get_instance() )->get_option_value( 'secret_key' ),
 		);
 
 		$stringToHash = '';
@@ -206,12 +206,12 @@ final class Flutterwave_Payments {
 		$payment_options = sanitize_text_field( $_POST['payment_options'] );
 		$title           = get_bloginfo( 'name' );
 		$payment_type    = ( isset( $_POST['payment_type'] ) && $_POST['payment_type'] !== 'once' ) ? sanitize_text_field( $_POST['payment_type'] ) : 'once';
-		
+
 		$payment_hash = array(
-			'amount' => $amount,
+			'amount'   => $amount,
 			'currency' => $currency,
-			'email' => $email,
-			'tx_ref' => $tx_ref
+			'email'    => $email,
+			'tx_ref'   => $tx_ref,
 		);
 
 		$args = array(
@@ -219,11 +219,11 @@ final class Flutterwave_Payments {
 			'post_status' => 'publish',
 			'post_title'  => $tx_ref,
 		);
-		
+
 		$payment_record_id = wp_insert_post( $args, true );
-		
+
 		if ( ! is_wp_error( $payment_record_id ) ) {
-			
+
 			$post_meta = array(
 				'_flw_rave_payment_amount'   => (float) $amount,
 				'_flw_rave_payment_fullname' => $name,
@@ -234,7 +234,7 @@ final class Flutterwave_Payments {
 			);
 			$this->_add_post_meta( $payment_record_id, $post_meta );
 		}
-		$redirect_url    = get_site_url() . '/wp-json/flutterwave/v1/verify-transaction?order=' . $payment_record_id;
+		$redirect_url = get_site_url() . '/wp-json/flutterwave/v1/verify-transaction?order=' . $payment_record_id;
 		// check for payment type
 
 		$payload = array(
@@ -244,7 +244,7 @@ final class Flutterwave_Payments {
 			'country'         => $country,
 			'redirect_url'    => $redirect_url,
 			'payment_options' => $payment_options,
-			'payment_hash'	  => $payment_hash,
+			'payment_hash'    => $payment_hash,
 			'customer'        => array(
 				'email'       => $email,
 				'phonenumber' => $phone,
@@ -255,11 +255,11 @@ final class Flutterwave_Payments {
 				'ip_address'     => $_SERVER['REMOTE_ADDR'],
 				'order_id'       => $payment_record_id,
 				'order_amount'   => $amount,
-				'order_currency' => $currency 
+				'order_currency' => $currency,
 			),
 			'customizations'  => array(
 				'title'       => $title,
-				'description' => 'Payment #'. $payment_record_id ?? '2019384' ,
+				'description' => 'Payment #' . $payment_record_id ?? '2019384',
 			),
 		);
 

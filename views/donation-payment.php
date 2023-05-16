@@ -125,7 +125,7 @@ $donation_merchant_name = $admin_settings->get_option_value( 'donation_merchant_
 		<br>
 
 		<?php wp_nonce_field( 'flw-rave-pay-nonce', 'flw_sec_code' ); ?>
-		<button value="submit" id="flw-pay-now-button" class='flw-pay-now-button' href='#'><?php echo esc_attr($btn_text); ?></button>
+		<button value="submit" id="flw-pay-now-button" class='flw-pay-now-button' href='#'><?php echo esc_attr( $btn_text ); ?></button>
 	</form>
 </div>
 <div id="flutterwave-overlay" style="display:none">

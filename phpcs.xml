@@ -11,6 +11,8 @@
 
 	<!-- Exclude minified Javascript files. -->
 	<exclude-pattern>*.min.js</exclude-pattern>
+	<exclude-pattern>*.js</exclude-pattern>
+
 
     <!-- Configs -->
 	<config name="minimum_supported_wp_version" value="6.0" />

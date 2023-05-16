@@ -50,122 +50,127 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	 * @since  1.0.6
 	 */
 	protected function parse_attributes( array $attributes = array() ): array {
-		$email                = self::use_current_user_email( $attributes ) ? wp_get_current_user()->user_email : '';
-		$admin_payment_method = $this->settings->get_option_value( 'method' );
-		$payment_method       = self::get_payment_options()[ $admin_payment_method ] ?? self::get_payment_options()['all'];
+		$email                      = self::use_current_user_email( $attributes ) ? wp_get_current_user()->user_email : '';
+		$admin_payment_method       = $this->settings->get_option_value( 'method' );
+		$payment_method             = self::get_payment_options()[ $admin_payment_method ] ?? self::get_payment_options()['all'];
 		$this->allowed_to_exclude[] = 'phone';
-		$default_fields_order = 'email,fullname,phone,amount,currency';
-		$custom_currency      = '';
-		$custom_fields        = array();
-		$default_fullname	  = '';
-		$default_config       = array(); 
-		
+		$default_fields_order       = 'email,fullname,phone,amount,currency';
+		$custom_currency            = '';
+		$custom_fields              = array();
+		$default_fullname           = '';
+		$default_config             = array();
+
 		// handle when a merchant allows clients to choose the currency to pay in.
-		if( !isset( $attributes['currency'] ) ) {
+		if ( ! isset( $attributes['currency'] ) ) {
 			if ( 'any' === $this->settings->get_option_value( 'currency' ) ) {
 				$default_config['custom_currency'] .= 'USD,KES,ZAR,GHS,TZS,EUR,NGN,GBP,UGX,RWF,ZMW';
 			} else {
-				$merchant_base_currency = $this->settings->get_option_value( 'currency' );
-				$default_config['custom_currency'] 		= $merchant_base_currency ;
+				$merchant_base_currency            = $this->settings->get_option_value( 'currency' );
+				$default_config['custom_currency'] = $merchant_base_currency;
 			}
 		} else {
-			$default_config['custom_currency']  = $attributes['currency'];
+			$default_config['custom_currency'] = $attributes['currency'];
 		}
-		
 
-		// parses custom fields from shortcode attributes. 
-		if( isset( $attributes['custom_fields'] ) ) {
-			$custom_fields = $this->build_custom_fields($attributes['custom_fields'], $attributes);
-			$attributes['custom_fields'] = $custom_fields;
+		// parses custom fields from shortcode attributes.
+		if ( isset( $attributes['custom_fields'] ) ) {
+			$custom_fields                   = $this->build_custom_fields( $attributes['custom_fields'], $attributes );
+			$attributes['custom_fields']     = $custom_fields;
 			$default_config['custom_fields'] = $custom_fields;
-			$this->custom_fields = $custom_fields;
+			$this->custom_fields             = $custom_fields;
 
-			$default_config['order'] = $default_fields_order .",". implode(',', array_keys($this->custom_fields));
+			$default_config['order'] = $default_fields_order . ',' . implode( ',', array_keys( $this->custom_fields ) );
 			// update allowed_to_exclude.
 			$this->allowed_to_exclude = array_merge( $this->allowed_to_exclude, array_keys( $custom_fields ) );
 		}
-		
-		// handles excluded fields both custom or not.
-		if( isset( $attributes['exclude'] ) ) {
-			//trim spaces of each word.
-			$proposed_fields = array_map( function( string $item ) {
-				return trim($item);
-			}, explode(',', $attributes['exclude'] ));
 
-			foreach ($this->allowed_to_exclude  as $keyword) {
-				if( in_array( $keyword , $proposed_fields ) ) {
-					$attributes[ "should_collect_". $keyword ] = 0;
-					$default_config["should_collect_". $keyword] = 0;
+		// handles excluded fields both custom or not.
+		if ( isset( $attributes['exclude'] ) ) {
+			// trim spaces of each word.
+			$proposed_fields = array_map(
+				function( string $item ) {
+					return trim( $item );
+				},
+				explode( ',', $attributes['exclude'] )
+			);
+
+			foreach ( $this->allowed_to_exclude  as $keyword ) {
+				if ( in_array( $keyword, $proposed_fields ) ) {
+					$attributes[ 'should_collect_' . $keyword ]     = 0;
+					$default_config[ 'should_collect_' . $keyword ] = 0;
 				}
 			}
 		}
 
-		if( isset( $attributes['order'] )) {
-			//check order array has valid fields.
-			$custom_form_fields_order_array = explode(',', $attributes['order'] );
-			$default_fields = array_keys($this->get_field_data_type());
-			$all_fields = array_merge( $default_fields, array_keys( $this->custom_fields ) );
-			foreach ($custom_form_fields_order_array as $index => $value ) {
-				if( !in_array( $value, $all_fields ) ) {
-					unset($custom_form_fields_order_array[$index]);
+		if ( isset( $attributes['order'] ) ) {
+			// check order array has valid fields.
+			$custom_form_fields_order_array = explode( ',', $attributes['order'] );
+			$default_fields                 = array_keys( $this->get_field_data_type() );
+			$all_fields                     = array_merge( $default_fields, array_keys( $this->custom_fields ) );
+			foreach ( $custom_form_fields_order_array as $index => $value ) {
+				if ( ! in_array( $value, $all_fields ) ) {
+					unset( $custom_form_fields_order_array[ $index ] );
 				}
 			}
 
-			$attributes['order'] = implode(",", $custom_form_fields_order_array );
-			$default_config['order'] = ( !empty( $custom_form_fields_order_array ) ) ? $attributes['order']: $default_fields_order;
+			$attributes['order']     = implode( ',', $custom_form_fields_order_array );
+			$default_config['order'] = ( ! empty( $custom_form_fields_order_array ) ) ? $attributes['order'] : $default_fields_order;
 		}
 
 		// If a fullname is passed. do not display names separately.
-		if(isset( $attributes['fullname'] ) ) {
-			$attributes['split_name'] = 0;
+		if ( isset( $attributes['fullname'] ) ) {
+			$attributes['split_name']   = 0;
 			$default_config['fullname'] = $attributes['fullname'];
 		}
 
 		// should display last_name and first_name or not.
-		$split_name = ( isset($attributes['split_name']) ) ? (bool) $attributes['split_name'] : false ;
+		$split_name = ( isset( $attributes['split_name'] ) ) ? (bool) $attributes['split_name'] : false;
 
-		$defaults = array_merge(array(
-			'amount'          => 0,
-			'split_name'      => $split_name,
-			'custom_currency' => $custom_currency,
-			'country'         => $this->settings->get_option_value( 'country' ),
-			'payment_method'  => $payment_method,
-			'email'           => $email,
-			'custom_fields'	  => $custom_fields,
-			'order'			  => $default_fields_order,
-		), $default_config);
+		$defaults = array_merge(
+			array(
+				'amount'          => 0,
+				'split_name'      => $split_name,
+				'custom_currency' => $custom_currency,
+				'country'         => $this->settings->get_option_value( 'country' ),
+				'payment_method'  => $payment_method,
+				'email'           => $email,
+				'custom_fields'   => $custom_fields,
+				'order'           => $default_fields_order,
+			),
+			$default_config
+		);
 
-		return shortcode_atts( $defaults , $attributes ,$this->type );
+		return shortcode_atts( $defaults, $attributes, $this->type );
 	}
 
 	private function convert_options_to_array( array $string_key_value_array ): array {
 		$fields = array();
-		foreach ($string_key_value_array as $value ) {
-			$pair = explode(':', $value);
-			$fields[$pair[0]] = $pair[1];
+		foreach ( $string_key_value_array as $value ) {
+			$pair               = explode( ':', $value );
+			$fields[ $pair[0] ] = $pair[1];
 		}
 		return $fields;
 	}
 
 	private function build_custom_fields( string $fields, array &$attr ) {
-		//convert string to array.
-		$document = explode(',', $fields);
+		// convert string to array.
+		$document = explode( ',', $fields );
 
 		$custom_fields = array();
 
-		foreach ($document as $key_value_pair ) {
-			if( (bool)strpos( $key_value_pair, 'select' ) ) {
+		foreach ( $document as $key_value_pair ) {
+			if ( (bool) strpos( $key_value_pair, 'select' ) ) {
 				// check if data type contains options.
-				$option = explode('|', $key_value_pair);
-				$key_datatype = explode(':', array_shift( $option ) );
-				$key = $key_datatype[0];
-				$datatype = $key_datatype[1];
-				$custom_fields[$key][$datatype] = $this->convert_options_to_array( $option );
+				$option                             = explode( '|', $key_value_pair );
+				$key_datatype                       = explode( ':', array_shift( $option ) );
+				$key                                = $key_datatype[0];
+				$datatype                           = $key_datatype[1];
+				$custom_fields[ $key ][ $datatype ] = $this->convert_options_to_array( $option );
 			} else {
-				$pair = explode(':', $key_value_pair);
-				$key = $pair[0];
-				$input_data_type = $pair[1];
-				$custom_fields[$key] = $input_data_type;
+				$pair                  = explode( ':', $key_value_pair );
+				$key                   = $pair[0];
+				$input_data_type       = $pair[1];
+				$custom_fields[ $key ] = $input_data_type;
 			}
 		}
 		return $custom_fields;
@@ -175,68 +180,68 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		return array();
 	}
 
-	private function handle_currency_field( $key, $field, $amount, $custom_currency, &$html_array) {
+	private function handle_currency_field( $key, $field, $amount, $custom_currency, &$html_array ) {
 
-		if($key !== 'currency') {
+		if ( $key !== 'currency' ) {
 			return;
 		}
 
-		$currencies = explode(',', $custom_currency );
+		$currencies = explode( ',', $custom_currency );
 
-		if(is_array( $field ) && isset( $field['type'] ) && 'select' === $field['type']) {
-			$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst($key) ). '</label>';
-			$html_array[] = '<'. esc_html( $field['type'] ) . '  class="'. esc_html( $field['class'] ) .'" id="'. esc_html( $field['id'] ) .'" required>';
-			if( $field['name'] === 'custom_currency') {
-				foreach ($currencies as $currency) {
-					$html_array[] = '<option value="'. $currency .'">'. $currency .'</option>'; 
+		if ( is_array( $field ) && isset( $field['type'] ) && 'select' === $field['type'] ) {
+			$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $key ) ) . '</label>';
+			$html_array[] = '<' . esc_html( $field['type'] ) . '  class="' . esc_html( $field['class'] ) . '" id="' . esc_html( $field['id'] ) . '" required>';
+			if ( $field['name'] === 'custom_currency' ) {
+				foreach ( $currencies as $currency ) {
+					$html_array[] = '<option value="' . $currency . '">' . $currency . '</option>';
 				}
 			}
-			$html_array[] = '</'. esc_html( $field['type'] ) . '>';
+			$html_array[] = '</' . esc_html( $field['type'] ) . '>';
 		}
 	}
 
 	private function handle_special_fields( array $field, array $atts, array &$html_array ) {
-		$custom_currency = $atts['custom_currency'];
-		$split_name 	 = $atts['split_name'];
-		$amount 		 = $atts['amount'];
-		$country		 = $atts['country'];
-		$field_name		 = $field['name'];
-		$custom_currency_array = explode(',', $custom_currency);
+		$custom_currency       = $atts['custom_currency'];
+		$split_name            = $atts['split_name'];
+		$amount                = $atts['amount'];
+		$country               = $atts['country'];
+		$field_name            = $field['name'];
+		$custom_currency_array = explode( ',', $custom_currency );
 
-		if( !$this->is_special_field($field_name) ) {
+		if ( ! $this->is_special_field( $field_name ) ) {
 			return;
 		}
 
 		// handle currency field: assume single currency and amount is set.
-		if($field_name === 'custom_currency' && count( $custom_currency_array ) === 1 && $amount !== 0 ) {
+		if ( $field_name === 'custom_currency' && count( $custom_currency_array ) === 1 && $amount !== 0 ) {
 			$html_array[] = '<div class="flw_payment_overview">
 									<div class="flw_total_label">Total Amount</div>
 									<div class="flw_amount_to_pay">
-										<div>'.esc_attr((float)$amount).esc_attr($custom_currency_array[0]).'</div>
+										<div>' . esc_attr( (float) $amount ) . esc_attr( $custom_currency_array[0] ) . '</div>
 									</div>
 							</div>';
 		}
 
 		// handle currency field: assume multiple currencies and amount is set.
-		if($field_name === 'custom_currency' && count( $custom_currency_array ) > 1 && $amount >= 0 ) {
-			
+		if ( $field_name === 'custom_currency' && count( $custom_currency_array ) > 1 && $amount >= 0 ) {
+
 			$this->handle_currency_field( 'currency', $field, $amount, $custom_currency, $html_array );
 		}
 
 		// handle amount.
-		if( 'amount' == $field_name && $amount == 0) {
+		if ( 'amount' == $field_name && $amount == 0 ) {
 			$this->handle_regular_fields( 'amount', $field, $html_array );
 		}
 
 		// handle name split.
-		if( 'firstname' == $field_name && $atts['split_name'] === 1 || 'lastname' == $field_name && $atts['split_name'] === 1 ) {
+		if ( 'firstname' == $field_name && $atts['split_name'] === 1 || 'lastname' == $field_name && $atts['split_name'] === 1 ) {
 			$this->handle_regular_fields( $field_name, $field, $html_array );
 		}
 
 		// handle fullname.
-		if( 'fullname' == $field_name && $atts['split_name'] == 0) {
+		if ( 'fullname' == $field_name && $atts['split_name'] == 0 ) {
 
-			if( !isset( $atts['fullname'] ) ) {
+			if ( ! isset( $atts['fullname'] ) ) {
 
 				$this->handle_regular_fields( $field_name, $field, $html_array );
 
@@ -246,7 +251,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 			}
 		}
 
-		if( !isset( $atts['should_collect_'. $field_name ] ) && in_array( $field_name, $this->allowed_to_exclude ) ) {
+		if ( ! isset( $atts[ 'should_collect_' . $field_name ] ) && in_array( $field_name, $this->allowed_to_exclude ) ) {
 			// TODO: handle custom_fields.
 			$this->handle_regular_fields( $field_name, $field, $html_array );
 		}
@@ -259,85 +264,83 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	}
 
 	protected function is_special_field( string $field_name ) {
-		$special_fields  = array ( 'amount', 'currency', 'custom_currency', 'fullname', 'phone', 'firstname', 'lastname');
-		return in_array( $field_name , $special_fields );
+		$special_fields = array( 'amount', 'currency', 'custom_currency', 'fullname', 'phone', 'firstname', 'lastname' );
+		return in_array( $field_name, $special_fields );
 	}
 
-	private function handle_regular_fields( $key, $field, &$html_array, $default_value = "" ) {
+	private function handle_regular_fields( $key, $field, &$html_array, $default_value = '' ) {
 
-		if( $default_value !== "" ) {
-			$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst($key) ). '</label>';
-			$html_array[] = '<input class="'. esc_attr( $field['class'] ) .'" id="' . esc_attr( $field['id'] ) .'" type="'. 
-			esc_attr( $field['type'] ).'" placeholder=" '. esc_attr( ucfirst($key) ) .' " value="'. $default_value .'" >';
+		if ( $default_value !== '' ) {
+			$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $key ) ) . '</label>';
+			$html_array[] = '<input class="' . esc_attr( $field['class'] ) . '" id="' . esc_attr( $field['id'] ) . '" type="' .
+			esc_attr( $field['type'] ) . '" placeholder=" ' . esc_attr( ucfirst( $key ) ) . ' " value="' . $default_value . '" >';
 		} else {
-			if(is_array( $field ) && isset( $field['type'] ) && $field['type'] !== 'select') {
-				$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst($key) ). '</label>';
-				$html_array[] = '<input class="'. esc_attr( $field['class'] ) .'" id="' . esc_attr( $field['id'] ) .'" type="'. 
-				esc_attr( $field['type'] ).'" placeholder=" '. esc_attr( ucfirst($key) ) .' " >';
+			if ( is_array( $field ) && isset( $field['type'] ) && $field['type'] !== 'select' ) {
+				$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $key ) ) . '</label>';
+				$html_array[] = '<input class="' . esc_attr( $field['class'] ) . '" id="' . esc_attr( $field['id'] ) . '" type="' .
+				esc_attr( $field['type'] ) . '" placeholder=" ' . esc_attr( ucfirst( $key ) ) . ' " >';
 			}
 		}
 	}
 
 	private function prepare_default_fields( array $atts ) {
-		$order 			 = explode(',', $atts['order']);
-		$custom_fields	 = $atts['custom_fields'];
-		$html_array		 = array();
-		$field			 = array();
+		$order         = explode( ',', $atts['order'] );
+		$custom_fields = $atts['custom_fields'];
+		$html_array    = array();
+		$field         = array();
 
-		foreach ($order as $key ) {
+		foreach ( $order as $key ) {
 
-			if( $this->is_custom_field( $key ) ) {
+			if ( $this->is_custom_field( $key ) ) {
 				$current_custom_field_array = array( $key => $custom_fields[ $key ] );
-				$html_array[] = $this->prepare_custom_fields( $current_custom_field_array , $atts );
+				$html_array[]               = $this->prepare_custom_fields( $current_custom_field_array, $atts );
 				continue;
 			}
 
-			$field = $this->get_field_data_type($key);
-	
-			if( !$this->is_custom_field( $key ) && !$this->is_special_field( $field['name'] )) {
+			$field = $this->get_field_data_type( $key );
 
-				$this->handle_regular_fields( $key , $field, $html_array );	
+			if ( ! $this->is_custom_field( $key ) && ! $this->is_special_field( $field['name'] ) ) {
+
+				$this->handle_regular_fields( $key, $field, $html_array );
 
 			}
 
-			if( !$this->is_custom_field( $key ) && $this->is_special_field( $field['name'] ) ) {
-				
+			if ( ! $this->is_custom_field( $key ) && $this->is_special_field( $field['name'] ) ) {
+
 				$this->handle_special_fields( $field, $atts, $html_array );
 			}
-			
 		}
 
-		return implode("", $html_array);
+		return implode( '', $html_array );
 	}
 
 	private function prepare_custom_fields( array $fields, array $atts ) {
 
 		$html_array = array();
 
-		foreach ($fields as $name => $value) {
-			if(is_array( $value )) {
+		foreach ( $fields as $name => $value ) {
+			if ( is_array( $value ) ) {
 
-				foreach ($value as $element => $option ) {
-					if( ! empty( $option ) && !isset( $atts['should_collect_'. $name ] ) ) {
-						$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst($name) ). '</label>';
-						$html_array[] = '<'. esc_html( $element ) . '  class="flw-form-select flw-extra-fields" id="flw-extra" required>';
-						foreach ($option as $key => $val) {
-							$html_array[] = '<option value="'. $val .'">'. $key .'</option>'; 
+				foreach ( $value as $element => $option ) {
+					if ( ! empty( $option ) && ! isset( $atts[ 'should_collect_' . $name ] ) ) {
+						$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $name ) ) . '</label>';
+						$html_array[] = '<' . esc_html( $element ) . '  class="flw-form-select flw-extra-fields" id="flw-extra" required>';
+						foreach ( $option as $key => $val ) {
+							$html_array[] = '<option value="' . $val . '">' . $key . '</option>';
 						}
-						$html_array[] = '</'. esc_html( $element ) . '>';
+						$html_array[] = '</' . esc_html( $element ) . '>';
 					}
 				}
-
 			} else {
-				if( !isset( $atts['should_collect_'. $name ] ) ) {
-					$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst($name) ). '</label>';
-					$html_array[] = '<input class="flw-form-input-text flw-extra-fields" id="flw-extra" type="'. 
-					esc_attr( $value ).'" placeholder=" '. esc_attr( ucfirst($name) ) .' " required';
+				if ( ! isset( $atts[ 'should_collect_' . $name ] ) ) {
+					$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $name ) ) . '</label>';
+					$html_array[] = '<input class="flw-form-input-text flw-extra-fields" id="flw-extra" type="' .
+					esc_attr( $value ) . '" placeholder=" ' . esc_attr( ucfirst( $name ) ) . ' " required';
 				}
 			}
 		}
 
-		return implode("", $html_array);
+		return implode( '', $html_array );
 	}
 
 	public function render(): void {
@@ -346,7 +349,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		$data_attr = '';
 		foreach ( $atts as $att_key => $att_value ) {
 			if ( ! is_array( $att_value ) ) {
-				if( $att_key === 'amount' && $att_value === 0) {
+				if ( $att_key === 'amount' && $att_value === 0 ) {
 					continue;
 				}
 				$data_attr .= ' data-' . $att_key . '="' . $att_value . '"';
@@ -356,16 +359,16 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		$input_fields_html     = $this->prepare_default_fields( $atts );
 		$allowed_html_elements = self::get_allowed_html();
 		// $custom_fields_html  = $this->prepare_custom_fields( $atts['custom_fields'], $atts );
-		
+
 		include FLW_DIR_PATH . 'views/pay-now-form.php';
 	}
 
 	public function load_scripts(): void {
 		$settings = $this->settings;
 
-		$admin_payment_method 		= $settings->get_option_value( 'method' );
-		$available_payment_methods 	= self::get_payment_options();
-		$payment_method       		= $available_payment_methods[ $admin_payment_method ] ?? $available_payment_methods['all'];
+		$admin_payment_method      = $settings->get_option_value( 'method' );
+		$available_payment_methods = self::get_payment_options();
+		$payment_method            = $available_payment_methods[ $admin_payment_method ] ?? $available_payment_methods['all'];
 
 		$args = array(
 			'cb_url'     => admin_url( 'admin-ajax.php' ),
@@ -381,7 +384,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-effects-shake' );
-		wp_enqueue_script( 'flw_pay_js', FLW_DIR_URL . 'assets/js/flw.js', array( 'jquery','jquery-effects-core' ), FLW_PAY_VERSION, false );
+		wp_enqueue_script( 'flw_pay_js', FLW_DIR_URL . 'assets/js/flw.js', array( 'jquery', 'jquery-effects-core' ), FLW_PAY_VERSION, false );
 		wp_localize_script( 'flw_pay_js', 'flw_pay_options', $args );
 	}
 }

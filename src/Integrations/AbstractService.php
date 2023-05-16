@@ -10,48 +10,48 @@ namespace Flutterwave\WordPress\Integration;
 
 abstract class AbstractService {
 
-    protected string $base_url;
+	protected string $base_url;
 
-    protected string $name;
+	protected string $name;
 
-    protected string $api_key;
+	protected string $api_key;
 
-    protected string $owner;
+	protected string $owner;
 
-    public array $error_log = [];
+	public array $error_log = array();
 
-    const PUBLIC_KEY = 'public';
+	const PUBLIC_KEY = 'public';
 
-    const SECRET_KEY = 'secret';
+	const SECRET_KEY = 'secret';
 
-    abstract public function _init( string $key ): void ;
-    
-    abstract public function get_features(): array ;
+	abstract public function _init( string $key ): void;
 
-    abstract public function get_assets(): array ;
+	abstract public function get_features(): array;
 
-    abstract public function get_info() : array ;
+	abstract public function get_assets(): array;
 
-    abstract protected function get_headers() : array ;
+	abstract public function get_info() : array;
 
-    public function __construct( string $key ) {
-        $this->_init( $key );
-    }
+	abstract protected function get_headers() : array;
 
-    public function set_key( string $key ):void {
-        $this->api_key = $key;
-    }
+	public function __construct( string $key ) {
+		$this->_init( $key );
+	}
 
-    public function get_key () {
-        return $this->api_key;
-    }
+	public function set_key( string $key ):void {
+		$this->api_key = $key;
+	}
 
-    public function get_name() {
-        return $this->owner ." ".$this->name;
-    }
+	public function get_key() {
+		return $this->api_key;
+	}
 
-    protected function request( string $url, string $method = 'GET', array $data = array() ): object {
-        $url = $this->base_url . $url;
+	public function get_name() {
+		return $this->owner . ' ' . $this->name;
+	}
+
+	protected function request( string $url, string $method = 'GET', array $data = array() ): object {
+		$url                = $this->base_url . $url;
 		$wp_args['method']  = $method;
 		$wp_args['timeout'] = 60;
 		$wp_args['body']    = \wp_json_encode( $data, JSON_UNESCAPED_SLASHES );
@@ -62,15 +62,15 @@ abstract class AbstractService {
 
 		$response = \wp_safe_remote_request( $url, $wp_args );
 
-        if ( !is_wp_error( $response ) ) {
-            return json_decode( wp_remote_retrieve_body( $response ), true );
-        } 
-        
-        return \WP_Error( 
-            'flw-unavailable',
-            /* translators: %s: owner's name, %s: service name */
-            __( sprintf( '%s', $this->owner ) .'\'s ' . sprintf( '%s', $this->name ) . ' service is currently unavailable. please use another integration.', 'flutterwave-payments' ) 
-        );
-    }
+		if ( ! is_wp_error( $response ) ) {
+			return json_decode( wp_remote_retrieve_body( $response ), true );
+		}
+
+		return \WP_Error(
+			'flw-unavailable',
+			/* translators: %s: owner's name, %s: service name */
+			__( sprintf( '%s', $this->owner ) . '\'s ' . sprintf( '%s', $this->name ) . ' service is currently unavailable. please use another integration.', 'flutterwave-payments' )
+		);
+	}
 
 }

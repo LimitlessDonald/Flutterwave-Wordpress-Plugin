@@ -78,14 +78,14 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		 * @return string
 		 */
 		public function column_tx_ref( $item ) {
-			$tx_ref = get_post_meta( $item->ID, '_flw_rave_payment_tx_ref', true );
-			$title = '<strong>' . $tx_ref . '</strong>';
-			$transaction_id = get_post_meta( $item->ID, '_flw_rave_payment_id', true );
-			$update_transaction_link = get_site_url().'/wp-json/flutterwave/v1/update-transaction?post_id='. $item->ID .'&tx_ref='. $tx_ref;
+			$tx_ref                  = get_post_meta( $item->ID, '_flw_rave_payment_tx_ref', true );
+			$title                   = '<strong>' . $tx_ref . '</strong>';
+			$transaction_id          = get_post_meta( $item->ID, '_flw_rave_payment_id', true );
+			$update_transaction_link = get_site_url() . '/wp-json/flutterwave/v1/update-transaction?post_id=' . $item->ID . '&tx_ref=' . $tx_ref;
 
 			$actions = array(
 				'delete' => sprintf( '<a href="%s">Delete</a>', get_delete_post_link( absint( $item->ID ) ) ),
-				'update' => sprintf( '<a href="%s">Update</a>', $update_transaction_link ) 
+				'update' => sprintf( '<a href="%s">Update</a>', $update_transaction_link ),
 			);
 
 			return $title . $this->row_actions( $actions );
@@ -137,7 +137,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 				'customer' => __( 'Customer', 'flutterwave-payments' ),
 				'fullname' => __( 'Customer Fullname', 'flutterwave-payments' ),
 				'amount'   => __( 'Amount', 'flutterwave-payments' ),
-				'currency' => __( 'Currency', 'flutterwave-payments'),
+				'currency' => __( 'Currency', 'flutterwave-payments' ),
 				'status'   => __( 'Status', 'flutterwave-payments' ),
 				'date'     => __( 'Date', 'flutterwave-payments' ),
 			);

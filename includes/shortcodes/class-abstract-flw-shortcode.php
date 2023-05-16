@@ -119,66 +119,66 @@ abstract class Abstract_FLW_Shortcode {
 	protected function get_field_data_type( ?string $key = null ) {
 
 		$data = array(
-			'email' => array(
-				'id' => 'flw-customer-email',
-				'name' => 'email',
-				'class' => 'flw-form-input-text',
-				'type' => 'text',
-				'placeholder' => __( 'Email', 'flutterwave-payments' )
+			'email'           => array(
+				'id'          => 'flw-customer-email',
+				'name'        => 'email',
+				'class'       => 'flw-form-input-text',
+				'type'        => 'text',
+				'placeholder' => __( 'Email', 'flutterwave-payments' ),
 			),
-			'amount' => array(
-				'id' => 'flw-amount',
-				'name' => 'amount',
-				'class' => 'flw-form-input-text',
-				'type' => 'number',
-				'placeholder' => __( 'Amount', 'flutterwave-payments' )
+			'amount'          => array(
+				'id'          => 'flw-amount',
+				'name'        => 'amount',
+				'class'       => 'flw-form-input-text',
+				'type'        => 'number',
+				'placeholder' => __( 'Amount', 'flutterwave-payments' ),
 			),
-			'currency' => array(
-				'id' => 'flw-currency',
-				'name' => 'custom_currency',
+			'currency'        => array(
+				'id'    => 'flw-currency',
+				'name'  => 'custom_currency',
 				'class' => 'flw-form-select',
-				'type' => 'select',
-				'label' => __( 'Currency', 'flutterwave-payments' )
+				'type'  => 'select',
+				'label' => __( 'Currency', 'flutterwave-payments' ),
 			),
 			'custom_currency' => array(
-				'id' => 'flw-currency',
-				'name' => 'custom_currency',
+				'id'    => 'flw-currency',
+				'name'  => 'custom_currency',
 				'class' => 'flw-form-select',
-				'type' => 'select',
-				'label' => __( 'Currency', 'flutterwave-payments' )
+				'type'  => 'select',
+				'label' => __( 'Currency', 'flutterwave-payments' ),
 			),
-			'fullname' => array(
-				'id' => 'flw-full-name',
-				'name' => 'fullname',
-				'class' => 'flw-form-input-text',
-				'type' => 'text',
-				'placeholder' => __( 'Full Name', 'flutterwave-payments' )
+			'fullname'        => array(
+				'id'          => 'flw-full-name',
+				'name'        => 'fullname',
+				'class'       => 'flw-form-input-text',
+				'type'        => 'text',
+				'placeholder' => __( 'Full Name', 'flutterwave-payments' ),
 			),
-			'phone'    => array(
-				'id' => 'flw-phone',
-				'name' => 'phone',
-				'class' => 'flw-form-input-text',
-				'type' => 'tel',
-				'placeholder' => __( 'Phone Number', 'flutterwave-payments' )
+			'phone'           => array(
+				'id'          => 'flw-phone',
+				'name'        => 'phone',
+				'class'       => 'flw-form-input-text',
+				'type'        => 'tel',
+				'placeholder' => __( 'Phone Number', 'flutterwave-payments' ),
 			),
-			'firstname' => array(
-				'id' => 'flw-first-name',
-				'name' => 'firstname',
-				'class' => 'flw-form-input-text',
-				'type' => 'text',
-				'placeholder' => __( 'First Name', 'flutterwave-payments' )
+			'firstname'       => array(
+				'id'          => 'flw-first-name',
+				'name'        => 'firstname',
+				'class'       => 'flw-form-input-text',
+				'type'        => 'text',
+				'placeholder' => __( 'First Name', 'flutterwave-payments' ),
 			),
-			'lastname' => array(
-				'id' => 'flw-last-name',
-				'name' => 'lastname',
-				'class' => 'flw-form-input-text',
-				'type' => 'text',
-				'placeholder' => __( 'Last Name', 'flutterwave-payments' )
+			'lastname'        => array(
+				'id'          => 'flw-last-name',
+				'name'        => 'lastname',
+				'class'       => 'flw-form-input-text',
+				'type'        => 'text',
+				'placeholder' => __( 'Last Name', 'flutterwave-payments' ),
 			),
-			'country' => 'text'
+			'country'         => 'text',
 		);
 
-		if( is_null( $key ) ) {
+		if ( is_null( $key ) ) {
 			return $data;
 		}
 
@@ -187,25 +187,25 @@ abstract class Abstract_FLW_Shortcode {
 
 	protected static function get_allowed_html() {
 		return array(
-			'div'   => array(), 
-			'input' => array(
+			'div'    => array(),
+			'input'  => array(
 				'id'          => array(),
 				'class'       => array(),
 				'type'        => array(),
 				'placeholder' => array(),
-				'required' => array(),
+				'required'    => array(),
 			),
 			'select' => array(
-				'id'          => array(),
-				'class'       => array(),
+				'id'       => array(),
+				'class'    => array(),
 				'required' => array(),
 			),
 			'option' => array(
-				'value' => array()
-			) ,
-			'label' => array(
-				'class' => array()
-			) 
-		);	
+				'value' => array(),
+			),
+			'label'  => array(
+				'class' => array(),
+			),
+		);
 	}
 }

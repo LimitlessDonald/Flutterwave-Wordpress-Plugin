@@ -32,7 +32,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 		add_action( 'rest_api_init', array( $this, 'create_rest_routes' ) );
 	}
 
-    public function free_pass() {
+	public function free_pass() {
 		return true;
 	}
 
@@ -50,140 +50,142 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 	public function handle_hook( WP_REST_Request $request ) {
 
-        sleep(7);
-        
-        if( !$request->has_param('event') ) {
-            return wp_json_encode(
-				array(
-					'status'  => 'error',
-					'message' => 'Hook sent does not contain an event parameter. Please assist.',
-                    'agent' => 'Flutterwave Payments - WordPress Plugin.'
-				)
-			);
-        }
+		sleep( 7 );
 
-		$token            = $this->f4b_options['secret_key'];
-        $local_signature  = $this->f4b_options['secret_hash'];
-        $event            =  $request->get_param('event');
-
-        $request->set_headers( $request->get_headers( wp_unslash( $_SERVER ) ) );
-        $signature = $request->get_header('verif_hash');
-
-        if ( $signature !== $local_signature ) {
+		if ( ! $request->has_param( 'event' ) ) {
 			return wp_json_encode(
 				array(
 					'status'  => 'error',
-					'message' => 'Access Denied Hash does not match',
-                    'agent' => 'Flutterwave Payments - WordPress Plugin.'
+					'message' => 'Hook sent does not contain an event parameter. Please assist.',
+					'agent'   => 'Flutterwave Payments - WordPress Plugin.',
 				)
 			);
 		}
 
-        if( 'charge.completed' === $event ) {
+		$token           = $this->f4b_options['secret_key'];
+		$local_signature = $this->f4b_options['secret_hash'];
+		$event           = $request->get_param( 'event' );
 
-            $data = $request->get_param('data');
+		$request->set_headers( $request->get_headers( wp_unslash( $_SERVER ) ) );
+		$signature = $request->get_header( 'verif_hash' );
 
-            $txref         = $data['tx_ref'];
-            $transactionId = $data['id'];
-            $status        = $data['status'];
-            $customer      = $data['customer'];
+		if ( $signature !== $local_signature ) {
+			return wp_json_encode(
+				array(
+					'status'  => 'error',
+					'message' => 'Access Denied Hash does not match',
+					'agent'   => 'Flutterwave Payments - WordPress Plugin.',
+				)
+			);
+		}
 
-            if ( 'cancelled' === $status ) {
-                $this->_update_wordpress(
-                    $txref,
-                    array(
-                        'data' => array(
-                            'amount'   => '00',
-                            'customer' => array(
-                                'name'  => '-',
-                                'email' => '-',
-                            ),
-                            'status'   => 'cancelled',
-                        ),
-                    )
-                );
-    
-                return wp_json_encode(
-                    array( 
-                        'message' => 'Hook recieved with thanks. status: cancelled',
-                        'site_url' => get_site_url(),
-                        'agent' => 'Flutterwave Payments - WordPress Plugin.'
-                    )
-                );
-            }
+		if ( 'charge.completed' === $event ) {
 
-		    $url      = 'https://api.flutterwave.com/v3/transactions/'. $transactionId .'/verify';
+			$data = $request->get_param( 'data' );
 
-            $response = wp_safe_remote_get(
-                $url,
-                array(
-                    'headers' => array(
-                        'Content-Type'  => 'application/json',
-                        'Authorization' => 'Bearer ' . $token,
-                    ),
-                )
-            );
+			$txref         = $data['tx_ref'];
+			$transactionId = $data['id'];
+			$status        = $data['status'];
+			$customer      = $data['customer'];
 
-            if ( is_wp_error( $response ) ) {
-                $this->_update_wordpress( $txref, array(
-                    'data' => array(
-                        'amount'   => '00',
-                        'customer' => array(
-                            'name'  => $customer['name'],
-                            'email' => $customer['email'],
-                        ),
-                        'status'   => $status,
-                    ),
-                ) );
-                return wp_json_encode(
-                    array( 
-                        'message' => 'Hook recieved with thanks. status:error',
-                        'site_url' => get_site_url(),
-                        'agent' => 'Flutterwave Payments - WordPress Plugin.'
-                    )
-                );
-            }
+			if ( 'cancelled' === $status ) {
+				$this->_update_wordpress(
+					$txref,
+					array(
+						'data' => array(
+							'amount'   => '00',
+							'customer' => array(
+								'name'  => '-',
+								'email' => '-',
+							),
+							'status'   => 'cancelled',
+						),
+					)
+				);
 
-		    $response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+				return wp_json_encode(
+					array(
+						'message'  => 'Hook recieved with thanks. status: cancelled',
+						'site_url' => get_site_url(),
+						'agent'    => 'Flutterwave Payments - WordPress Plugin.',
+					)
+				);
+			}
 
-            if ( $response_body['data']['status'] != 'successful' ) {
+			$url = 'https://api.flutterwave.com/v3/transactions/' . $transactionId . '/verify';
 
-                $this->_update_wordpress( $txref, $response_body );
-                return wp_json_encode(
-                    array( 
-                        'message' => 'Hook recieved with thanks. status: failed',
-                        'site_url' => get_site_url(),
-                        'agent' => 'Flutterwave Payments - WordPress Plugin.'
-                    )
-                );
-            }
+			$response = wp_safe_remote_get(
+				$url,
+				array(
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Bearer ' . $token,
+					),
+				)
+			);
 
-            
-            $payment_record_id = $response_body['data']['meta']['order_id'];
+			if ( is_wp_error( $response ) ) {
+				$this->_update_wordpress(
+					$txref,
+					array(
+						'data' => array(
+							'amount'   => '00',
+							'customer' => array(
+								'name'  => $customer['name'],
+								'email' => $customer['email'],
+							),
+							'status'   => $status,
+						),
+					)
+				);
+				return wp_json_encode(
+					array(
+						'message'  => 'Hook recieved with thanks. status:error',
+						'site_url' => get_site_url(),
+						'agent'    => 'Flutterwave Payments - WordPress Plugin.',
+					)
+				);
+			}
 
-            if( 'successful' !== get_post_meta($payment_record_id)['_flw_rave_payment_status']) {
-                $this->_update_wordpress( $txref, $response_body );
-            }
+			$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-            return wp_json_encode(
-                array( 
-                    'message' => 'Hook recieved with thanks. status: success',
-                    'site_url' => get_site_url(),
-                    'agent' => 'Flutterwave Payments - WordPress Plugin.'
-                )
-            );
-        }
+			if ( $response_body['data']['status'] != 'successful' ) {
+
+				$this->_update_wordpress( $txref, $response_body );
+				return wp_json_encode(
+					array(
+						'message'  => 'Hook recieved with thanks. status: failed',
+						'site_url' => get_site_url(),
+						'agent'    => 'Flutterwave Payments - WordPress Plugin.',
+					)
+				);
+			}
+
+			$payment_record_id = $response_body['data']['meta']['order_id'];
+
+			if ( 'successful' !== get_post_meta( $payment_record_id )['_flw_rave_payment_status'] ) {
+				$this->_update_wordpress( $txref, $response_body );
+			}
+
+			return wp_json_encode(
+				array(
+					'message'  => 'Hook recieved with thanks. status: success',
+					'site_url' => get_site_url(),
+					'agent'    => 'Flutterwave Payments - WordPress Plugin.',
+				)
+			);
+		}
 	}
 
-    private function _update_wordpress( $tx_ref, $response ): void {
-		$pending_amount	   = (float) $response['data']['meta']['order_amount'];
+	private function _update_wordpress( $tx_ref, $response ): void {
+		$pending_amount    = (float) $response['data']['meta']['order_amount'];
 		$pending_currency  = $response['data']['meta']['order_currency'];
 		$recieved_amount   = (float) $response['data']['amount'];
 		$recieved_currency = $response['data']['currency'];
 
 		$payment_record_id = $response['data']['meta']['order_id'];
 
-		if($this->has_order_property_matched( $response )) {
+		if ( $this->has_order_property_matched( $response ) ) {
 			if ( ! is_wp_error( $payment_record_id ) ) {
 				$data      = $response['data'];
 				$post_meta = array(
@@ -197,22 +199,22 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 			}
 		} else {
 			if ( ! is_wp_error( $payment_record_id ) ) {
-				
-				if( $recieved_amount < $pending_amount && $pending_currency === $recieved_currency) {
+
+				if ( $recieved_amount < $pending_amount && $pending_currency === $recieved_currency ) {
 					$post_meta = array(
-						'_flw_rave_payment_status'   => 'paid less - remains'. ($pending_amount - $recieved_amount),
+						'_flw_rave_payment_status' => 'paid less - remains' . ( $pending_amount - $recieved_amount ),
 					);
 				}
 
-				if( $recieved_currency !== $pending_currency && $recieved_amount === $pending_amount ) {
+				if ( $recieved_currency !== $pending_currency && $recieved_amount === $pending_amount ) {
 					$post_meta = array(
-						'_flw_rave_payment_status'   => 'currency diff'. ($pending_amount - $recieved_amount),
+						'_flw_rave_payment_status' => 'currency diff' . ( $pending_amount - $recieved_amount ),
 					);
 				}
 
-				if( $recieved_amount > $pending_amount && $pending_currency === $recieved_currency) {
+				if ( $recieved_amount > $pending_amount && $pending_currency === $recieved_currency ) {
 					$post_meta = array(
-						'_flw_rave_payment_status'   => 'paid more - refund'. ($pending_amount - $recieved_amount),
+						'_flw_rave_payment_status' => 'paid more - refund' . ( $pending_amount - $recieved_amount ),
 					);
 				}
 
@@ -220,7 +222,6 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 			}
 		}
 
-		
 	}
 
 	private function _add_post_meta( $post_id, $data ): void {
@@ -232,13 +233,13 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 	}
 
 	private function has_order_property_matched( $response ) {
-        // check the amount against amount, currency paid. 
-		$pending_amount	   = (float) $response['data']['meta']['order_amount'];
+		// check the amount against amount, currency paid.
+		$pending_amount    = (float) $response['data']['meta']['order_amount'];
 		$pending_currency  = $response['data']['meta']['order_currency'];
 		$recieved_amount   = (float) $response['data']['amount'];
 		$recieved_currency = $response['data']['currency'];
 
 		return $pending_amount === $recieved_amount && $pending_currency === $recieved_currency;
-        
-    }
+
+	}
 }

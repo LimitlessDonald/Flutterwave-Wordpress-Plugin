@@ -60,7 +60,6 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 			)
 		);
 
-
 		register_rest_route(
 			$this->namespace,
 			'/update-transaction',
@@ -73,39 +72,39 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 	}
 
 	public function update_transaction( WP_REST_Request $request ) {
-		$token         = $this->f4b_options['secret_key'];
+		$token = $this->f4b_options['secret_key'];
 
-		if( !$request->has_param('tx_ref') || !$request->has_param('post_id') ) {
+		if ( ! $request->has_param( 'tx_ref' ) || ! $request->has_param( 'post_id' ) ) {
 			return rest_ensure_response(
 				new WP_REST_Response(
 					null,
 					302,
 					array(
-						'Location' => get_site_url().'/wp-admin/admin.php?page=flutterwave-payments-transactions', 
+						'Location' => get_site_url() . '/wp-admin/admin.php?page=flutterwave-payments-transactions',
 					)
 				)
 			);
 		}
 
-		$txref         = $request->get_param( 'tx_ref' );
-		$post_id	   = $request->get_param( 'post_id' );
-		$status 	   = get_post_meta( $post_id, '_flw_rave_payment_status', true );
+		$txref   = $request->get_param( 'tx_ref' );
+		$post_id = $request->get_param( 'post_id' );
+		$status  = get_post_meta( $post_id, '_flw_rave_payment_status', true );
 
-		if( empty( $status ) ) {
+		if ( empty( $status ) ) {
 			return rest_ensure_response(
 				new WP_REST_Response(
 					null,
 					302,
 					array(
-						'Location' => get_site_url().'/wp-admin/admin.php?page=flutterwave-payments-transactions&status=nope', 
+						'Location' => get_site_url() . '/wp-admin/admin.php?page=flutterwave-payments-transactions&status=nope',
 					)
 				)
 			);
 		}
 
-		if( 'successful' !== $status ) {
+		if ( 'successful' !== $status ) {
 
-			$url      = 'https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=' . $txref;
+			$url = 'https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=' . $txref;
 
 			$response = wp_safe_remote_get(
 				$url,
@@ -119,7 +118,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 			if ( is_wp_error( $response ) ) {
 				update_post_meta( $post_id, '_flw_rave_payment_status', $status );
-            } else {
+			} else {
 				$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 				$this->_update_wordpress( $txref, $response_body );
 			}
@@ -130,7 +129,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 				null,
 				302,
 				array(
-					'Location' => get_site_url().'/wp-admin/admin.php?page=flutterwave-payments-transactions', 
+					'Location' => get_site_url() . '/wp-admin/admin.php?page=flutterwave-payments-transactions',
 				)
 			)
 		);
@@ -173,7 +172,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 		$token         = $this->f4b_options['secret_key'];
 		$success_url   = $this->f4b_options['success_redirect_url'];
 		$failer_url    = $this->f4b_options['failed_redirect_url'];
-		$pending_url = $this->f4b_options['pending_redirect_url'];
+		$pending_url   = $this->f4b_options['pending_redirect_url'];
 		$txref         = $request->get_param( 'tx_ref' ) ?? null;
 		$transactionId = $request->get_param( 'transaction_id' ) ?? null;
 		$status        = $request->get_param( 'status' ) ?? null;
@@ -204,7 +203,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 			);
 		}
 
-		if ( is_null( $txref ) || is_null( $transactionId )) {
+		if ( is_null( $txref ) || is_null( $transactionId ) ) {
 			return rest_ensure_response(
 				new WP_REST_Response(
 					null,
@@ -216,10 +215,10 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 			);
 		}
 
-		sleep(2);
+		sleep( 2 );
 
 		// $url      = 'https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=' . $txref;
-		$url      = 'https://api.flutterwave.com/v3/transactions/'. $transactionId .'/verify';
+		$url = 'https://api.flutterwave.com/v3/transactions/' . $transactionId . '/verify';
 
 		$response = wp_safe_remote_get(
 			$url,
@@ -232,22 +231,25 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			$this->_update_wordpress( $txref, array(
-				'data' => array(
-					'amount'   => 0.00,
-					'customer' => array(
-						'name'  => '-',
-						'email' => '-',
+			$this->_update_wordpress(
+				$txref,
+				array(
+					'data' => array(
+						'amount'   => 0.00,
+						'customer' => array(
+							'name'  => '-',
+							'email' => '-',
+						),
+						'status'   => self::PENDING,
 					),
-					'status'   => self::PENDING,
-				),
-			) );
+				)
+			);
 			return rest_ensure_response(
 				new WP_REST_Response(
 					null,
 					302,
 					array(
-						'Location' => $pending_url."?status=".self::PENDING, 
+						'Location' => $pending_url . '?status=' . self::PENDING,
 					)
 				)
 			);
@@ -262,7 +264,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 					null,
 					302,
 					array(
-						'Location' => $failer_url."?status=".self::PENDING,
+						'Location' => $failer_url . '?status=' . self::PENDING,
 					)
 				)
 			);
@@ -270,7 +272,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 		$payment_record_id = $response_body['data']['meta']['order_id'];
 
-		if( 'successful' !== get_post_meta($payment_record_id)['_flw_rave_payment_status']) {
+		if ( 'successful' !== get_post_meta( $payment_record_id )['_flw_rave_payment_status'] ) {
 			$this->_update_wordpress( $txref, $response_body );
 		}
 
@@ -286,41 +288,41 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 	}
 
 	private function _update_wordpress( $tx_ref, $response ): void {
-		$pending_amount	   = (float) $response['data']['meta']['order_amount'];
+		$pending_amount    = (float) $response['data']['meta']['order_amount'];
 		$pending_currency  = $response['data']['meta']['order_currency'];
 		$recieved_amount   = (float) $response['data']['amount'];
 		$recieved_currency = $response['data']['currency'];
 
 		$payment_record_id = $response['data']['meta']['order_id'];
 
-		if($this->has_order_property_matched( $response )) {
+		if ( $this->has_order_property_matched( $response ) ) {
 			if ( ! is_wp_error( $payment_record_id ) ) {
 				$data      = $response['data'];
 				$post_meta = array(
 					// '_flw_rave_payment_amount'   => (float) $data['amount'],
-					'_flw_rave_payment_id' => $data['id'],
-					'_flw_rave_payment_status'   => $data['status'],
+					'_flw_rave_payment_id'     => $data['id'],
+					'_flw_rave_payment_status' => $data['status'],
 				);
 				$this->_add_post_meta( $payment_record_id, $post_meta );
 			}
 		} else {
 			if ( ! is_wp_error( $payment_record_id ) ) {
-				
-				if( $recieved_amount < $pending_amount && $pending_currency === $recieved_currency) {
+
+				if ( $recieved_amount < $pending_amount && $pending_currency === $recieved_currency ) {
 					$post_meta = array(
-						'_flw_rave_payment_status'   => 'paid less - remains'. ($pending_amount - $recieved_amount),
+						'_flw_rave_payment_status' => 'paid less - remains' . ( $pending_amount - $recieved_amount ),
 					);
 				}
 
-				if( $recieved_currency !== $pending_currency && $recieved_amount === $pending_amount ) {
+				if ( $recieved_currency !== $pending_currency && $recieved_amount === $pending_amount ) {
 					$post_meta = array(
-						'_flw_rave_payment_status'   => 'currency diff'. ($pending_amount - $recieved_amount),
+						'_flw_rave_payment_status' => 'currency diff' . ( $pending_amount - $recieved_amount ),
 					);
 				}
 
-				if( $recieved_amount > $pending_amount && $pending_currency === $recieved_currency) {
+				if ( $recieved_amount > $pending_amount && $pending_currency === $recieved_currency ) {
 					$post_meta = array(
-						'_flw_rave_payment_status'   => 'paid more - refund'. ($pending_amount - $recieved_amount),
+						'_flw_rave_payment_status' => 'paid more - refund' . ( $pending_amount - $recieved_amount ),
 					);
 				}
 
@@ -328,7 +330,6 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 			}
 		}
 
-		
 	}
 
 	private function _add_post_meta( $post_id, $data ): void {
@@ -340,13 +341,13 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 	}
 
 	private function has_order_property_matched( $response ) {
-        // check the amount against amount, currency paid. 
-		$pending_amount	   = (float) $response['data']['meta']['order_amount'];
+		// check the amount against amount, currency paid.
+		$pending_amount    = (float) $response['data']['meta']['order_amount'];
 		$pending_currency  = $response['data']['meta']['order_currency'];
 		$recieved_amount   = (float) $response['data']['amount'];
 		$recieved_currency = $response['data']['currency'];
 
 		return $pending_amount === $recieved_amount && $pending_currency === $recieved_currency;
-        
-    }
+
+	}
 }
