@@ -35,28 +35,28 @@
 	</rule>
 
     <rule ref="WordPress.Files.FileName.InvalidClassFileName">
-		<exclude-pattern>tests/*</exclude-pattern>
-		<exclude-pattern>src/*</exclude-pattern>
+		<exclude-pattern>*/tests/*</exclude-pattern>
+		<exclude-pattern>*/src/*</exclude-pattern>
 	</rule>
 
     <rule ref="WordPress.PHP.DisallowShortTernary.Found">
-		<exclude-pattern>src/*</exclude-pattern>
-		<exclude-pattern>tests/*</exclude-pattern>
+		<exclude-pattern>*/src/*</exclude-pattern>
+		<exclude-pattern>*/tests/*</exclude-pattern>
 	</rule>
 
     <rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
-		<exclude-pattern>src/*</exclude-pattern>
+		<exclude-pattern>*/src/*</exclude-pattern>
 		<exclude-pattern>tests/*</exclude-pattern>
 	</rule>
 
 	<rule ref="Squiz.Commenting.FileComment.MissingPackageTag">
-		<exclude-pattern>src/</exclude-pattern>
+		<exclude-pattern>src/*</exclude-pattern>
 		<exclude-pattern>tests/php</exclude-pattern>
 		<exclude-pattern>patterns</exclude-pattern>
 	</rule>
 
 	<rule ref="Squiz.Commenting.FileComment.Missing">
-		<exclude-pattern>src/</exclude-pattern>
+		<exclude-pattern>src/*</exclude-pattern>
 		<exclude-pattern>tests/php</exclude-pattern>
 	</rule>
 
