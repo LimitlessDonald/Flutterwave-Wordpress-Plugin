@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Flutterwave Payment List
  *
@@ -65,7 +64,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		 * @return void
 		 */
 		public function no_items() {
-			_e( 'No payments have been made yet.', 'flutterwave-payments' );
+			esc_html_e( 'No payments have been made yet.', 'flutterwave-payments' );
 		}
 
 		/**
@@ -89,11 +88,25 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 			return $title . $this->row_actions( $actions );
 		}
 
+		/**
+		 * Method for name column.
+		 *
+		 * @param array $item an array of DB data.
+		 *
+		 * @return string
+		 */
 		public function column_amount( $item ) {
 			$amount = get_post_meta( $item->ID, '_flw_rave_payment_amount', true );
 			return number_format( $amount, 2 );
 		}
 
+		/**
+		 * Method for name column.
+		 *
+		 * @param array $item an array of DB data.
+		 *
+		 * @return string
+		 */
 		public function column_currency( $item ) {
 			return get_post_meta( $item->ID, '_flw_rave_payment_currency', true );
 		}
@@ -116,7 +129,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 				case 'date':
 					return $item->post_date;
 				default:
-					return print_r( $item, true ); // Show the whole array for troubleshooting purposes.
+					return null;
 			}
 		}
 
@@ -125,7 +138,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		 *
 		 * @return array
 		 */
-		function get_columns() {
+		public function get_columns(): array {
 			$columns = array(
 				'cb'       => '<input type="checkbox" />',
 				'tx_ref'   => __( 'Transaction Ref', 'flutterwave-payments' ),
@@ -173,11 +186,24 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 			$this->items = self::get_payments( $per_page, $current_page );
 		}
 
+		/**
+		 * Set screen
+		 *
+		 * @param [string] $status status of screen.
+		 * @param [string] $option option on screen.
+		 * @param [string] $value  value of option.
+		 *
+		 * @return string
+		 */
 		public function set_screen( $status, $option, $value ) {
 			return $value;
 		}
 
-
+		/**
+		 * Add to menu.
+		 *
+		 * @return void
+		 */
 		public function add_to_menu() {
 			$hook = add_submenu_page(
 				'flutterwave-payments',
@@ -189,6 +215,11 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 			);
 		}
 
+		/**
+		 * Display table list.
+		 *
+		 * @return void
+		 */
 		public function payment_list_table() {
 			require_once FLW_DIR_PATH . 'views/payment-list-table.php';
 		}
@@ -235,7 +266,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		 *
 		 * @return int The total number of payments.
 		 */
-		public static function record_count() {
+		public static function record_count(): int {
 			$total_records = wp_count_posts( 'payment_list' );
 
 			return $total_records->publish;
@@ -268,7 +299,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		 * @return object - the instance of the class.
 		 */
 		public static function get_instance() {
-			if ( self::$instance === null ) {
+			if ( null === self::$instance ) {
 
 				self::$instance = new self();
 			}

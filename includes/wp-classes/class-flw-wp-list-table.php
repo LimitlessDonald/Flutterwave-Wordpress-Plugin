@@ -31,7 +31,7 @@ class FLW_WP_List_Table {
 	 * @access protected
 	 * @var    array
 	 */
-	protected $_args;
+	protected $args;
 
 	/**
 	 * Various information needed for displaying the pagination.
@@ -40,7 +40,7 @@ class FLW_WP_List_Table {
 	 * @access protected
 	 * @var    array
 	 */
-	protected $_pagination_args = array();
+	protected $pagination_args = array();
 
 	/**
 	 * The current screen.
@@ -58,7 +58,7 @@ class FLW_WP_List_Table {
 	 * @access private
 	 * @var    array
 	 */
-	private $_actions;
+	private $actions;
 
 	/**
 	 * Cached pagination output.
@@ -67,7 +67,7 @@ class FLW_WP_List_Table {
 	 * @access private
 	 * @var    string
 	 */
-	private $_pagination;
+	private $pagination;
 
 	/**
 	 * The view switcher modes.
@@ -85,7 +85,7 @@ class FLW_WP_List_Table {
 	 * @access protected
 	 * @var    array
 	 */
-	protected $_column_headers;
+	protected $column_headers;
 
 	/**
 	 * {@internal Missing Summary}
@@ -125,6 +125,8 @@ class FLW_WP_List_Table {
 	 *
 	 * The child class should call this constructor from its own constructor to override
 	 * the default $args.
+  *
+	 * @param [array] $args Some arguments.
 	 *
 	 * @since  3.1.0
 	 * @access public
@@ -151,10 +153,10 @@ class FLW_WP_List_Table {
 		$args['plural']   = sanitize_key( $args['plural'] );
 		$args['singular'] = sanitize_key( $args['singular'] );
 
-		$this->_args = $args;
+		$this->args = $args;
 
 		if ( $args['ajax'] ) {
-			// wp_enqueue_script( 'list-table' );
+			// wp_enqueue_script( 'list-table' );.
 			add_action( 'admin_footer', array( $this, '_js_vars' ) );
 		}
 
@@ -273,11 +275,11 @@ class FLW_WP_List_Table {
 
 		// Redirect if page number is invalid and headers are not already sent.
 		if ( ! headers_sent() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && $args['total_pages'] > 0 && $this->get_pagenum() > $args['total_pages'] ) {
-			wp_redirect( add_query_arg( 'paged', $args['total_pages'] ) );
+			wp_safe_redirect( add_query_arg( 'paged', $args['total_pages'] ) );
 			exit;
 		}
 
-		$this->_pagination_args = $args;
+		$this->pagination_args = $args;
 	}
 
 	/**
@@ -291,8 +293,8 @@ class FLW_WP_List_Table {
 			return $this->get_pagenum();
 		}
 
-		if ( isset( $this->_pagination_args[ $key ] ) ) {
-			return $this->_pagination_args[ $key ];
+		if ( isset( $this->pagination_args[ $key ] ) ) {
+			return $this->pagination_args[ $key ];
 		}
 	}
 
@@ -315,7 +317,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function no_items() {
-		_e( 'No items found.', 'flutterwave-payments' );
+		esc_html_e( 'No items found.', 'flutterwave-payments' );
 	}
 
 	/**
@@ -417,8 +419,8 @@ class FLW_WP_List_Table {
 	 * @access protected
 	 */
 	protected function bulk_actions( $which = '' ) {
-		if ( is_null( $this->_actions ) ) {
-			$no_new_actions = $this->_actions = $this->get_bulk_actions();
+		if ( is_null( $this->actions ) ) {
+			$no_new_actions = $this->actions = $this->get_bulk_actions();
 			/**
 			 * Filter the list table Bulk Actions drop-down.
 			 *
@@ -429,14 +431,14 @@ class FLW_WP_List_Table {
 			 *
 			 * @since 3.5.0
 			 */
-			$this->_actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->_actions );
-			$this->_actions = array_intersect_assoc( $this->_actions, $no_new_actions );
+			$this->actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->actions );
+			$this->actions = array_intersect_assoc( $this->actions, $no_new_actions );
 			$two            = '';
 		} else {
 			$two = '2';
 		}
 
-		if ( empty( $this->_actions ) ) {
+		if ( empty( $this->actions ) ) {
 			return;
 		}
 
@@ -444,7 +446,7 @@ class FLW_WP_List_Table {
 		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
 		echo '<option value="-1">' . __( 'Bulk Actions', 'flutterwave-payments' ) . "</option>\n";
 
-		foreach ( $this->_actions as $name => $title ) {
+		foreach ( $this->actions as $name => $title ) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
 			echo "\t" . '<option value="' . $name . '"' . $class . '>' . $title . "</option>\n";
@@ -697,8 +699,8 @@ class FLW_WP_List_Table {
 	public function get_pagenum() {
 		$pagenum = isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 0;
 
-		if ( isset( $this->_pagination_args['total_pages'] ) && $pagenum > $this->_pagination_args['total_pages'] ) {
-			$pagenum = $this->_pagination_args['total_pages'];
+		if ( isset( $this->pagination_args['total_pages'] ) && $pagenum > $this->pagination_args['total_pages'] ) {
+			$pagenum = $this->pagination_args['total_pages'];
 		}
 
 		return max( 1, $pagenum );
@@ -735,15 +737,15 @@ class FLW_WP_List_Table {
 	 * @access protected
 	 */
 	protected function pagination( $which ) {
-		if ( empty( $this->_pagination_args ) ) {
+		if ( empty( $this->pagination_args ) ) {
 			return;
 		}
 
-		$total_items     = $this->_pagination_args['total_items'];
-		$total_pages     = $this->_pagination_args['total_pages'];
+		$total_items     = $this->pagination_args['total_items'];
+		$total_pages     = $this->pagination_args['total_pages'];
 		$infinite_scroll = false;
-		if ( isset( $this->_pagination_args['infinite_scroll'] ) ) {
-			$infinite_scroll = $this->_pagination_args['infinite_scroll'];
+		if ( isset( $this->pagination_args['infinite_scroll'] ) ) {
+			$infinite_scroll = $this->pagination_args['infinite_scroll'];
 		}
 
 		if ( 'top' === $which && $total_pages > 1 ) {
@@ -850,9 +852,9 @@ class FLW_WP_List_Table {
 		} else {
 			$page_class = ' no-pages';
 		}
-		$this->_pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
+		$this->pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
 
-		echo $this->_pagination;
+		echo $this->pagination;
 	}
 
 	/**
@@ -902,7 +904,7 @@ class FLW_WP_List_Table {
 			return $column;
 		}
 
-		// We need a primary defined so responsive views show something,
+		// We need a primary defined so responsive views show something.
 		// so let's fall back to the first non-checkbox column.
 		foreach ( $columns as $col => $column_name ) {
 			if ( 'cb' === $col ) {
@@ -963,12 +965,12 @@ class FLW_WP_List_Table {
 	 * @return array
 	 */
 	protected function get_column_info() {
-		// $_column_headers is already set / cached
-		if ( isset( $this->_column_headers ) && is_array( $this->_column_headers ) ) {
+		// $_column_headers is already set / cached.
+		if ( isset( $this->column_headers ) && is_array( $this->column_headers ) ) {
 			// Back-compat for list tables that have been manually setting $_column_headers for horse reasons.
 			// In 4.3, we added a fourth argument for primary column.
 			$column_headers = array( array(), array(), array(), $this->get_primary_column_name() );
-			foreach ( $this->_column_headers as $key => $value ) {
+			foreach ( $this->column_headers as $key => $value ) {
 				$column_headers[ $key ] = $value;
 			}
 
@@ -1004,9 +1006,9 @@ class FLW_WP_List_Table {
 		}
 
 		$primary               = $this->get_primary_column_name();
-		$this->_column_headers = array( $columns, $hidden, $sortable, $primary );
+		$this->column_headers = array( $columns, $hidden, $sortable, $primary );
 
-		return $this->_column_headers;
+		return $this->column_headers;
 	}
 
 	/**
@@ -1108,7 +1110,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function display() {
-		$singular = $this->_args['singular'];
+		$singular = $this->args['singular'];
 
 		$this->display_tablenav( 'top' );
 
@@ -1151,7 +1153,7 @@ class FLW_WP_List_Table {
 	 * @return array List of CSS classes for the table tag.
 	 */
 	protected function get_table_classes() {
-		return array( 'widefat', 'fixed', 'striped', $this->_args['plural'] );
+		return array( 'widefat', 'fixed', 'striped', $this->args['plural'] );
 	}
 
 	/**
@@ -1159,7 +1161,7 @@ class FLW_WP_List_Table {
 	 */
 	protected function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
-			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+			wp_nonce_field( 'bulk-' . $this->args['plural'] );
 		}
 		?>
 	<div class="tablenav <?php echo esc_attr( $which ); ?>">
@@ -1325,17 +1327,17 @@ class FLW_WP_List_Table {
 
 		$response = array( 'rows' => $rows );
 
-		if ( isset( $this->_pagination_args['total_items'] ) ) {
+		if ( isset( $this->pagination_args['total_items'] ) ) {
 
 			$response['total_items_i18n'] = sprintf(
 				/* translators: %1$s: single item, %2$s: plural items */
-				_n( '%s item', '%s items', $this->_pagination_args['total_items'], 'flutterwave-payments' ),
-				number_format_i18n( $this->_pagination_args['total_items'] )
+				_n( '%s item', '%s items', $this->pagination_args['total_items'], 'flutterwave-payments' ),
+				number_format_i18n( $this->pagination_args['total_items'] )
 			);
 		}
-		if ( isset( $this->_pagination_args['total_pages'] ) ) {
-			$response['total_pages']      = $this->_pagination_args['total_pages'];
-			$response['total_pages_i18n'] = number_format_i18n( $this->_pagination_args['total_pages'] );
+		if ( isset( $this->pagination_args['total_pages'] ) ) {
+			$response['total_pages']      = $this->pagination_args['total_pages'];
+			$response['total_pages_i18n'] = number_format_i18n( $this->pagination_args['total_pages'] );
 		}
 
 		die( wp_json_encode( $response ) );

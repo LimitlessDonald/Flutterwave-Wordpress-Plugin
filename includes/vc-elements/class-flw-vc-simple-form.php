@@ -8,30 +8,30 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Simple PAY NOW form Class
+ * Simple PAY NOW form Class.
  */
 class FLW_VC_Simple_Form {
 
 
 	/**
-	 * Class Constructor
+	 * Class Constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		add_action( 'init', array( $this, 'flw_simple_form_mapping' ) );
 	}
 
 	/**
-	 * Visual Composer Form elements mapping
+	 * Visual Composer Form elements mapping.
 	 *
 	 * @return void
 	 */
 	public function flw_simple_form_mapping() {
-		// Stop all if VC is not enabled
+		// Stop all if VC is not enabled.
 		if ( ! defined( 'WPB_VC_VERSION' ) ) {
 			return;
 		}
 
-		// Map the block with vc_map()
+		// Map the block with vc_map().
 		vc_map(
 			array(
 				'name'        => __( 'Flutterwave Simple Form', 'flutterwave-payments' ),
@@ -82,5 +82,5 @@ class FLW_VC_Simple_Form {
 	}
 }
 
-// Element Class Init
+// Element Class Init.
 new FLW_VC_Simple_Form();
