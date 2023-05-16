@@ -42,8 +42,9 @@ class FLW_Shortcodes {
 
 	public function init() {
 	  $shortcodes = array(
-		  'flw-pay-button' => __CLASS__ . '::pay_button_shortcode',
-		  'flw-donation-page' => __CLASS__ . '::donation_page_shortcode',
+		  'flw-pay-button'    => __CLASS__ . '::pay_button_shortcode',
+      'flw-pay-form'      => __CLASS__ . '::pay_button_shortcode',
+		  'flw-donation-form' => __CLASS__ . '::donation_page_shortcode',
 	  );
 
 	  foreach ( $shortcodes as $shortcode => $function ) {
@@ -81,7 +82,7 @@ class FLW_Shortcodes {
 		return self::check_redirect_urls();
 	}
 
-	$shortcode  = new FLW_Shortcode_Payment_Form( (array) $attr, 'flw-pay-button' );
+	$shortcode  = new FLW_Shortcode_Payment_Form( (array) $attr, 'flw-pay-form' );
 	$shortcode->set_button_text( $content );
     $shortcode->load_scripts();
     ob_start();

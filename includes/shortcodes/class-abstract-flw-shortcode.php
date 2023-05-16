@@ -1,4 +1,11 @@
 <?php
+/*
+ * Abstract Flutterwave Shortcode Class.
+ *
+ * @package Flutterwave-Payments
+ */
+
+defined( 'ABSPATH' ) || exit;
 
 abstract class Abstract_FLW_Shortcode {
 
@@ -75,9 +82,9 @@ abstract class Abstract_FLW_Shortcode {
 	 *
 	 * @return string
 	 */
-	protected static function get_logo_url($attr) {
+	protected static function get_logo_url( $attr ) {
 		$admin_settings = FLW_Admin_Settings::get_instance();
-		$logo = $admin_settings->get_option_value( 'modal_logo' );
+		$logo           = $admin_settings->get_option_value( 'modal_logo' );
 		if ( ! empty( $attr['logo'] ) ) {
 			$logo = strpos( $attr['logo'], 'http' ) != false ? $attr['logo'] : wp_get_attachment_url( $attr['logo'] );
 		}
@@ -102,10 +109,103 @@ abstract class Abstract_FLW_Shortcode {
 
 	protected static function get_payment_options(): array {
 		return array(
-			'both' => 'card,account',
-			'card' => 'card',
+			'both'    => 'card,account',
+			'card'    => 'card',
 			'account' => 'account',
-			'all' => 'card,account,ussd,qr,mpesa,banktransfer,mobilemoneyghana,mobilemoneyfranco,mobilemoneyuganda,mobilemoneyrwanda,mobilemoneyzambia,barter,credit',
+			'all'     => 'card,account,ussd,qr,mpesa,banktransfer,mobilemoneyghana,mobilemoneyfranco,mobilemoneyuganda,mobilemoneyrwanda,mobilemoneyzambia,barter,credit',
 		);
+	}
+
+	protected function get_field_data_type( ?string $key = null ) {
+
+		$data = array(
+			'email' => array(
+				'id' => 'flw-customer-email',
+				'name' => 'email',
+				'class' => 'flw-form-input-text',
+				'type' => 'text',
+				'placeholder' => __( 'Email', 'flutterwave-payments' )
+			),
+			'amount' => array(
+				'id' => 'flw-amount',
+				'name' => 'amount',
+				'class' => 'flw-form-input-text',
+				'type' => 'number',
+				'placeholder' => __( 'Amount', 'flutterwave-payments' )
+			),
+			'currency' => array(
+				'id' => 'flw-currency',
+				'name' => 'custom_currency',
+				'class' => 'flw-form-select',
+				'type' => 'select',
+				'label' => __( 'Currency', 'flutterwave-payments' )
+			),
+			'custom_currency' => array(
+				'id' => 'flw-currency',
+				'name' => 'custom_currency',
+				'class' => 'flw-form-select',
+				'type' => 'select',
+				'label' => __( 'Currency', 'flutterwave-payments' )
+			),
+			'fullname' => array(
+				'id' => 'flw-full-name',
+				'name' => 'fullname',
+				'class' => 'flw-form-input-text',
+				'type' => 'text',
+				'placeholder' => __( 'Full Name', 'flutterwave-payments' )
+			),
+			'phone'    => array(
+				'id' => 'flw-phone',
+				'name' => 'phone',
+				'class' => 'flw-form-input-text',
+				'type' => 'tel',
+				'placeholder' => __( 'Phone Number', 'flutterwave-payments' )
+			),
+			'firstname' => array(
+				'id' => 'flw-first-name',
+				'name' => 'firstname',
+				'class' => 'flw-form-input-text',
+				'type' => 'text',
+				'placeholder' => __( 'First Name', 'flutterwave-payments' )
+			),
+			'lastname' => array(
+				'id' => 'flw-last-name',
+				'name' => 'lastname',
+				'class' => 'flw-form-input-text',
+				'type' => 'text',
+				'placeholder' => __( 'Last Name', 'flutterwave-payments' )
+			),
+			'country' => 'text'
+		);
+
+		if( is_null( $key ) ) {
+			return $data;
+		}
+
+		return $data[ $key ];
+	}
+
+	protected static function get_allowed_html() {
+		return array(
+			'div'   => array(), 
+			'input' => array(
+				'id'          => array(),
+				'class'       => array(),
+				'type'        => array(),
+				'placeholder' => array(),
+				'required' => array(),
+			),
+			'select' => array(
+				'id'          => array(),
+				'class'       => array(),
+				'required' => array(),
+			),
+			'option' => array(
+				'value' => array()
+			) ,
+			'label' => array(
+				'class' => array()
+			) 
+		);	
 	}
 }
