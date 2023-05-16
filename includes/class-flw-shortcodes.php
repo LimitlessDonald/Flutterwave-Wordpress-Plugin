@@ -29,23 +29,44 @@ class FLW_Shortcodes {
 		$this->init();
 	}
 
+	/**
+	 * Check if api keys are set.
+	 *
+	 * @return string;
+	 */
 	private static function check_settings_for_api_keys() {
 		$api_key_not_present = __( 'Please configure Flutterwave Payments settings correctly. API keys are still missing.', 'flutterwave-payments' );
 		return "<span class='flw-mssing-api-keys'> Note: " . $api_key_not_present . '</span>';
 	}
 
+	/**
+	 * Check if redirect urls are set.
+	 *
+	 * @return string;
+	 */
 	private static function check_redirect_urls() {
 		$api_key_not_present = __( 'Please configure Flutterwave Payments settings correctly. Redirect Urls are missing.', 'flutterwave-payments' );
 
 		return "<span class='flw-mssing-api-keys'> Note: " . $api_key_not_present . '</span>';
 	}
 
+	/**
+	 * Prevent Cloning.
+	 */
 	public function __clone() {
 	}
 
+	/**
+	 * Prevent Access.
+	 */
 	public function __wakeup() {
 	}
 
+	/**
+	 * Register Shortcode and assets.
+	 *
+	 * @return void
+	 */
 	public function init() {
 		$shortcodes = array(
 			'flw-pay-button'    => __CLASS__ . '::pay_button_shortcode',
@@ -59,9 +80,9 @@ class FLW_Shortcodes {
 	}
 
 	/**
-	 * Get the instance of this class
+	 * Get the instance of this class.
 	 *
-	 * @return object the single instance of this class
+	 * @return object the single instance of this class.
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -73,12 +94,12 @@ class FLW_Shortcodes {
 	/**
 	 * Generates Pay Now button from shortcode
 	 *
-	 * @codeCoverageIgnore Start. This is a view function
+	 * @param [array]  $attr attributes array.
+	 * @param [string] $content button text.
 	 *
-	 * @return string      Pay Now button html content
+	 * @return string      Pay Now button html content.
 	 */
-	public static function pay_button_shortcode( $attr, $content ): string
-  { //phpcs:ignore.
+	public static function pay_button_shortcode( $attr, $content ): string { //phpcs:ignore.
 		$admin_settings = FLW_Admin_Settings::get_instance();
 
 		if ( ! $admin_settings->is_public_key_present() && current_user_can( 'administrator' ) || current_user_can( 'editor' ) ) {
@@ -100,12 +121,11 @@ class FLW_Shortcodes {
 	}
 
 	/**
-	 * Generates Donation page from shortcode
+	 * Generates Donation page from shortcode.
 	 *
-	 * @return string      Pay Now button html content
+	 * @return string      Pay Now button html content.
 	 */
-	public static function donation_page_shortcode( $attr, $content ): string
-  { //phpcs:ignore.
+	public static function donation_page_shortcode( $attr, $content ): string { //phpcs:ignore.
 		$admin_settings = FLW_Admin_Settings::get_instance();
 
 		if ( ! $admin_settings->is_public_key_present() && current_user_can( 'administrator' ) || current_user_can( 'editor' ) ) {
@@ -126,6 +146,11 @@ class FLW_Shortcodes {
 		return $form;
 	}
 
+	/**
+	 * Render Regular Form.
+	 *
+	 * @return void
+	 */
 	public static function render_payment_form( $atts, $btn_text ) {
 
 		_deprecated_function( __FUNCTION__, '1.0.6', 'FLW_Shortcode_Payment_Form::render' );
@@ -141,23 +166,29 @@ class FLW_Shortcodes {
 	}
 
 	/**
-	 * Loads css files
+	 * Loads css files.
 	 *
 	 * @return void
 	 */
 	public static function load_css_files() {
 		$admin_settings = FLW_Admin_Settings::get_instance();
 		if ( 'yes' !== $admin_settings->get_option_value( 'theme_style' ) ) {
-			wp_enqueue_style( 'flw_css', FLW_DIR_URL . 'assets/css/flw.css', false );
+			wp_enqueue_style( 'flw_css', FLW_DIR_URL . 'assets/css/flw.css', array(), FLW_PAY_VERSION, false );
 		}
 	}
 
-
+	/**
+	 * Get admin logo.
+	 *
+	 * @param [array] $attr attribute list.
+	 *
+	 * @return string
+	 */
 	private static function get_logo_url( $attr ) {
 		$admin_settings = FLW_Admin_Settings::get_instance();
 		$logo           = $admin_settings->get_option_value( 'modal_logo' );
 		if ( ! empty( $attr['logo'] ) ) {
-			$logo = strpos( $attr['logo'], 'http' ) != false ? $attr['logo'] : wp_get_attachment_url( $attr['logo'] );
+			$logo = strpos( $attr['logo'], 'http' ) !== false ? $attr['logo'] : wp_get_attachment_url( $attr['logo'] );
 		}
 		return $logo;
 	}

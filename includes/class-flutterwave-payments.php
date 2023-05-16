@@ -164,6 +164,13 @@ final class Flutterwave_Payments {
 
 	}
 
+	/**
+	 * Get Plugin options.
+	 *
+	 * @param string $name The name of the option.
+	 *
+	 * @return mixed
+	 */
 	private function get_option( string $name ) {
 		return $this->settings->get_option_value( $name );
 	}
@@ -359,7 +366,7 @@ final class Flutterwave_Payments {
 
 		check_ajax_referer( 'flw-rave-pay-nonce', 'flw_sec_code' );
 
-		$tx_ref = isset( $_POST['tx_ref'] ) ? sanitize_text_field( wp_unslash($_POST['tx_ref']) ) : null ;
+		$tx_ref = isset( $_POST['tx_ref'] ) ? sanitize_text_field( wp_unslash( $_POST['tx_ref'] ) ) : null;
 
 		$res_data = json_decode( $this->fetch_transaction( $tx_ref ) );
 
