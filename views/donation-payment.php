@@ -26,11 +26,11 @@ $donation_merchant_name = $admin_settings->get_option_value( 'donation_merchant_
 
 <div class="flutterwave-donation-form">
 	<span class="flw-error"></span>
-	<form id="<?php echo $form_id; ?>" class="flw-donation-form" <?php echo $data_attr; ?>>
+	<form id="<?php echo esc_attr( $form_id ); ?>" class="flw-donation-form" <?php echo esc_attr( $data_attr ); ?>>
 		<div id="notice"></div>
 		<?php if ( empty( $atts['email'] ) ) : ?>
 
-			<label class="pay-now"><?php _e( 'Email', 'flutterwave-payments' ); ?></label>
+			<label class="pay-now"><?php esc_attr_e( 'Email', 'flutterwave-payments' ); ?></label>
 			<input class="flw-form-input-text" id="flw-customer-email" type="email" placeholder="<?php esc_attr_e( 'Email', 'flutterwave-payments' ); ?>" required /><br>
 
 		<?php endif; ?>
@@ -69,14 +69,14 @@ $donation_merchant_name = $admin_settings->get_option_value( 'donation_merchant_
 
 				<select class="flw-form-select" id="flw-currency" required>
 					<?php foreach ( $currencies as $currency ) : ?>
-						<option value="<?php echo esc_attr( $currency ); ?>"><?php echo $currency; ?></option>
+						<option value="<?php echo esc_attr( $currency ); ?>"><?php echo esc_attr( $currency ); ?></option>
 					<?php endforeach; ?>
 				</select>
 
 			<?php } else { ?>
 
 
-				<?php if ( $atts['country'] === 'NG' ) : ?>
+				<?php if ( 'NG' === $atts['country'] ) : ?>
 					<select class="flw-form-select" id="flw-currency" required>
 						<option value="NGN">NGN</option>
 						<option value="USD">USD</option>
@@ -86,26 +86,26 @@ $donation_merchant_name = $admin_settings->get_option_value( 'donation_merchant_
 					</select>
 				<?php endif; ?>
 
-				<?php if ( $atts['country'] === 'KE' ) : ?>
+				<?php if ( 'KE' === $atts['country'] ) : ?>
 					<select class="flw-form-select" id="flw-currency" required>
 						<option value="KES">KES</option>
 					</select>
 				<?php endif; ?>
 
-				<?php if ( $atts['country'] === 'GH' ) : ?>
+				<?php if ( 'GH' === $atts['country'] ) : ?>
 					<select class="flw-form-select" id="flw-currency" required>
 						<option value="GHS">GHS</option>
 						<option value="USD">USD</option>
 					</select>
 				<?php endif; ?>
 
-				<?php if ( $atts['country'] === 'ZA' ) : ?>
+				<?php if ( 'ZA' === $atts['country'] ) : ?>
 					<select class="flw-form-select" id="flw-currency" required>
 						<option value="ZAR">ZAR</option>
 					</select>
 				<?php endif; ?>
 
-				<?php if ( $atts['country'] === 'US' ) : ?>
+				<?php if ( 'US' === $atts['country'] ) : ?>
 					<select class="flw-form-select" id="flw-currency" required>
 						<option value="NGN">NGN</option>
 						<option value="USD">USD</option>
