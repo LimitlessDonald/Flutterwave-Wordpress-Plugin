@@ -179,9 +179,9 @@ final class Flutterwave_Payments {
 
 		if ( $no_secret_key || $no_public_key ) {
 			echo '<div class="updated"><p>';
-			_e( 'Flutterwave Payments is installed. - ', 'flutterwave-payments' );
+			esc_attr_e( 'Flutterwave Payments is installed. - ', 'flutterwave-payments' );
 			echo '<a href=' . esc_url( add_query_arg( 'page', $this->plugin_name, admin_url( 'admin.php' ) ) ) . " class='button-primary'>";
-			_e( 'Enter your Flutterwave "Pay Checkout" Public Key and Secret Key to start accepting payments', 'flutterwave-payments' );
+			esc_attr_e( 'Enter your Flutterwave "Pay Checkout" Public Key and Secret Key to start accepting payments', 'flutterwave-payments' );
 			echo '</a></div>';
 		}
 
@@ -294,7 +294,7 @@ final class Flutterwave_Payments {
 			),
 		);
 
-		if ( $payment_type !== 'once' ) {
+		if ( 'once' !== $payment_type ) {
 			$key = $amount . '_' . $currency . '_' . $payment_type;
 			// check if the payment_plan exists in transient.
 			if ( ! get_transient( $key ) ) {
@@ -359,7 +359,7 @@ final class Flutterwave_Payments {
 
 		check_ajax_referer( 'flw-rave-pay-nonce', 'flw_sec_code' );
 
-		$tx_ref = sanitize_text_field( $_POST['tx_ref'] );
+		$tx_ref = isset( $_POST['tx_ref'] ) ? sanitize_text_field( wp_unslash($_POST['tx_ref']) ) : null ;
 
 		$res_data = json_decode( $this->fetch_transaction( $tx_ref ) );
 
@@ -417,7 +417,7 @@ final class Flutterwave_Payments {
 	 *
 	 * @param int $len length of string.
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public static function gen_rand_string( $len = 4 ) {
 
@@ -430,7 +430,7 @@ final class Flutterwave_Payments {
 	/**
 	 * Fetches transaction from flutterwave endpoint
 	 *
-	 * @param $tx_ref
+	 * @param string $tx_ref Transaction reference.
 	 *
 	 * @return string
 	 */
@@ -455,8 +455,8 @@ final class Flutterwave_Payments {
 	/**
 	 * Adds metadata to payment list post type
 	 *
-	 * @param [int]   $post_id  The ID of the post to add metadata to
-	 * @param [array] $data     Collection of the data to be added to the post
+	 * @param [int]   $post_id  The ID of the post to add metadata to.
+	 * @param [array] $data     Collection of the data to be added to the post.
 	 */
 	private function add_post_meta( $post_id, $data ) {
 
