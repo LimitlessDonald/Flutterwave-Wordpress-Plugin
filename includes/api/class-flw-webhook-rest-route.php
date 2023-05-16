@@ -5,6 +5,9 @@
  * @package Flutterwave Payment
  */
 
+/**
+ * FLW Webhook Rest Route.
+ */
 class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 	/**
 	 * Payment base_url.
@@ -27,11 +30,19 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 	 */
 	protected $rest_base = 'webhook';
 
+	/**
+	 * Constructure for Webhook Route class.
+	 */
 	public function __construct() {
 		$this->f4b_options = get_option( 'flw_rave_options' );
 		add_action( 'rest_api_init', array( $this, 'create_rest_routes' ) );
 	}
 
+	/**
+	 * Open to all.
+	 * 
+	 * @return bool permission callback.
+	 */
 	public function free_pass() {
 		return true;
 	}
@@ -48,6 +59,11 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 		);
 	}
 
+	/**
+	 * Handle Webhooks from Flutterwave.
+	 * 
+	 * @param WP_REST_Request $request The request to verify transactions.
+	 */
 	public function handle_hook( WP_REST_Request $request ) {
 
 		sleep( 7 );
@@ -84,12 +100,12 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 			$data = $request->get_param( 'data' );
 
 			$txref         = $data['tx_ref'];
-			$transactionId = $data['id'];
+			$transaction_id = $data['id'];
 			$status        = $data['status'];
 			$customer      = $data['customer'];
 
 			if ( 'cancelled' === $status ) {
-				$this->_update_wordpress(
+				$this->update_wordpress(
 					$txref,
 					array(
 						'data' => array(
@@ -112,7 +128,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 				);
 			}
 
-			$url = 'https://api.flutterwave.com/v3/transactions/' . $transactionId . '/verify';
+			$url = 'https://api.flutterwave.com/v3/transactions/' . $transaction_id . '/verify';
 
 			$response = wp_safe_remote_get(
 				$url,
@@ -125,7 +141,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 			);
 
 			if ( is_wp_error( $response ) ) {
-				$this->_update_wordpress(
+				$this->update_wordpress(
 					$txref,
 					array(
 						'data' => array(
@@ -151,7 +167,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 			if ( $response_body['data']['status'] != 'successful' ) {
 
-				$this->_update_wordpress( $txref, $response_body );
+				$this->update_wordpress( $txref, $response_body );
 				return wp_json_encode(
 					array(
 						'message'  => 'Hook recieved with thanks. status: failed',
@@ -164,7 +180,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 			$payment_record_id = $response_body['data']['meta']['order_id'];
 
 			if ( 'successful' !== get_post_meta( $payment_record_id )['_flw_rave_payment_status'] ) {
-				$this->_update_wordpress( $txref, $response_body );
+				$this->update_wordpress( $txref, $response_body );
 			}
 
 			return wp_json_encode(
@@ -177,7 +193,15 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 		}
 	}
 
-	private function _update_wordpress( $tx_ref, $response ): void {
+	/**
+	 * Update WordPress.
+	 * 
+	 * @param string $tx_ref The request tx_ref.
+	 * @param array $response  data from flutterwave.
+	 * 
+	 * @return void 
+	 */
+	private function update_wordpress( $tx_ref, $response ): void {
 		$pending_amount    = (float) $response['data']['meta']['order_amount'];
 		$pending_currency  = $response['data']['meta']['order_currency'];
 		$recieved_amount   = (float) $response['data']['amount'];
@@ -195,7 +219,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 					'_flw_rave_payment_status'   => $data['status'],
 					'_flw_rave_payment_tx_ref'   => $tx_ref,
 				);
-				$this->_add_post_meta( $payment_record_id, $post_meta );
+				$this->add_post_meta( $payment_record_id, $post_meta );
 			}
 		} else {
 			if ( ! is_wp_error( $payment_record_id ) ) {
@@ -218,13 +242,13 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 					);
 				}
 
-				$this->_add_post_meta( $payment_record_id, $post_meta );
+				$this->add_post_meta( $payment_record_id, $post_meta );
 			}
 		}
 
 	}
 
-	private function _add_post_meta( $post_id, $data ): void {
+	private function add_post_meta( $post_id, $data ): void {
 
 		foreach ( $data as $meta_key => $meta_value ) {
 			update_post_meta( $post_id, $meta_key, $meta_value );
@@ -232,6 +256,13 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 	}
 
+	/**
+	 * Check order mismatch.
+	 * 
+	 * @param array $response  data from flutterwave.
+	 * 
+	 * @return bool 
+	 */
 	private function has_order_property_matched( $response ) {
 		// check the amount against amount, currency paid.
 		$pending_amount    = (float) $response['data']['meta']['order_amount'];

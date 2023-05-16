@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Flutterwave Payments Form Page
  *
  * @package Flutterwave\Payments\Views
