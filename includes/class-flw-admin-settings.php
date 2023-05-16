@@ -64,11 +64,11 @@ class FLW_Admin_Settings {
 	/**
 	 * Fetches admin option settings from the db.
 	 *
-	 * @param $attr attributes for gateway.
+	 * @param string $attr attributes for gateway.
 	 *
 	 * @return mixed The value of the option fetched.
 	 */
-	public function get_option_value( $attr ) {
+	public function get_option_value( string $attr ) {
 
 		$options = get_option( 'flw_rave_options' );
 
@@ -96,6 +96,11 @@ class FLW_Admin_Settings {
 
 	}
 
+	/**
+	 * Are redirect urls present.
+	 * 
+	 * @return bool
+	 */
 	public function are_redirect_urls_present() {
 		$options = get_option( 'flw_rave_options' );
 
@@ -113,7 +118,7 @@ class FLW_Admin_Settings {
 	 */
 	public static function get_instance() {
 
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 
 			self::$instance = new self();
 

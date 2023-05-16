@@ -40,7 +40,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Open to all.
-	 * 
+	 *
 	 * @return bool permission callback.
 	 */
 	public function free_pass() {
@@ -61,7 +61,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Handle Webhooks from Flutterwave.
-	 * 
+	 *
 	 * @param WP_REST_Request $request The request to verify transactions.
 	 */
 	public function handle_hook( WP_REST_Request $request ) {
@@ -99,10 +99,10 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 			$data = $request->get_param( 'data' );
 
-			$txref         = $data['tx_ref'];
+			$txref          = $data['tx_ref'];
 			$transaction_id = $data['id'];
-			$status        = $data['status'];
-			$customer      = $data['customer'];
+			$status         = $data['status'];
+			$customer       = $data['customer'];
 
 			if ( 'cancelled' === $status ) {
 				$this->update_wordpress(
@@ -195,11 +195,11 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Update WordPress.
-	 * 
+	 *
 	 * @param string $tx_ref The request tx_ref.
-	 * @param array $response  data from flutterwave.
-	 * 
-	 * @return void 
+	 * @param array  $response  data from flutterwave.
+	 *
+	 * @return void
 	 */
 	private function update_wordpress( $tx_ref, $response ): void {
 		$pending_amount    = (float) $response['data']['meta']['order_amount'];
@@ -258,10 +258,10 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Check order mismatch.
-	 * 
+	 *
 	 * @param array $response  data from flutterwave.
-	 * 
-	 * @return bool 
+	 *
+	 * @return bool
 	 */
 	private function has_order_property_matched( $response ) {
 		// check the amount against amount, currency paid.

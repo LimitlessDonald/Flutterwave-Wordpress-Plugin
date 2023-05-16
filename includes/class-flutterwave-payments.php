@@ -141,7 +141,7 @@ final class Flutterwave_Payments {
 		add_action( 'wp_ajax_nopriv_get_payment_url', array( $this, 'get_payment_url' ) );
 
 		// Register Third party Services.
-		// $this->register_third_party_integrations();
+
 	}
 
 	/**
@@ -180,9 +180,10 @@ final class Flutterwave_Payments {
 
 		if ( $no_secret_key || $no_public_key ) {
 			echo '<div class="updated"><p>';
-			echo __( 'Flutterwave Payments is installed. - ', 'flutterwave-payments' );
-			echo '<a href=' . esc_url( add_query_arg( 'page', $this->plugin_name, admin_url( 'admin.php' ) ) ) . " class='button-primary'>" . __( 'Enter your Flutterwave "Pay Checkout" Public Key and Secret Key to start accepting payments', 'flutterwave-payments' ) . '</a>';
-			echo '</p></div>';
+			_e( 'Flutterwave Payments is installed. - ', 'flutterwave-payments' );
+			echo '<a href=' . esc_url( add_query_arg( 'page', $this->plugin_name, admin_url( 'admin.php' ) ) ) . " class='button-primary'>";
+			_e( 'Enter your Flutterwave "Pay Checkout" Public Key and Secret Key to start accepting payments', 'flutterwave-payments' );
+			echo '</a></div>';
 		}
 
 	}
@@ -192,7 +193,7 @@ final class Flutterwave_Payments {
 	 *
 	 * @param array $payment_data data to hash.
 	 *
-	 * @return void
+	 * @return string
 	 */
 	private static function generate_payment_hash( array $payment_data ) {
 		$data_to_join = array(
@@ -222,18 +223,18 @@ final class Flutterwave_Payments {
 	 */
 	public function get_payment_url() {
 		check_ajax_referer( 'flw-rave-pay-nonce', 'flw_sec_code' );
-
-		$amount          = isset( $_POST['amount'] ) ? sanitize_text_field( $_POST['amount'] ) : null;
-		$email           = isset( $_POST['customer']['email'] ) ? sanitize_email( $_POST['customer']['email'] ) : null;
-		$country         = isset( $_POST['country'] ) ? sanitize_text_field( $_POST['country'] ) : 'NGN';
-		$form_id         = isset( $_POST['form_id'] ) ? sanitize_text_field( $_POST['form_id'] ) : null;
-		$tx_ref          = 'WP_' . $form_id . mt_rand( 20, 1500 ) . '_' . time();
-		$currency        = isset( $_POST['currency'] ) ? sanitize_text_field( $_POST['currency'] ) : null;
-		$name            = isset( $_POST['customer']['name'] ) ? sanitize_text_field( $_POST['customer']['name'] ) : null;
-		$phone           = ( isset( $_POST['customer']['phone_number'] ) ) ? sanitize_text_field( $_POST['customer']['phone_number'] ) : null;
-		$payment_options = isset( $_POST['payment_options'] ) ? sanitize_text_field( $_POST['payment_options'] ) : null;
+		$post_data       = wp_unslash($_POST);
+		$amount          = isset( $post_data['amount'] ) ? sanitize_text_field( $post_data['amount'] ) : null;
+		$email           = isset( $post_data['customer']['email'] ) ? sanitize_email( $post_data['customer']['email'] ) : null;
+		$country         = isset( $post_data['country'] ) ? sanitize_text_field( $post_data['country'] ) : 'NGN';
+		$form_id         = isset( $post_data['form_id'] ) ? sanitize_text_field( $post_data['form_id'] ) : null;
+		$tx_ref          = 'WP_' . $form_id . wp_rand( 20, 15003 ) . '_' . time();
+		$currency        = isset( $post_data['currency'] ) ? sanitize_text_field( $post_data['currency'] ) : null;
+		$name            = isset( $post_data['customer']['name'] ) ? sanitize_text_field( $post_data['customer']['name'] ) : null;
+		$phone           = ( isset( $post_data['customer']['phone_number'] ) ) ? sanitize_text_field( $post_data['customer']['phone_number'] ) : null;
+		$payment_options = isset( $post_data['payment_options'] ) ? sanitize_text_field( $post_data['payment_options'] ) : null;
 		$title           = get_bloginfo( 'name' );
-		$payment_type    = ( isset( $_POST['payment_type'] ) && $_POST['payment_type'] !== 'once' ) ? sanitize_text_field( $_POST['payment_type'] ) : 'once';
+		$payment_type    = ( isset( $post_data['payment_type'] ) && 'once' !== $post_data['payment_type'] ) ? sanitize_text_field( $post_data['payment_type'] ) : 'once';
 
 		$payment_hash_args = array(
 			'amount'   => $amount,
@@ -243,6 +244,7 @@ final class Flutterwave_Payments {
 		);
 
 		$payment_hash = $this->generate_payment_hash( $payment_hash_args );
+		$ip_address	  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field(wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '127.0.0.1';
 
 		$args = array(
 			'post_type'   => 'payment_list',
@@ -262,7 +264,7 @@ final class Flutterwave_Payments {
 				'_flw_rave_payment_status'   => 'pending',
 				'_flw_rave_payment_tx_ref'   => $tx_ref,
 			);
-			$this->_add_post_meta( $payment_record_id, $post_meta );
+			$this->add_post_meta( $payment_record_id, $post_meta );
 		}
 		$redirect_url = get_site_url() . '/wp-json/flutterwave/v1/verify-transaction?order=' . $payment_record_id;
 		// check for payment type.
@@ -282,7 +284,7 @@ final class Flutterwave_Payments {
 			),
 			'meta'            => array(
 				'form_id'        => $form_id,
-				'ip_address'     => $_SERVER['REMOTE_ADDR'],
+				'ip_address'     => $ip_address,
 				'order_id'       => $payment_record_id,
 				'order_amount'   => $amount,
 				'order_currency' => $currency,
@@ -360,7 +362,7 @@ final class Flutterwave_Payments {
 
 		$tx_ref = sanitize_text_field( $_POST['tx_ref'] );
 
-		$res_data = json_decode( $this->_fetchTransaction( $tx_ref ) );
+		$res_data = json_decode( $this->fetch_transaction( $tx_ref ) );
 
 		if ( is_object( $res_data->data ) && $this->is_successful( $res_data->data ) ) {
 			$status            = $res_data->data->status;
@@ -386,7 +388,7 @@ final class Flutterwave_Payments {
 					'_flw_rave_payment_status'   => $status,
 					'_flw_rave_payment_tx_ref'   => $tx_ref,
 				);
-				$this->_add_post_meta( $payment_record_id, $post_meta );
+				$this->add_post_meta( $payment_record_id, $post_meta );
 			}
 
 			if ( 'successful' === $status ) {
@@ -421,7 +423,7 @@ final class Flutterwave_Payments {
 	public static function gen_rand_string( $len = 4 ) {
 
 		if ( version_compare( PHP_VERSION, '5.3.0' ) <= 0 ) {
-			return substr( md5( rand() ), 0, $len );
+			return substr( md5( wp_rand() ), 0, $len );
 		}
 		return bin2hex( openssl_random_pseudo_bytes( $len / 2 ) );
 	}
@@ -433,8 +435,7 @@ final class Flutterwave_Payments {
 	 *
 	 * @return string
 	 */
-	private function _fetchTransaction( $tx_ref ): string {
-		// https://api.flutterwave.com/v3/transactions/verify_by_reference .
+	private function fetch_transaction( $tx_ref ): string {
 		$url      = '/transactions/verify_by_reference?tx_ref=' . $tx_ref;
 		$response = $this->api_client->request( $url );
 
@@ -444,12 +445,12 @@ final class Flutterwave_Payments {
 	/**
 	 * Checks if payment is successful
 	 *
-	 * @param $data object the transaction object to do the check on.
+	 * @param object $data  the transaction object to do the check on.
 	 *
 	 * @return boolean
 	 */
 	private function is_successful( object $data ): bool {
-		return $data->status === 'successful';
+		return 'successful' === $data->status;
 	}
 
 	/**
@@ -458,18 +459,17 @@ final class Flutterwave_Payments {
 	 * @param [int]   $post_id  The ID of the post to add metadata to
 	 * @param [array] $data     Collection of the data to be added to the post
 	 */
-	private function _add_post_meta( $post_id, $data ) {
+	private function add_post_meta( $post_id, $data ) {
 
 		foreach ( $data as $meta_key => $meta_value ) {
 			update_post_meta( $post_id, $meta_key, $meta_value );
 		}
-
 	}
 
 	/**
 	 * Generate Payment Plan.
 	 *
-	 * @param $data object create a payment plan.
+	 * @param array $data  create a payment plan.
 	 *
 	 * @return int|WP_Error
 	 */
@@ -497,7 +497,7 @@ final class Flutterwave_Payments {
 	 */
 	public static function get_instance(): object {
 
-		if ( null == self::$instance ) {
+		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
 

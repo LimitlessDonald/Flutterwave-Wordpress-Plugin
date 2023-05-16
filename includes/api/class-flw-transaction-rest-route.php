@@ -81,7 +81,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Trigger a transaction Update.
-	 * 
+	 *
 	 * @param WP_REST_Request $request The request from flutterwave.
 	 */
 	public function update_transaction( WP_REST_Request $request ) {
@@ -179,7 +179,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Open to all.
-	 * 
+	 *
 	 * @return bool permission callback.
 	 */
 	public function free_pass() {
@@ -188,17 +188,17 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Open to all.
-	 * 
+	 *
 	 * @param WP_REST_Request $request The request to verify transactions.
 	 */
 	public function verifyPayment( WP_REST_Request $request ) {
-		$token         = $this->f4b_options['secret_key'];
-		$success_url   = $this->f4b_options['success_redirect_url'];
-		$failer_url    = $this->f4b_options['failed_redirect_url'];
-		$pending_url   = $this->f4b_options['pending_redirect_url'];
-		$txref         = $request->get_param( 'tx_ref' ) ?? null;
+		$token          = $this->f4b_options['secret_key'];
+		$success_url    = $this->f4b_options['success_redirect_url'];
+		$failer_url     = $this->f4b_options['failed_redirect_url'];
+		$pending_url    = $this->f4b_options['pending_redirect_url'];
+		$txref          = $request->get_param( 'tx_ref' ) ?? null;
 		$transaction_id = $request->get_param( 'transaction_id' ) ?? null;
-		$status        = $request->get_param( 'status' ) ?? null;
+		$status         = $request->get_param( 'status' ) ?? null;
 
 		if ( 'cancelled' === $status ) {
 			$this->update_wordpress(
@@ -280,7 +280,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-		if ( 'successful' !==  $response_body['data']['status']  ) {
+		if ( 'successful' !== $response_body['data']['status'] ) {
 			$this->update_wordpress( $txref, $response_body );
 			return rest_ensure_response(
 				new WP_REST_Response(
@@ -312,11 +312,11 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Update WordPress.
-	 * 
+	 *
 	 * @param string $tx_ref The request tx_ref.
-	 * @param array $response  data from flutterwave.
-	 * 
-	 * @return void 
+	 * @param array  $response  data from flutterwave.
+	 *
+	 * @return void
 	 */
 	private function update_wordpress( string $tx_ref, array $response ): void {
 		$pending_amount    = (float) $response['data']['meta']['order_amount'];
@@ -373,10 +373,10 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 	/**
 	 * Check order mismatch.
-	 * 
+	 *
 	 * @param array $response  data from flutterwave.
-	 * 
-	 * @return bool 
+	 *
+	 * @return bool
 	 */
 	private function has_order_property_matched( $response ) {
 		// check the amount against amount, currency paid.

@@ -6,7 +6,7 @@
  * @version 1.0.6
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="wrap">
@@ -19,17 +19,18 @@ defined('ABSPATH') || exit;
 		</div>
 		<div><h2>All integrations </h2>
 			<?php
-			foreach ($integrations as $owner => $services) {
-				echo "<div class='flw_thirdparty_service'><h3>" . esc_attr(ucfirst($owner)) . '</h3>';
-				foreach ($services as $service) {
+			foreach ( $integrations as $owner => $services ) {
+				echo "<div class='flw_thirdparty_service'><h3>" . esc_attr( ucfirst( $owner ) ) . '</h3>';
+				foreach ( $services as $service ) {
 					$name = $service->get_info()['name'];
 					echo "<div class='flw-service-info'>";
-					echo "<div class='flw-service-name'>" . esc_attr($service->get_info()['name']) . '</div>';
+					echo "<div class='flw-service-name'>" . esc_attr( $service->get_info()['name'] ) . '</div>';
 					echo "<div class='flw-service-desc'>" . 'Trusted by over 1 million developers for secure and scalable REST APIs.
                 All APIs have a free plan . No credit card required.' . '</div>';
-					echo '<button>' . esc_attr__('view integration', 'flutterwave-payments') . '</button>';
+					echo '<button>' . esc_attr__( 'view integration', 'flutterwave-payments' ) . '</button>';
 					echo '</div>';
 				}
 				echo '</div>';
 			}
-			?><div><div></div>
+			?>
+			<div><div></div>
