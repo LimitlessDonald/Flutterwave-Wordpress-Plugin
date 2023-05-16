@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Flutterwave\WordPress\Exception;
 
