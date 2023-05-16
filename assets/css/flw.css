@@ -6,6 +6,29 @@
   text-align: center;
 }
 
+.flutterwave-overlay {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+.flw-overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
 .flutterwave-payment-form, .flutterwave-donation-form {
     /*position: absolute;*/
     background: #FFFFFF;
@@ -14,6 +37,8 @@
     border-radius: 8px;
     padding: 30px;
     width: 400px;
+    font-family: "Source Sans Pro","HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+    margin: auto;
 }
 
 .flutterwave-payment-form > form, .flutterwave-donation-form > form {
@@ -59,6 +84,7 @@
 
 .flutterwave-payment-form input[type="text"],
 .flutterwave-payment-form input[type="number"],
+.flutterwave-payment-form input[type="tel"],
 .flutterwave-payment-form input[type="email"], .flutterwave-payment-form select {
     background: #FFFFFF;
     border: 1px solid #BDBDBD;
@@ -69,14 +95,15 @@
     font-weight: 400;
     display: flex;
     justify-content: flex-start;
+    margin-bottom: .9em;
 }
 
 
-#flw-first-name:hover, #flw-customer-email:hover, #flw-last-name:hover, #flw-amount:hover {
+#flw-first-name:hover, #flw-customer-email:hover, #flw-last-name:hover, #flw-amount:hover, #flw-full-name:hover, #flw-phone:hover{
     border: 1px solid #F5A623;
 }
 
-.flutterwave-payment-form form #flw-pay-now-button {
+.flutterwave-payment-form form #flw-pay-now-button, .flutterwave-donation-form form #flw-pay-now-button {
     background: #F5A623;
     display: flex;
     flex-direction: column;
@@ -87,15 +114,51 @@
     border-radius: 4px;
 }
 
-.flutterwave-payment-form form #flw-pay-now-button:disabled {
+.flutterwave-payment-form form #flw-pay-now-button:disabled, .flutterwave-donation-form  form #flw-pay-now-button:disabled {
     background-color: rgba(239, 239, 239, 0.3);
     color: rgba(16, 16, 16, 0.3);
     border-color: rgba(118, 118, 118, 0.3);
 }
 
-.flutterwave-payment-form form #flw-pay-now-button:hover {
+.flutterwave-payment-form form #flw-pay-now-button:hover, .flutterwave-donation-form form #flw-pay-now-button:hover {
     background: #6672c7;
     color: #FFFFFF;
 }
 
+.flutterwave-payment-form form > div.flw_payment_overview {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flutterwave-payment-form form > div.flw_payment_overview > div.flw_total_label {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.flutterwave-payment-form form > div.flw_payment_overview > div.flw_amount_to_pay {
+    font-size: 22px;
+    font-weight: 600;
+    color: #35a162;
+}
+
+.flutterwave-payment-form div, .flutterwave-donation-form div {
+    display: block;
+}
+
 /** Flutterwave Donation Page **/
+
+.flutterwave-donation-form input[type="text"],
+.flutterwave-donation-form input[type="number"],
+.flutterwave-donation-form input[type="email"], .flutterwave-donation-form select {
+    background: #FFFFFF;
+    border: 1px solid #BDBDBD;
+    /*border: 1px solid #F5A623;*/
+    border-radius: 4px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 400;
+    display: flex;
+    justify-content: flex-start;
+}
