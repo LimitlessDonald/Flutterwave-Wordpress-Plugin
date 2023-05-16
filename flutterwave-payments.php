@@ -23,12 +23,12 @@ declare(strict_types=1);
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'FLW_PAY_PLUGIN_FILE' ) ) {
-  define( 'FLW_PAY_PLUGIN_FILE', __FILE__ );
+	define( 'FLW_PAY_PLUGIN_FILE', __FILE__ );
 }
 
-if( ! class_exists('Flutterwave_Payments')) {
-  require_once( dirname(FLW_PAY_PLUGIN_FILE ) . '/includes/class-flutterwave-payments.php' );
-  $flw_pay_class = Flutterwave_Payments::get_instance();
+if ( ! class_exists( 'Flutterwave_Payments' ) ) {
+	require_once dirname( FLW_PAY_PLUGIN_FILE ) . '/includes/class-flutterwave-payments.php';
+	$flw_pay_class = Flutterwave_Payments::get_instance();
 }
 
-?>
+
