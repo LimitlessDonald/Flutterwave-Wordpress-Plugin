@@ -141,7 +141,6 @@ final class Flutterwave_Payments {
 		add_action( 'wp_ajax_nopriv_get_payment_url', array( $this, 'get_payment_url' ) );
 
 		// Register Third party Services.
-
 	}
 
 	/**
@@ -223,7 +222,7 @@ final class Flutterwave_Payments {
 	 */
 	public function get_payment_url() {
 		check_ajax_referer( 'flw-rave-pay-nonce', 'flw_sec_code' );
-		$post_data       = wp_unslash($_POST);
+		$post_data       = wp_unslash( $_POST );
 		$amount          = isset( $post_data['amount'] ) ? sanitize_text_field( $post_data['amount'] ) : null;
 		$email           = isset( $post_data['customer']['email'] ) ? sanitize_email( $post_data['customer']['email'] ) : null;
 		$country         = isset( $post_data['country'] ) ? sanitize_text_field( $post_data['country'] ) : 'NGN';
@@ -244,7 +243,7 @@ final class Flutterwave_Payments {
 		);
 
 		$payment_hash = $this->generate_payment_hash( $payment_hash_args );
-		$ip_address	  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field(wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '127.0.0.1';
+		$ip_address   = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '127.0.0.1';
 
 		$args = array(
 			'post_type'   => 'payment_list',

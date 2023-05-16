@@ -98,7 +98,7 @@ class FLW_Admin_Settings {
 
 	/**
 	 * Are redirect urls present.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function are_redirect_urls_present() {
