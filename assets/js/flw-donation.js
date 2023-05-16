@@ -163,7 +163,7 @@ jQuery(function ($) {
 				processCheckout(config, form);
 			} else {
 				//unblur button.
-				btn.effect( "shake", { times:2 }, 300 );
+				btn.effect('shake', { times: 2 }, 300);
 				btn.prop('disabled', false);
 			}
 		});

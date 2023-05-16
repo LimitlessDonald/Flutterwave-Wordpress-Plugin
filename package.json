@@ -1,14 +1,14 @@
 {
-  "name": "flutterwave-payments",
-  "version": "1.0.6",
-  "description": "Official Flutterwave Payment Plugin for WordPress",
-  "main": "index.js",
-  "scripts": {
+	"name": "flutterwave-payments",
+	"version": "1.0.6",
+	"description": "Official Flutterwave Payment Plugin for WordPress",
+	"main": "index.js",
+	"scripts": {
 		"postinstall": "composer install",
 		"prebuild": "npm install && composer install",
 		"build": "npm run uglify && composer run makepot && npm run build:webpack && npm run plugin-zip",
 		"build:webpack": "wp-scripts build",
-		"i18n:merge": "php bin/update-pot-file-references.php i18n/languages/woocommerce-rave.pot",
+		"i18n:merge": "php bin/update-pot-file-references.php i18n/languages/flutterwave-payments.pot",
 		"start": "npm run start:webpack",
 		"start:webpack": "rimraf build/* && wp-scripts start",
 		"preuglify": "rm -f $npm_package_config_assets_js_min",
@@ -54,21 +54,21 @@
 			}
 		}
 	},
-  "keywords": [
-    "fintech",
-    "payment",
-    "ecommerce",
-    "buy",
-    "sell",
-    "money",
-    "international",
-    "payment",
-    "payment",
-    "acquirer"
-  ],
-  "author": "Flutterwave Developers",
-  "license": "MIT",
-  "bugs": {
+	"keywords": [
+		"fintech",
+		"payment",
+		"ecommerce",
+		"buy",
+		"sell",
+		"money",
+		"international",
+		"payment",
+		"payment",
+		"acquirer"
+	],
+	"author": "Flutterwave Developers",
+	"license": "MIT",
+	"bugs": {
 		"url": "https://github.com/bajoski34/Woocommerce-v2/issues"
 	},
 	"files": [

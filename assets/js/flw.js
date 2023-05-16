@@ -6,28 +6,41 @@ jQuery(function ($) {
 	 */
 	const buildConfigObj = function (form) {
 		let formData = $(form).data();
-		
+
 		// Form Appearance settings.
 		let should_split_name = formData.split_name?.replace(/"|'/g, '') == 1;
 
 		let fullname = '';
-		if( ! should_split_name ) {
-			fullname = $(form).find('#flw-full-name').val()
+		if (!should_split_name) {
+			fullname = $(form).find('#flw-full-name').val();
 		} else {
 			let firstname =
-			formData.firstname?.replace(/"|'/g, '') || $(form).find('#flw-first-name').val();
+				formData.firstname?.replace(/"|'/g, '') ||
+				$(form).find('#flw-first-name').val();
 			let lastname =
-			formData.lastname?.replace(/"|'/g, '') || $(form).find('#flw-last-name').val();
+				formData.lastname?.replace(/"|'/g, '') ||
+				$(form).find('#flw-last-name').val();
 			fullname = firstname + ' ' + lastname;
 		}
 
-		let phone = formData.phone?.replace(/"|'/g, '') || $(form).find('#flw-phone').val();
-		
-		let amount = formData.amount?.replace(/"|'/g, '') || $(form).find('#flw-amount').val();
-		let email = formData.email?.replace(/"|'/g, '') || $(form).find('#flw-customer-email').val();
-		let special_currency_value = formData.custom_currency?.replace(/"|'/g, '') || $(form).find('#flw-currency').val();
-		let formCurrency = ( formData.custom_currency?.replace(/"|'/g, '').length > 3 ) ? $(form).find('#flw-currency').val(): special_currency_value ;
-			
+		let phone =
+			formData.phone?.replace(/"|'/g, '') ||
+			$(form).find('#flw-phone').val();
+
+		let amount =
+			formData.amount?.replace(/"|'/g, '') ||
+			$(form).find('#flw-amount').val();
+		let email =
+			formData.email?.replace(/"|'/g, '') ||
+			$(form).find('#flw-customer-email').val();
+		let special_currency_value =
+			formData.custom_currency?.replace(/"|'/g, '') ||
+			$(form).find('#flw-currency').val();
+		let formCurrency =
+			formData.custom_currency?.replace(/"|'/g, '').length > 3
+				? $(form).find('#flw-currency').val()
+				: special_currency_value;
+
 		let formId = form.attr('id');
 		let txref = 'WP_' + formId.toUpperCase() + '_' + new Date().valueOf();
 		let setCountry; //set country
@@ -67,7 +80,6 @@ jQuery(function ($) {
 		};
 
 		let dataObj = Object.assign({}, args, opts);
-
 
 		// console.log(dataObj);
 
@@ -138,7 +150,6 @@ jQuery(function ($) {
 		}
 	};
 
-
 	// for each form process payments
 	$('.flw-simple-pay-now-form').each(function () {
 		let form = $(this);
@@ -150,7 +161,7 @@ jQuery(function ($) {
 			btn.prop('disabled', true);
 
 			let inputs = form.find('input[type="*"]');
-			
+
 			let isValid = true;
 
 			inputs.each(function () {
@@ -170,16 +181,15 @@ jQuery(function ($) {
 					isValid = false;
 					$(this).attr('style', 'border-color: red');
 				}
-
 			});
 
-			if (isValid ) {
+			if (isValid) {
 				let config = buildConfigObj(form);
 				console.log(config);
 				processCheckout(config, form);
 			} else {
 				//unblur button.
-				btn.effect( "shake", { times:2 }, 300 );
+				btn.effect('shake', { times: 2 }, 300);
 				btn.prop('disabled', false);
 			}
 		});
