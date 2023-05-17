@@ -419,7 +419,7 @@ class FLW_WP_List_Table {
 	 * @access protected
 	 */
 	protected function bulk_actions( $which = '' ) {
-		$no_new_actions = $this->actions = $this->get_bulk_actions();
+		$no_new_actions = $this->actions;$this->actions = $this->get_bulk_actions();
 		if ( is_null( $this->actions ) ) {
 			/**
 			 * Filter the list table Bulk Actions drop-down.
@@ -681,7 +681,11 @@ class FLW_WP_List_Table {
 
 		$current = $this->get_pagenum();
 
-		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$current_url = '';
+
+		if( isset( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
+			$current_url = set_url_scheme( 'http://' . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] )  ) . sanitize_text_field(  wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+		}
 
 		$current_url = remove_query_arg( array( 'hotkeys_highlight_last', 'hotkeys_highlight_first' ), $current_url );
 
@@ -692,18 +696,18 @@ class FLW_WP_List_Table {
 
 		$disable_first = $disable_last = $disable_prev = $disable_next = false;
 
-		if ( $current == 1 ) {
+		if ( 1 === $current ) {
 			$disable_first = true;
 			$disable_prev  = true;
 		}
-		if ( $current == 2 ) {
+		if ( 2 === $current ) {
 			$disable_first = true;
 		}
-		if ( $current == $total_pages ) {
+		if ( $current === $total_pages ) {
 			$disable_last = true;
 			$disable_next = true;
 		}
-		if ( $current == $total_pages - 1 ) {
+		if ( $current === $total_pages - 1 ) {
 			$disable_last = true;
 		}
 
@@ -792,8 +796,8 @@ class FLW_WP_List_Table {
 	 *
 	 * @return array
 	 */
-	public function get_columns() {
-		die( 'function WP_List_Table::get_columns() must be over-ridden in a sub-class.' );
+	protected function get_columns(): array {
+		return array();
 	}
 
 	/**
