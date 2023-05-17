@@ -1,10 +1,26 @@
 <?php
+/**
+ * Request Helper class
+ *
+ * @package Flutterwave\WordPress\Helper;
+ */
 
 namespace Flutterwave\WordPress\Helper;
 
-class RequestHelper {
+/**
+ * Request Helper class.
+ */
+final class RequestHelper {
 
-	public static function generate_hash( array $payload, ?string $secret_key = null ) {
+	/**
+	 * Generate Payment Hash.
+	 *
+	 * @param array $payload
+	 * @param string|null $secret_key
+	 *
+	 * @return string
+	 */
+	public static function generate_hash( array $payload, ?string $secret_key = null ): string {
 		// format: sha256(amount+currency+customeremail+txref+sha256(secretkey)).
 		// assumes payload has amount, currency, email, and tx_ref.
 		$string_to_hash = '';
@@ -15,7 +31,12 @@ class RequestHelper {
 		return hash( 'sha256', $string_to_hash );
 	}
 
-	public static function get_default_payment_options() {
+	/**
+	 * Default Payment Methods.
+	 *
+	 * @return string
+	 */
+	public static function get_default_payment_options(): string {
 		return 'card, ussd, mobilemoneyghana, account, banktransfer, mpesa, mobilemoneyfranco, mobilemoneyuganda, mobilemoneyrwanda, mobilemoneyzambia';
 	}
 }

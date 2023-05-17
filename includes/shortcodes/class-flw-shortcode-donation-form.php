@@ -1,11 +1,14 @@
 <?php
-/*
+/**
  * Donation Form shortcode
  *
  * @package Flutterwave\Payments\Shortcodes
  * @version 1.0.6
  */
 
+/**
+ * Flutterwave Donation Shortcode Class.
+ */
 final class FLW_Shortcode_Donation_Form extends Abstract_FLW_Shortcode {
 	protected string $button_text = 'DONATE ONCE';
 	/**
@@ -20,6 +23,11 @@ final class FLW_Shortcode_Donation_Form extends Abstract_FLW_Shortcode {
 		parent::__construct( $attributes, $type );
 	}
 
+	/**
+	 * Get Attributes.
+	 *
+	 * @return array
+	 */
 	public function get_attributes(): array {
 		return $this->attributes;
 	}
@@ -53,10 +61,20 @@ final class FLW_Shortcode_Donation_Form extends Abstract_FLW_Shortcode {
 		);
 	}
 
+	/**
+	 * Parse Query Args.
+	 *
+	 * @return array
+	 */
 	protected function parse_query_args(): array {
 		return array();
 	}
 
+	/**
+	 * Render Shortcode Form.
+	 *
+	 * @return void
+	 */
 	public function render(): void {
 		$atts      = $this->get_attributes();
 		$btn_text  = $this->button_text;
@@ -70,6 +88,11 @@ final class FLW_Shortcode_Donation_Form extends Abstract_FLW_Shortcode {
 		include FLW_DIR_PATH . 'views/donation-payment.php';
 	}
 
+	/**
+	 * Include Javascript File.
+	 *
+	 * @return void
+	 */
 	public function load_scripts(): void {
 		$settings             = $this->settings;
 		$admin_payment_method = $settings->get_option_value( 'method' );

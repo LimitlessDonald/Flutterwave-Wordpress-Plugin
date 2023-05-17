@@ -63,7 +63,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		// handle when a merchant allows clients to choose the currency to pay in.
 		if ( ! isset( $attributes['currency'] ) ) {
 			if ( 'any' === $this->settings->get_option_value( 'currency' ) ) {
-				$default_config['custom_currency'] .= 'USD,KES,ZAR,GHS,TZS,EUR,NGN,GBP,UGX,RWF,ZMW';
+				$default_config['custom_currency'] = 'USD,KES,ZAR,GHS,TZS,EUR,NGN,GBP,UGX,RWF,ZMW';
 			} else {
 				$merchant_base_currency            = $this->settings->get_option_value( 'currency' );
 				$default_config['custom_currency'] = $merchant_base_currency;
@@ -124,7 +124,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 
 		// should display last_name and first_name or not.
-		$split_name = ( isset( $attributes['split_name'] ) ) ? (bool) $attributes['split_name'] : false;
+		$split_name = isset( $attributes['split_name'] ) && (bool) $attributes['split_name'];
 
 		$defaults = array_merge(
 			array(
@@ -191,7 +191,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		if ( is_array( $field ) && isset( $field['type'] ) && 'select' === $field['type'] ) {
 			$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $key ) ) . '</label>';
 			$html_array[] = '<' . esc_html( $field['type'] ) . '  class="' . esc_html( $field['class'] ) . '" id="' . esc_html( $field['id'] ) . '" required>';
-			if ( $field['name'] === 'custom_currency' ) {
+			if ( 'custom_currency' === $field['name'] ) {
 				foreach ( $currencies as $currency ) {
 					$html_array[] = '<option value="' . $currency . '">' . $currency . '</option>';
 				}
@@ -213,7 +213,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 
 		// handle currency field: assume single currency and amount is set.
-		if ( $field_name === 'custom_currency' && count( $custom_currency_array ) === 1 && $amount !== 0 ) {
+		if ( 'custom_currency' === $field_name &&  1 === count( $custom_currency_array ) && 0 !== (int)$amount ) {
 			$html_array[] = '<div class="flw_payment_overview">
 									<div class="flw_total_label">Total Amount</div>
 									<div class="flw_amount_to_pay">
@@ -223,23 +223,23 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 
 		// handle currency field: assume multiple currencies and amount is set.
-		if ( $field_name === 'custom_currency' && count( $custom_currency_array ) > 1 && $amount >= 0 ) {
+		if ( 'custom_currency' === $field_name && count( $custom_currency_array ) > 1 && $amount >= 0 ) {
 
 			$this->handle_currency_field( 'currency', $field, $amount, $custom_currency, $html_array );
 		}
 
 		// handle amount.
-		if ( 'amount' == $field_name && $amount == 0 ) {
+		if ( 'amount' === $field_name && $amount === 0 ) {
 			$this->handle_regular_fields( 'amount', $field, $html_array );
 		}
 
 		// handle name split.
-		if ( 'firstname' == $field_name && $atts['split_name'] === 1 || 'lastname' == $field_name && $atts['split_name'] === 1 ) {
+		if ( 'firstname' === $field_name && 1 === $atts['split_name'] || 'lastname' === $field_name && 1 === $atts['split_name'] ) {
 			$this->handle_regular_fields( $field_name, $field, $html_array );
 		}
 
 		// handle fullname.
-		if ( 'fullname' == $field_name && $atts['split_name'] == 0 ) {
+		if ( 'fullname' === $field_name && $atts['split_name'] === 0 ) {
 
 			if ( ! isset( $atts['fullname'] ) ) {
 
@@ -349,7 +349,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		$data_attr = '';
 		foreach ( $atts as $att_key => $att_value ) {
 			if ( ! is_array( $att_value ) ) {
-				if ( $att_key === 'amount' && $att_value === 0 ) {
+				if ( 'amount' === $att_key && 0 === $att_value ) {
 					continue;
 				}
 				$data_attr .= ' data-' . $att_key . '="' . $att_value . '"';

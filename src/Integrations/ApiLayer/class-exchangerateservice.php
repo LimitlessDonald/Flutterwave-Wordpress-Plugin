@@ -1,15 +1,18 @@
 <?php
-/*
+/**
  * Exchange Rate API Service.
  *
  * @package Flutterwave_Payments
  * @version 1.0.6
  */
 
-namespace Flutterwave\WordPress\Integration\ApiLayer;
+namespace Flutterwave\WordPress\Integrations\ApiLayer;
 
-use Flutterwave\WordPress\Integration\AbstractService;
+use Flutterwave\WordPress\Integrations\AbstractService;
 
+/**
+ * Exchange Rate Service.
+ */
 final class ExchangeRateService extends AbstractService {
 	public function __construct( string $key = '' ) {
 		parent::__construct( $key );
@@ -18,10 +21,22 @@ final class ExchangeRateService extends AbstractService {
 		$this->name  = 'exchange_rate';
 	}
 
+	/**
+	 * Init Service
+	 *
+	 * @param string $key
+	 *
+	 * @return void
+	 */
 	public function _init( string $key ): void {
 		$this->set_key( $key );
 	}
 
+	/**
+	 * Get Header.
+	 *
+	 * @return array
+	 */
 	protected function get_headers(): array {
 		return array(
 			'Content-Type' => 'text/plain',
@@ -29,12 +44,22 @@ final class ExchangeRateService extends AbstractService {
 		);
 	}
 
+	/**
+	 * The Services Assets.
+	 *
+	 * @return array
+	 */
 	public function get_assets(): array {
 		return array(
 			'logo' => 'https://assets.apilayer.com/logo/logo.png',
 		);
 	}
 
+	/**
+	 * Get Service Info.
+	 *
+	 * @return array
+	 */
 	public function get_info(): array {
 		return array(
 			'owner' => $this->owner,
@@ -42,6 +67,11 @@ final class ExchangeRateService extends AbstractService {
 		);
 	}
 
+	/**
+	 * Get Features.
+	 *
+	 * @return array
+	 */
 	public function get_features(): array {
 		return array(
 			'exchange rate',

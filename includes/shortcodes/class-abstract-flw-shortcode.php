@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Abstract Flutterwave Shortcode Class.
  *
  * @package Flutterwave-Payments
@@ -7,6 +7,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Abstract Shortcode.
+ */
 abstract class Abstract_FLW_Shortcode {
 
 	/**
@@ -49,14 +52,42 @@ abstract class Abstract_FLW_Shortcode {
 	 */
 	protected ?FLW_Admin_Settings $settings;
 
+	/**
+	 * Parse Attributes.
+	 *
+	 * @param array $attributes
+	 *
+	 * @return array
+	 */
 	abstract protected function parse_attributes( array $attributes = array() ): array;
 
+	/**
+	 * Parse Query Args.
+	 *
+	 * @return array
+	 */
 	abstract protected function parse_query_args(): array;
 
+	/**
+	 * Render Form.
+	 *
+	 * @return void
+	 */
 	abstract public function render(): void;
 
+	/**
+	 * Load Scripts.
+	 *
+	 * @return void
+	 */
 	abstract public function load_scripts(): void;
 
+	/**
+	 * Shortcode Constructor.
+	 *
+	 * @param array $attributes
+	 * @param string $type
+	 */
 	public function __construct( array $attributes, string $type ) {
 		$this->type       = $type;
 		$this->settings   = FLW_Admin_Settings::get_instance();
@@ -65,7 +96,7 @@ abstract class Abstract_FLW_Shortcode {
 	}
 
 	/**
-	 * Checks if the loggedin user email should be used
+	 * Checks if the loggedin user email should be used.
 	 *
 	 * @param $attr
 	 *
@@ -91,6 +122,11 @@ abstract class Abstract_FLW_Shortcode {
 		return $logo;
 	}
 
+	/**
+	 * Get Supported Country.
+	 *
+	 * @return string[]
+	 */
 	protected static function get_supported_country(): array {
 		return array(
 			'NGN' => 'NG',
@@ -107,6 +143,11 @@ abstract class Abstract_FLW_Shortcode {
 		);
 	}
 
+	/**
+	 * Get Payment Options.
+	 *
+	 * @return string[]
+	 */
 	protected static function get_payment_options(): array {
 		return array(
 			'both'    => 'card,account',
@@ -116,6 +157,13 @@ abstract class Abstract_FLW_Shortcode {
 		);
 	}
 
+	/**
+	 * Get field data type.
+	 *
+	 * @param string|null $key the field_name.
+	 *
+	 * @return array|mixed
+	 */
 	protected function get_field_data_type( ?string $key = null ) {
 
 		$data = array(
@@ -185,6 +233,11 @@ abstract class Abstract_FLW_Shortcode {
 		return $data[ $key ];
 	}
 
+	/**
+	 * Get allowed html for kses function.
+	 *
+	 * @return array
+	 */
 	protected static function get_allowed_html() {
 		return array(
 			'div'    => array(),

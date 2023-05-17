@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Flutterwave Transaction Route.
  *
  * @package Flutterwave Payment
@@ -47,6 +47,11 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 		return true;
 	}
 
+	/**
+	 * Create Webhook route.
+	 *
+	 * @return void
+	 */
 	public function create_rest_routes() {
 		register_rest_route(
 			$this->namespace,
@@ -165,7 +170,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 			$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-			if ( $response_body['data']['status'] != 'successful' ) {
+			if ( 'successful' !== $response_body['data']['status'] ) {
 
 				$this->update_wordpress( $txref, $response_body );
 				return wp_json_encode(
@@ -213,7 +218,6 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 			if ( ! is_wp_error( $payment_record_id ) ) {
 				$data      = $response['data'];
 				$post_meta = array(
-					// '_flw_rave_payment_amount'   => (float) $data['amount'],
 					'_flw_rave_payment_fullname' => $data['customer']['name'],
 					'_flw_rave_payment_customer' => $data['customer']['email'],
 					'_flw_rave_payment_status'   => $data['status'],
@@ -248,6 +252,14 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 
 	}
 
+	/**
+	 * Update WordPress.
+	 *
+	 * @param $post_id
+	 * @param $data
+	 *
+	 * @return void
+	 */
 	private function add_post_meta( $post_id, $data ): void {
 
 		foreach ( $data as $meta_key => $meta_value ) {

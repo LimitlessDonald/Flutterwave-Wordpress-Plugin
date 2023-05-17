@@ -1,24 +1,44 @@
 <?php
+/**
+ * Flutterwave Handler Class.
+ *
+ * @package Flutterwave\WordPress\API;
+ */
 
 namespace Flutterwave\WordPress\API;
 
 use Flutterwave\WordPress\Exception\ApiException;
 use Flutterwave\WordPress\Exception\InvalidRequestException;
 
+/**
+ * Flutterwave Handler Class.
+ */
 final class Handler {
 
+	/**
+	 * Handle Errors from the Flutterwave's side.
+	 *
+	 * @param $response
+	 *
+	 * @return void
+	 * @throws ApiException
+	 */
 	public static function handle_api_errors( $response ) {
 		$response_status_code = \wp_remote_retrieve_response_code( $response );
 
 		$error_hash_table = self::get_error_hash_table();
 
-		if ( isset( $error_hash_table[ $response_status_code ] ) && $error_hash_table[ $response_status_code ] !== 400 ) {
+		if ( isset( $error_hash_table[ $response_status_code ] ) && 400 !== $error_hash_table[ $response_status_code ] ) {
 			throw new ApiException( $error_hash_table[ $response_status_code ] );
 		}
 	}
 
-
-	public static function get_error_hash_table() {
+	/**
+	 * Get error table.
+	 *
+	 * @return \WP_Error[]
+	 */
+	public static function get_error_hash_table(): array {
 		return array(
 			500 => new \WP_Error( 'flw-unavailable', __( 'This Services are Currently Unavailable.  Please contact support.', 'flutterwave-payments' ) ),
 			401 => new \WP_Error( 'flw-unauthorized', __( 'You do not have the right permission to this service. please ensure your secret_key has been supplied.', 'flutterwave-payments' ) ),

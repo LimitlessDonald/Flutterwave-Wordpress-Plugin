@@ -1,13 +1,15 @@
 <?php
-/*
+/**
  * Abstract Flutterwave Service.
  *
  * @package Flutterwave_Payments
  * @version 1.0.6
  */
 
-namespace Flutterwave\WordPress\Integration;
-
+namespace Flutterwave\WordPress\Integrations;
+/*
+ * AbstractService.
+ */
 abstract class AbstractService {
 
 	protected string $base_url;
@@ -24,32 +26,90 @@ abstract class AbstractService {
 
 	const SECRET_KEY = 'secret';
 
+	/**
+	 * Init Settings
+	 *
+	 * @param string $key The API key.
+	 *
+	 * @return void
+	 */
 	abstract public function _init( string $key ): void;
 
+	/**
+	 * Get Features.
+	 *
+	 * @return array
+	 */
 	abstract public function get_features(): array;
 
+	/**
+	 * The Services Assets.
+	 *
+	 * @return array
+	 */
 	abstract public function get_assets(): array;
 
+	/**
+	 * Get Service Info.
+	 *
+	 * @return array
+	 */
 	abstract public function get_info() : array;
 
+	/**
+	 * Get Header.
+	 *
+	 * @return array
+	 */
 	abstract protected function get_headers() : array;
 
+	/**
+	 * Service Constructor.
+	 *
+	 * @param string $key The api key.
+	 */
 	public function __construct( string $key ) {
 		$this->_init( $key );
 	}
 
+	/**
+	 * Api Key.
+	 *
+	 * @param string $key The api key.
+	 *
+	 * @return void
+	 */
 	public function set_key( string $key ):void {
 		$this->api_key = $key;
 	}
 
+	/**
+	 * Get Api Key.
+	 *
+	 * @return string
+	 */
 	public function get_key() {
 		return $this->api_key;
 	}
 
+	/**
+	 * Get Service name.
+	 *
+	 * @return string
+	 */
 	public function get_name() {
 		return $this->owner . ' ' . $this->name;
 	}
 
+	/**
+	 * Make a Request.
+	 *
+	 * @param string $url Any endpoint the service provides.
+	 * @param string $method The Method or verb can be POST, PUT, PATCH, HEAD or GET.
+	 * @param array $data The Data for POST and PUT requests.
+	 *
+	 * @return object|mixed
+	 */
 	protected function request( string $url, string $method = 'GET', array $data = array() ): object {
 		$url                = $this->base_url . $url;
 		$wp_args['method']  = $method;
@@ -69,7 +129,7 @@ abstract class AbstractService {
 		return \WP_Error(
 			'flw-unavailable',
 			/* translators: %s: owner's name, %s: service name */
-			__( sprintf( '%s', $this->owner ) . '\'s ' . sprintf( '%s', $this->name ) . ' service is currently unavailable. please use another integration.', 'flutterwave-payments' )
+			 sprintf( '%s \'s  %s service is currently unavailable. please use another integration.', $this->owner, $this->name )
 		);
 	}
 

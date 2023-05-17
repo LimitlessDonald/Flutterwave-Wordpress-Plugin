@@ -92,8 +92,8 @@ final class Flutterwave_Payments {
 		require_once FLW_DIR_PATH . 'includes/class-flw-payment-list.php';
 		require_once FLW_DIR_PATH . 'includes/vc-elements/class-flw-vc-simple-form.php';
 		require_once FLW_DIR_PATH . 'src/Exception/ApiException.php';
-		require_once FLW_DIR_PATH . 'src/API/Client.php';
-		require_once FLW_DIR_PATH . 'src/API/Handler.php';
+		require_once FLW_DIR_PATH . 'src/API/class-handler.php';
+		require_once FLW_DIR_PATH . 'src/API/class-client.php';
 
 		require_once FLW_DIR_PATH . 'includes/api/class-flw-transaction-rest-route.php';
 		require_once FLW_DIR_PATH . 'includes/api/class-flw-webhook-rest-route.php';
@@ -150,8 +150,8 @@ final class Flutterwave_Payments {
 	 */
 	protected function register_third_party_integrations() {
 		// Third party Services.
-		require_once FLW_DIR_PATH . 'src/Integrations/AbstractService.php';
-		require_once FLW_DIR_PATH . 'src/Integrations/ApiLayer/ExchangeRateService.php';
+		require_once FLW_DIR_PATH . 'src/Integrations/class-abstractservice.php';
+		require_once FLW_DIR_PATH . 'src/Integrations/ApiLayer/class-exchangerateservice.php';
 
 		// get flutterwave integration options.
 
