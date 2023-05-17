@@ -108,7 +108,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 		$post_id = $request->get_param( 'post_id' );
 		$status  = get_post_meta( $post_id, '_flw_rave_payment_status', true );
 
-		if ( empty( $status ) ) {
+		if ( 'successful' === $status ) {
 			return rest_ensure_response(
 				new WP_REST_Response(
 					null,
@@ -120,26 +120,48 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 			);
 		}
 
-		if ( 'successful' !== $status ) {
+		$url = 'https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=' . $txref;
 
-			$url = 'https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=' . $txref;
+		$response = wp_safe_remote_get(
+			$url,
+			array(
+				'headers' => array(
+					'Content-Type'  => 'application/json',
+					'Authorization' => 'Bearer ' . $token,
+				),
+			)
+		);
 
-			$response = wp_safe_remote_get(
-				$url,
-				array(
-					'headers' => array(
-						'Content-Type'  => 'application/json',
-						'Authorization' => 'Bearer ' . $token,
-					),
-				)
-			);
+		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-			if ( is_wp_error( $response ) ) {
-				update_post_meta( $post_id, '_flw_rave_payment_status', $status );
-			} else {
-				$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
-				$this->update_wordpress( $txref, $response_body );
+		if ( is_wp_error( $response ) ) {
+
+			if( isset( $response_body['status'] ) && 'error' === $response_body['status'] ) {
+				return rest_ensure_response(
+					new WP_REST_Response(
+						null,
+						302,
+						array(
+							'Location' => get_site_url() . '/wp-admin/admin.php?page=flutterwave-payments-transactions&transaction_status=unverifed',
+						)
+					)
+				);
 			}
+		} else {
+
+			if( isset( $response_body['status'] ) && 'error' === $response_body['status'] ) {
+				return rest_ensure_response(
+					new WP_REST_Response(
+						null,
+						302,
+						array(
+							'Location' => get_site_url() . '/wp-admin/admin.php?page=flutterwave-payments-transactions&transaction_status=unverifed',
+						)
+					)
+				);
+			}
+
+			$this->update_wordpress( $txref, $response_body );
 		}
 
 		return rest_ensure_response(
@@ -147,7 +169,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 				null,
 				302,
 				array(
-					'Location' => get_site_url() . '/wp-admin/admin.php?page=flutterwave-payments-transactions',
+					'Location' => get_site_url() . '/wp-admin/admin.php?page=flutterwave-payments-transactions&transaction_status=successful',
 				)
 			)
 		);
@@ -185,7 +207,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 	 *
 	 * @return bool
 	 */
-	public function get_transactions_permission() {
+	public function get_transactions_permission(): bool {
 		return current_user_can( 'manage_options' );
 	}
 
