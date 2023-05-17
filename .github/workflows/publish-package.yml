@@ -23,7 +23,7 @@ jobs:
               env:
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-                  SLUG: rave-payment-form
+                  SLUG: rave-payment-forms
             - name: push build status to Slack
               uses: 8398a7/action-slack@v3
               with:
