@@ -856,9 +856,9 @@ class FLW_WP_List_Table {
 		} else {
 			$page_class = ' no-pages';
 		}
-		$this->pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
+		$this->pagination = "<div class='tablenav-pages". esc_attr( $page_class ) ."'>". esc_attr( $output ) . "</div>";
 
-		echo $this->pagination;
+		echo esc_html( $this->pagination );
 	}
 
 	/**
@@ -1032,6 +1032,8 @@ class FLW_WP_List_Table {
 	/**
 	 * Print column headers, accounting for hidden and sortable columns.
 	 *
+	 * @param bool $with_id use id.
+	 *
 	 * @since  3.1.0
 	 * @access public
 	 *
@@ -1040,16 +1042,19 @@ class FLW_WP_List_Table {
 	public function print_column_headers( $with_id = true ) {
 		list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
 
-		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$request = isset( $_GET ) && wp_unslash( $_GET );
+		$server  = isset( $_SERVER ) && wp_unslash( $_SERVER );
+
+		$current_url = set_url_scheme( 'http://' . sanitize_text_field( $server['HTTP_HOST'] ) . sanitize_text_field( $server['REQUEST_URI'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.
 		$current_url = remove_query_arg( 'paged', $current_url );
 
-		if ( isset( $_GET['orderby'] ) ) {
-			$current_orderby = $_GET['orderby'];
+		if ( isset( $request['orderby'] ) ) {
+			$current_orderby = sanitize_text_field( $request['orderby'] );
 		} else {
 			$current_orderby = '';
 		}
 
-		if ( isset( $_GET['order'] ) && 'desc' === $_GET['order'] ) {
+		if ( isset( $_GET['order'] ) && 'desc' === $_GET['order'] ) { // phpcs:ignore WordPress.Security.NonceVerification.
 			$current_order = 'desc';
 		} else {
 			$current_order = 'asc';
@@ -1120,7 +1125,7 @@ class FLW_WP_List_Table {
 
 		$this->screen->render_screen_reader_content( 'heading_list' );
 		?>
-<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
+<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
 	<thead>
 	<tr>
 		<?php $this->print_column_headers(); ?>
@@ -1222,7 +1227,9 @@ class FLW_WP_List_Table {
 	}
 
 	/**
-	 * Generates content for a single row of the table
+	 * Generates content for a single row of the table.
+	 *
+	 * @param [object]  $item Item object.
 	 *
 	 * @since  3.1.0
 	 * @access public
@@ -1248,7 +1255,7 @@ class FLW_WP_List_Table {
 	/**
 	 * Column cb.
 	 *
-	 * @param object $item
+	 * @param object $item The current item.
 	 *
 	 * @return string
 	 */
@@ -1259,7 +1266,7 @@ class FLW_WP_List_Table {
 	/**
 	 * Generates the columns for a single row of the table
 	 *
-	 * @param object $item The current item
+	 * @param object $item The current item.
 	 *
 	 * @since  3.1.0
 	 * @access protected
@@ -1296,12 +1303,12 @@ class FLW_WP_List_Table {
 					$primary
 				));
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
-				echo "<td $attributes>";
+				echo "<td". esc_attr( $attributes ) .">";
 				echo esc_html(call_user_func( array( $this, 'column_' . $column_name ), $item ));
 				echo esc_html($this->handle_row_actions( $item, $column_name, $primary ));
 				echo '</td>';
 			} else {
-				echo "<td $attributes>";
+				echo "<td". esc_attr( $attributes ) .">";
 				echo esc_html($this->column_default( $item, $column_name ));
 				echo esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
 				echo '</td>';
@@ -1312,7 +1319,7 @@ class FLW_WP_List_Table {
 	/**
 	 * Generates and display row actions links for the list table.
 	 *
-	 * @param $item
+	 * @param [object]  $item Item Object.
 	 * @param [string]  $column_name  Column name.
 	 * @param [string]  $primary  Default Column name.
 	 *

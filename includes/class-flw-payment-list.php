@@ -160,7 +160,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		 *
 		 * @return string
 		 */
-		public function column_cb( $item ) {
+		public function column_cb( $item ): string {
 
 			return sprintf(
 				'<input type="checkbox" name="bulk-delete[]" value="%s" />',
