@@ -156,7 +156,6 @@ class FLW_WP_List_Table {
 		$this->args = $args;
 
 		if ( $args['ajax'] ) {
-			// wp_enqueue_script( 'list-table' );.
 			add_action( 'admin_footer', array( $this, 'js_vars' ) );
 		}
 
@@ -327,28 +326,29 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+		$request = wp_unslash( $_REQUEST );
+		if ( empty( $request['s'] ) && ! $this->has_items() ) { // phpcs:ignore WordPress.Security.NonceVerification.
 			return;
 		}
 
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		if ( ! empty( $request['orderby'] ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( sanitize_text_field( $request['orderby'] ) ) . '" />';
 		}
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		if ( ! empty( $request['order'] ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( sanitize_text_field( $request['order'] ) ) . '" />';
 		}
-		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
-			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		if ( ! empty( $request['post_mime_type'] ) ) {
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( sanitize_text_field( $request['post_mime_type'] ) ) . '" />';
 		}
-		if ( ! empty( $_REQUEST['detached'] ) ) {
-			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		if ( ! empty( $request['detached'] ) ) {
+			echo '<input type="hidden" name="detached" value="' . esc_attr( sanitize_text_field( $request['detached'] ) ) . '" />';
 		}
 		?>
 <p class="search-box">
-	<label class="screen-reader-text" for="<?php echo $input_id; ?>"><?php echo $text; ?>:</label>
-	<input type="search" id="<?php echo $input_id; ?>" name="s" value="<?php _admin_search_query(); ?>" />
+	<label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
+	<input type="search" id="<?php echo esc_attr($input_id); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 		<?php submit_button( $text, 'button', '', false, array( 'id' => 'search-submit' ) ); ?>
 </p>
 		<?php
@@ -442,9 +442,9 @@ class FLW_WP_List_Table {
 			return;
 		}
 
-		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action', 'flutterwave-payments' ) . '</label>';
-		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
-		echo '<option value="-1">' . __( 'Bulk Actions', 'flutterwave-payments' ) . "</option>\n";
+		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . esc_html__( 'Select bulk action', 'flutterwave-payments' ) . '</label>';
+		echo '<select name="action' . esc_attr($two) . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<option value="-1">' . esc_html__( 'Bulk Actions', 'flutterwave-payments' ) . "</option>\n";
 
 		foreach ( $this->actions as $name => $title ) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
@@ -468,16 +468,16 @@ class FLW_WP_List_Table {
 	 */
 	public function current_action() {
 
-		$request = wp_unslash( $_REQUEST );
-		if ( ! empty( $_REQUEST['filter_action'] ) ) {
+		$request = wp_unslash( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.
+		if ( ! empty( $_REQUEST['filter_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.
 			return false;
 		}
 
-		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
+		if ( isset( $_REQUEST['action'] ) && -1 !== $_REQUEST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.
 			return sanitize_text_field( $request['action'] );
 		}
 
-		if ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
+		if ( isset( $_REQUEST['action2'] ) && -1 !== $_REQUEST['action2'] ) { // phpcs:ignore WordPress.Security.NonceVerification.
 			return sanitize_text_field( $request['action2'] );
 		}
 
@@ -523,7 +523,7 @@ class FLW_WP_List_Table {
 	protected function months_dropdown( $post_type ) {
 		global $wpdb, $wp_locale;
 
-		$request = wp_unslash( $_GET );
+		$request = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.
 		/**
 		 * Filter whether to remove the 'Months' drop-down from the post list table.
 		 */
@@ -561,15 +561,15 @@ class FLW_WP_List_Table {
 
 		$month_count = count( $months );
 
-		if ( ! $month_count || ( 1 == $month_count && 0 == $months[0]->month ) ) {
+		if ( ! $month_count || ( 1 === $month_count && 0 === $months[0]->month ) ) {
 			return;
 		}
 
-		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0;
+		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.
 		?>
-		<label for="filter-by-date" class="screen-reader-text"><?php _e( 'Filter by date', 'flutterwave-payments' ); ?></label>
+		<label for="filter-by-date" class="screen-reader-text"><?php esc_html_e( 'Filter by date', 'flutterwave-payments' ); ?></label>
 		<select name="m" id="filter-by-date">
-			<option<?php selected( $m, 0 ); ?> value="0"><?php _e( 'All dates', 'flutterwave-payments' ); ?></option>
+			<option<?php selected( $m, 0 ); ?> value="0"><?php esc_html_e( 'All dates', 'flutterwave-payments' ); ?></option>
 		<?php
 		foreach ( $months as $arc_row ) {
 			if ( 0 == $arc_row->year ) {
@@ -584,7 +584,7 @@ class FLW_WP_List_Table {
 				selected( $m, $year . $month, false ),
 				esc_attr( $arc_row->year . $month ),
 				/* translators: 1: month name, 2: 4-digit year */
-				sprintf( esc_attr__( '%1$s %2$d', 'flutterwave-payments' ), $wp_locale->get_month( $month ), $year )
+				sprintf( esc_attr__( '%1$s %2$d', 'flutterwave-payments' ), esc_attr( $wp_locale->get_month( $month ) ), $year )
 			);
 		}
 		?>
@@ -609,10 +609,10 @@ class FLW_WP_List_Table {
 				$classes[] = 'current';
 			}
 			printf(
-				"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n",
+				esc_html( "<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n" ),
 				esc_url( add_query_arg( 'mode', $mode ) ),
-				implode( ' ', $classes ),
-				$title
+				esc_attr(implode( ' ', $classes )),
+				esc_attr($title)
 			);
 		}
 		?>
@@ -622,6 +622,9 @@ class FLW_WP_List_Table {
 
 	/**
 	 * Display a comment count bubble
+	 *
+	 * @param int $post_id post id.
+	 * @param int $pending_comments pending comments.
 	 *
 	 * @since  3.1.0
 	 * @access protected
@@ -642,7 +645,7 @@ class FLW_WP_List_Table {
 		if ( ! $approved_comments && ! $pending_comments ) {
 			printf(
 				'<span aria-hidden="true">—</span><span class="screen-reader-text">%s</span>',
-				__( 'No comments', 'flutterwave-payments' )
+				esc_html__( 'No comments', 'flutterwave-payments' )
 			);
 			// Approved comments have different display depending on some conditions.
 		} elseif ( $approved_comments ) {
@@ -664,7 +667,7 @@ class FLW_WP_List_Table {
 			printf(
 				'<span class="post-com-count post-com-count-no-comments"><span class="comment-count comment-count-no-comments" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
 				esc_attr( $approved_comments_number ),
-				$pending_comments ? __( 'No approved comments', 'flutterwave-payments' ) : __( 'No comments', 'flutterwave-payments' )
+				$pending_comments ? esc_html__( 'No approved comments', 'flutterwave-payments' ) : esc_html__( 'No comments', 'flutterwave-payments' )
 			);
 		}
 
@@ -687,7 +690,7 @@ class FLW_WP_List_Table {
 			printf(
 				'<span class="post-com-count post-com-count-pending post-com-count-no-pending"><span class="comment-count comment-count-no-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
 				esc_attr( $pending_comments_number ),
-				$approved_comments ? __( 'No pending comments', 'flutterwave-payments' ) : __( 'No comments', 'flutterwave-payments' )
+				$approved_comments ? esc_html__( 'No pending comments', 'flutterwave-payments' ) : esc_html__( 'No comments', 'flutterwave-payments' )
 			);
 		}
 	}
