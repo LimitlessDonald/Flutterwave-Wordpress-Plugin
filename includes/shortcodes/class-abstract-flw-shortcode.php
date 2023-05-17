@@ -55,7 +55,7 @@ abstract class Abstract_FLW_Shortcode {
 	/**
 	 * Parse Attributes.
 	 *
-	 * @param array $attributes
+	 * @param array $attributes attributes array.
 	 *
 	 * @return array
 	 */
@@ -85,8 +85,8 @@ abstract class Abstract_FLW_Shortcode {
 	/**
 	 * Shortcode Constructor.
 	 *
-	 * @param array $attributes
-	 * @param string $type
+	 * @param array $attributes Attribute array.
+	 * @param string $type Shortcode type or Name.
 	 */
 	public function __construct( array $attributes, string $type ) {
 		$this->type       = $type;
@@ -98,26 +98,28 @@ abstract class Abstract_FLW_Shortcode {
 	/**
 	 * Checks if the loggedin user email should be used.
 	 *
-	 * @param $attr
+	 * @param [array]  $attr Attributes array.
 	 *
 	 * @return boolean
 	 */
 	protected static function use_current_user_email( $attr ): bool {
 
-		return isset( $attr['use_current_user_email'] ) && $attr['use_current_user_email'] === 'yes';
+		return isset( $attr['use_current_user_email'] ) && 'yes' === $attr['use_current_user_email'];
 
 	}
 
 	/**
 	 * Get the current user email
 	 *
+	 * @param [array]  $attr The Attribute array.
+	 *
 	 * @return string
 	 */
-	protected static function get_logo_url( $attr ) {
+	protected static function get_logo_url( $attr ): string {
 		$admin_settings = FLW_Admin_Settings::get_instance();
 		$logo           = $admin_settings->get_option_value( 'modal_logo' );
 		if ( ! empty( $attr['logo'] ) ) {
-			$logo = strpos( $attr['logo'], 'http' ) != false ? $attr['logo'] : wp_get_attachment_url( $attr['logo'] );
+			$logo = strpos( $attr['logo'], 'http' ) ? $attr['logo'] : wp_get_attachment_url( $attr['logo'] );
 		}
 		return $logo;
 	}

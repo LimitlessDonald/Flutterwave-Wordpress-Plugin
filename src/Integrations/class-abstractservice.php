@@ -7,19 +7,45 @@
  */
 
 namespace Flutterwave\WordPress\Integrations;
-/*
+
+/**
  * AbstractService.
  */
 abstract class AbstractService {
 
+	/**
+	 * Base Url.
+	 *
+	 * @var string
+	 */
 	protected string $base_url;
 
+	/**
+	 * Name.
+	 *
+	 * @var string
+	 */
 	protected string $name;
 
+	/**
+	 * Api Key.
+	 *
+	 * @var string
+	 */
 	protected string $api_key;
 
+	/**
+	 * Owner Name
+	 *
+	 * @var string
+	 */
 	protected string $owner;
 
+	/**
+	 * Error Array.
+	 *
+	 * @var array
+	 */
 	public array $error_log = array();
 
 	const PUBLIC_KEY = 'public';
@@ -33,7 +59,7 @@ abstract class AbstractService {
 	 *
 	 * @return void
 	 */
-	abstract public function _init( string $key ): void;
+	abstract public function init( string $key ): void;
 
 	/**
 	 * Get Features.
@@ -116,7 +142,7 @@ abstract class AbstractService {
 		$wp_args['timeout'] = 60;
 		$wp_args['body']    = \wp_json_encode( $data, JSON_UNESCAPED_SLASHES );
 		$wp_args['headers'] = $this->get_headers();
-		if ( empty( $data ) || $method === 'GET' ) {
+		if ( empty( $data ) || 'GET' === $method ) {
 			unset( $wp_args['body'] );
 		}
 

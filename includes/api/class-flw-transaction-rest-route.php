@@ -42,6 +42,11 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 		add_action( 'rest_api_init', array( $this, 'create_rest_routes' ) );
 	}
 
+	/**
+	 * Create Rest Route.
+	 *
+	 * @return void
+	 */
 	public function create_rest_routes() {
 
 		register_rest_route(
@@ -151,6 +156,8 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 	/**
 	 * Retrieve settings.
 	 *
+	 * @param WP_REST_Request $request The request.
+	 *
 	 * @return WP_REST_Response
 	 */
 	public function get_transactions( WP_REST_Request $request ): WP_REST_Response {
@@ -173,6 +180,11 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 	}
 
+	/**
+	 * Route Permission.
+	 *
+	 * @return bool
+	 */
 	public function get_transactions_permission() {
 		return current_user_can( 'manage_options' );
 	}
@@ -240,7 +252,6 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 		sleep( 2 );
 
-		// $url      = 'https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=' . $txref;
 		$url = 'https://api.flutterwave.com/v3/transactions/' . $transaction_id . '/verify';
 
 		$response = wp_safe_remote_get(
@@ -330,7 +341,6 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 			if ( ! is_wp_error( $payment_record_id ) ) {
 				$data      = $response['data'];
 				$post_meta = array(
-					// '_flw_rave_payment_amount'   => (float) $data['amount'],
 					'_flw_rave_payment_id'     => $data['id'],
 					'_flw_rave_payment_status' => $data['status'],
 				);
@@ -363,6 +373,14 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 	}
 
+	/**
+	 * Update WordPress.
+	 *
+	 * @param $post_id
+	 * @param $data
+	 *
+	 * @return void
+	 */
 	private function add_post_meta( $post_id, $data ): void {
 
 		foreach ( $data as $meta_key => $meta_value ) {

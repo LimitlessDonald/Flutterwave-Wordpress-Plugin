@@ -6,7 +6,7 @@
  * @version 1.0.6
  */
 
-use Flutterwave\WordPress\Integration\AbstractService;
+use Flutterwave\WordPress\Integrations\AbstractService;
 
 
 /**
@@ -14,9 +14,18 @@ use Flutterwave\WordPress\Integration\AbstractService;
  */
 class FLW_Thirdparty_Integrations {
 
-
+	/**
+	 * Integration Registry.
+	 *
+	 * @var array
+	 */
 	public static array $integrations = array();
 
+	/**
+	 * Instance.
+	 *
+	 * @var FLW_Thirdparty_Integrations|null
+	 */
 	public static ?FLW_Thirdparty_Integrations $instance = null;
 	/**
 	 * Third Party Class Contructor.
@@ -55,13 +64,15 @@ class FLW_Thirdparty_Integrations {
 	 * @return void
 	 */
 	private function init_settings() {
-		if ( false == get_option( 'flw_integrations_options' ) ) {
+		if ( false === get_option( 'flw_integrations_options' ) ) {
 			update_option( 'flw_integrations_options', array() );
 		}
 	}
 
 	/**
 	 * Registers Third Party Integration.
+	 *
+	 * @param array $services
 	 *
 	 * @return void
 	 */
@@ -94,9 +105,11 @@ class FLW_Thirdparty_Integrations {
 	}
 
 	/**
-	 * Get a Thirdparty Service.
+	 * Get a ThirdParty Service.
 	 *
-	 * @return void
+	 * @param string $service_name
+	 *
+	 * @return AbstractService|null
 	 */
 	public function get( string $service_name ): ?AbstractService {
 
@@ -110,7 +123,7 @@ class FLW_Thirdparty_Integrations {
 	/**
 	 * Fetches admin option settings from the db.
 	 *
-	 * @param $attr
+	 * @param [string]  $attr The option.
 	 *
 	 * @return mixed  The value of the option fetched.
 	 */
@@ -126,6 +139,11 @@ class FLW_Thirdparty_Integrations {
 		return '';
 	}
 
+	/**
+	 * Handle Admin Javascript and CSS.
+	 *
+	 * @return void
+	 */
 	public function get_admin_script() {
 		wp_enqueue_style( 'flw-integration-css', FLW_DIR_URL . 'assets/css/admin/integrations.css', array(), FLW_PAY_VERSION, false );
 		wp_enqueue_style( 'flw-integration-css' );

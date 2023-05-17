@@ -14,6 +14,11 @@ use Flutterwave\WordPress\Integrations\AbstractService;
  * Exchange Rate Service.
  */
 final class ExchangeRateService extends AbstractService {
+	/**
+	 * Exchange Rate Constructor.
+	 *
+	 * @param string $key Api key.
+	 */
 	public function __construct( string $key = '' ) {
 		parent::__construct( $key );
 
@@ -24,11 +29,11 @@ final class ExchangeRateService extends AbstractService {
 	/**
 	 * Init Service
 	 *
-	 * @param string $key
+	 * @param string $key Api key.
 	 *
 	 * @return void
 	 */
-	public function _init( string $key ): void {
+	public function init( string $key ): void {
 		$this->set_key( $key );
 	}
 

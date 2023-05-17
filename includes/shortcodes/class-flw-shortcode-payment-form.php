@@ -143,6 +143,13 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		return shortcode_atts( $defaults, $attributes, $this->type );
 	}
 
+	/**
+	 * Convert Options to and Array.
+	 *
+	 * @param array $string_key_value_array The key-value pair array.
+	 *
+	 * @return array
+	 */
 	private function convert_options_to_array( array $string_key_value_array ): array {
 		$fields = array();
 		foreach ( $string_key_value_array as $value ) {
@@ -152,7 +159,15 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		return $fields;
 	}
 
-	private function build_custom_fields( string $fields, array &$attr ) {
+	/**
+	 * Build Custom Fields.
+	 *
+	 * @param string $fields The fields.
+	 * @param array $attr  The attributes.
+	 *
+	 * @return array
+	 */
+	private function build_custom_fields( string $fields, array &$attr ): array {
 		// convert string to array.
 		$document = explode( ',', $fields );
 
@@ -176,10 +191,26 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		return $custom_fields;
 	}
 
+	/**
+	 * Parse Query Args.
+	 *
+	 * @return array
+	 */
 	protected function parse_query_args(): array {
 		return array();
 	}
 
+	/**
+	 * Handle Currency Fields.
+	 *
+	 * @param $key
+	 * @param $field
+	 * @param $amount
+	 * @param $custom_currency
+	 * @param $html_array
+	 *
+	 * @return void
+	 */
 	private function handle_currency_field( $key, $field, $amount, $custom_currency, &$html_array ) {
 
 		if ( $key !== 'currency' ) {
@@ -200,6 +231,15 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 	}
 
+	/**
+	 * Handle Special Fields.
+	 *
+	 * @param array $field
+	 * @param array $atts
+	 * @param array $html_array
+	 *
+	 * @return void
+	 */
 	private function handle_special_fields( array $field, array $atts, array &$html_array ) {
 		$custom_currency       = $atts['custom_currency'];
 		$split_name            = $atts['split_name'];
@@ -229,7 +269,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 
 		// handle amount.
-		if ( 'amount' === $field_name && $amount === 0 ) {
+		if ( 'amount' === $field_name && 0 === $amount ) {
 			$this->handle_regular_fields( 'amount', $field, $html_array );
 		}
 
@@ -239,7 +279,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 
 		// handle fullname.
-		if ( 'fullname' === $field_name && $atts['split_name'] === 0 ) {
+		if ( 'fullname' === $field_name && 0 === $atts['split_name'] ) {
 
 			if ( ! isset( $atts['fullname'] ) ) {
 
@@ -257,25 +297,49 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 	}
 
-	protected function is_custom_field( string $field_name ) {
+	/**
+	 * Check if field is custom.
+	 *
+	 * @param string $field_name The field name.
+	 *
+	 * @return bool
+	 */
+	protected function is_custom_field( string $field_name ): bool {
 		$custom_fields = array_keys( $this->custom_fields );
 
 		return in_array( $field_name, $custom_fields );
 	}
 
+	/**
+	 * Check if field is special.
+	 *
+	 * @param string $field_name
+	 *
+	 * @return bool
+	 */
 	protected function is_special_field( string $field_name ) {
 		$special_fields = array( 'amount', 'currency', 'custom_currency', 'fullname', 'phone', 'firstname', 'lastname' );
 		return in_array( $field_name, $special_fields );
 	}
 
-	private function handle_regular_fields( $key, $field, &$html_array, $default_value = '' ) {
+	/**
+	 * Handle Regular Fields.
+	 *
+	 * @param string $key The field key.
+	 * @param array $field The field array.
+	 * @param array $html_array The html array.
+	 * @param string $default_value The default value.
+	 *
+	 * @return void
+	 */
+	private function handle_regular_fields( string $key, array $field, array &$html_array, string $default_value = '' ) {
 
-		if ( $default_value !== '' ) {
+		if ( '' !== $default_value ) {
 			$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $key ) ) . '</label>';
 			$html_array[] = '<input class="' . esc_attr( $field['class'] ) . '" id="' . esc_attr( $field['id'] ) . '" type="' .
 			esc_attr( $field['type'] ) . '" placeholder=" ' . esc_attr( ucfirst( $key ) ) . ' " value="' . $default_value . '" >';
 		} else {
-			if ( is_array( $field ) && isset( $field['type'] ) && $field['type'] !== 'select' ) {
+			if ( is_array( $field ) && isset( $field['type'] ) && 'select' !== $field['type'] ) {
 				$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $key ) ) . '</label>';
 				$html_array[] = '<input class="' . esc_attr( $field['class'] ) . '" id="' . esc_attr( $field['id'] ) . '" type="' .
 				esc_attr( $field['type'] ) . '" placeholder=" ' . esc_attr( ucfirst( $key ) ) . ' " >';
@@ -283,7 +347,14 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 	}
 
-	private function prepare_default_fields( array $atts ) {
+	/**
+	 * Prepare Default Fields.
+	 *
+	 * @param array $atts Attribute array.
+	 *
+	 * @return string
+	 */
+	private function prepare_default_fields( array $atts ): string {
 		$order         = explode( ',', $atts['order'] );
 		$custom_fields = $atts['custom_fields'];
 		$html_array    = array();
@@ -314,7 +385,15 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		return implode( '', $html_array );
 	}
 
-	private function prepare_custom_fields( array $fields, array $atts ) {
+	/**
+	 * Prepare Custom Fields.
+	 *
+	 * @param array $fields Custom Fields
+	 * @param array $atts  Attributes
+	 *
+	 * @return string
+	 */
+	private function prepare_custom_fields( array $fields, array $atts ): string {
 
 		$html_array = array();
 
@@ -343,6 +422,11 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		return implode( '', $html_array );
 	}
 
+	/**
+	 * Render Payment Form.
+	 *
+	 * @return void
+	 */
 	public function render(): void {
 		$atts      = $this->get_attributes();
 		$btn_text  = $this->button_text;
@@ -358,11 +442,15 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 
 		$input_fields_html     = $this->prepare_default_fields( $atts );
 		$allowed_html_elements = self::get_allowed_html();
-		// $custom_fields_html  = $this->prepare_custom_fields( $atts['custom_fields'], $atts );
 
 		include FLW_DIR_PATH . 'views/pay-now-form.php';
 	}
 
+	/**
+	 * Load Scripts.
+	 *
+	 * @return void
+	 */
 	public function load_scripts(): void {
 		$settings = $this->settings;
 

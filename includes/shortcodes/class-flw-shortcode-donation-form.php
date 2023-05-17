@@ -10,6 +10,11 @@
  * Flutterwave Donation Shortcode Class.
  */
 final class FLW_Shortcode_Donation_Form extends Abstract_FLW_Shortcode {
+	/**
+	 * Button Text.
+	 *
+	 * @var string
+	 */
 	protected string $button_text = 'DONATE ONCE';
 	/**
 	 * Initialize shortcode.
@@ -19,7 +24,7 @@ final class FLW_Shortcode_Donation_Form extends Abstract_FLW_Shortcode {
 	 *
 	 * @since 1.0.6
 	 */
-	public function __construct( array $attributes = array(), string $type = 'flw-donation-form' ) {
+	public function __construct( array $attributes = array(), string $type = 'flw-donation-form' ) { // phpcs:ignore
 		parent::__construct( $attributes, $type );
 	}
 

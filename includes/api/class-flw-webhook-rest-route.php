@@ -255,8 +255,8 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 	/**
 	 * Update WordPress.
 	 *
-	 * @param $post_id
-	 * @param $data
+	 * @param [int]  $post_id  The post id.
+	 * @param [array]  $data The data array.
 	 *
 	 * @return void
 	 */
@@ -265,7 +265,6 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 		foreach ( $data as $meta_key => $meta_value ) {
 			update_post_meta( $post_id, $meta_key, $meta_value );
 		}
-
 	}
 
 	/**
@@ -275,7 +274,7 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 	 *
 	 * @return bool
 	 */
-	private function has_order_property_matched( $response ) {
+	private function has_order_property_matched( $response ): bool {
 		// check the amount against amount, currency paid.
 		$pending_amount    = (float) $response['data']['meta']['order_amount'];
 		$pending_currency  = $response['data']['meta']['order_currency'];
@@ -283,6 +282,5 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 		$recieved_currency = $response['data']['currency'];
 
 		return $pending_amount === $recieved_amount && $pending_currency === $recieved_currency;
-
 	}
 }

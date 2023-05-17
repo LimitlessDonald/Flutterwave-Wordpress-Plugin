@@ -114,8 +114,8 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		/**
 		 * Renders a column when no column specific method exists.
 		 *
-		 * @param array  $item
-		 * @param string $column_name
+		 * @param array  $item item in column.
+		 * @param string $column_name column name.
 		 *
 		 * @return mixed
 		 */
@@ -156,7 +156,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		/**
 		 * Render the bulk edit checkbox.
 		 *
-		 * @param array $item
+		 * @param array $item item in the column.
 		 *
 		 * @return string
 		 */
@@ -233,7 +233,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 		 * @return mixed                  The list of all the payment records.
 		 */
 		public static function get_payments( $post_per_page = 20, $page_number = 1 ) {
-			$request = wp_unslash( $_REQUEST );
+			$request = wp_unslash( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification
 			$args    = array(
 				'posts_per_page'   => $post_per_page,
 				'offset'           => ( $page_number - 1 ) * $post_per_page,

@@ -91,7 +91,7 @@ final class Flutterwave_Payments {
 		require_once FLW_DIR_PATH . 'includes/class-flw-admin-settings.php';
 		require_once FLW_DIR_PATH . 'includes/class-flw-payment-list.php';
 		require_once FLW_DIR_PATH . 'includes/vc-elements/class-flw-vc-simple-form.php';
-		require_once FLW_DIR_PATH . 'src/Exception/ApiException.php';
+		require_once FLW_DIR_PATH . 'src/Exception/class-apiexception.php';
 		require_once FLW_DIR_PATH . 'src/API/class-handler.php';
 		require_once FLW_DIR_PATH . 'src/API/class-client.php';
 
