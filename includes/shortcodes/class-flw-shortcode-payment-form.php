@@ -44,6 +44,8 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	 */
 	public function __construct( array $attributes = array(), string $type = 'flw-pay-form' ) {
 		parent::__construct( $attributes, $type );
+
+		$this->query_args['name'] = $this->type;
 	}
 
 	/**
@@ -444,7 +446,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 				if ( ! isset( $atts[ 'should_collect_' . $name ] ) ) {
 					$html_array[] = '<label class="pay-now">' . esc_attr( ucfirst( $name ) ) . '</label>';
 					$html_array[] = '<input class="flw-form-input-text flw-extra-fields" id="flw-extra" type="' .
-					esc_attr( $value ) . '" placeholder=" ' . esc_attr( ucfirst( $name ) ) . ' " required';
+					esc_attr( $value ) . '" placeholder=" ' . esc_attr( ucfirst( $name ) ) . ' " required >';
 				}
 			}
 		}
