@@ -10,10 +10,7 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/template.php';
 	require_once ABSPATH . 'wp-admin/includes/class-wp-screen.php';
-}
-
-if ( ! class_exists( 'FLW_WP_List_Table' ) ) {
-	require_once FLW_DIR_PATH . 'includes/wp-classes/class-flw-wp-list-table.php';
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 if ( ! class_exists( 'FLW_Payment_List' ) ) {
@@ -22,7 +19,7 @@ if ( ! class_exists( 'FLW_Payment_List' ) ) {
 	 * Payment List Class to add list payments made.
 	 * via the payment buttons.
 	 */
-	class FLW_Payment_List extends FLW_WP_List_Table {
+	class FLW_Payment_List extends WP_List_Table {
 
 
 		/**
