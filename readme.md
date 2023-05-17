@@ -131,6 +131,28 @@ or
 With attributes and button text: _email_, _amount_
 ```
 [flw-pay-button amount="1290" email="customer@email.com" ]Button Text[/flw-pay-button]
+
+or
+
+[flw-pay-button amount="1290" email="customer@email.com" split_name=1 ]Button Text[/flw-pay-button]
+
+
+```
+
+With custom and excluded fields.
+```
+[flw-pay-form amount=1234 fullname="Abraham Olaobaju" currency="USD,UGX,NGN" custom_fields='age:number,color:select|black:#000|white:#fff' exclude="phone"]
+
+```
+
+With order rearranged.
+```
+[flw-pay-form amount=1234 fullname="Abraham Olaobaju" currency="USD,UGX,NGN" order="currency,fullname,amount,phone,email"]
+```
+
+Donation Form.
+```
+[flw-donation-form]
 ```
 
 ####2. Visual Composer

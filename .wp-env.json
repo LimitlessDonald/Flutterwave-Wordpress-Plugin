@@ -1,0 +1,10 @@
+{
+	"core": "https://wordpress.org/latest.zip",
+	"phpVersion": "7.4",
+	"plugins": ["flutterwave-payments.zip"],
+	"port": 1000,
+	"testsPort": 1001,
+	"config": {
+		"WP_DEBUG_DISPLAY": false
+	}
+}

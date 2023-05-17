@@ -1,0 +1,68 @@
+{
+	"name": "flutterwavedev/wordpress",
+	"description": "WordPress plugin for Flutterwave for Business (F4B) v3 APIs",
+	"type": "wordpress-plugin",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"Flutterwave\\WordPress\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "Flutterwave Developers",
+			"email": "developers@flutterwavego.com"
+		}
+	],
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^2.3",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+		"yoast/phpunit-polyfills": "^1.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"scripts": {
+		"test": [
+			"./vendor/bin/pest --coverage=coverage --coverage-text"
+		],
+		"standards:check": [
+			"./vendor/bin/phpcs --standard=WordPress --extensions=php --ignore=*/vendor/*,*/tests/*,*/data/*,*/assets/*,*/.docker/*,*/build/*.asset.php,*/node_modules/* ."
+		],
+		"standards:fix": [
+			"./vendor/bin/phpcbf --standard=WordPress --extensions=php --ignore=*/vendor/*,*/tests/*,*/data/*,*/assets/*,*/.docker/*,*/build/*.asset.php,*/node_modules/* ."
+		],
+		"phpcompatibility:check": [
+			"./vendor/bin/phpcs --standard=PHPCompatibilityWP --extensions=php --ignore=*/vendor/*,*/tests/*,*/data/*,*/assets/*,*/.docker/*,*/build/*.asset.php,*/node_modules/* ."
+		],
+		"phpcompatibility:fix": [
+			"./vendor/bin/phpcbf --standard=PHPCompatibilityWP --extensions=php --ignore=*/vendor/*,*/tests/*,*/data/*,*/assets/*,*/.docker/*,*/build/*.asset.php,*/node_modules/* ."
+		],
+		"phpcompatibility:check:php-7-2": [
+			"./vendor/bin/phpcs --runtime-set testVersion 7.2- --standard=PHPCompatibilityWP --extensions=php --ignore=vendor/*,*/build/*.asset.php,*/node_modules/* ."
+		],
+		"makepot-audit": [
+			"wp --allow-root i18n make-pot . --exclude=\".github,.wordpress-org,bin,node_modules,tests,docs\" --slug=flutterwave-payments --debug"
+		],
+		"makepot": [
+			"@makepot-audit --skip-audit"
+		]
+	},
+	"extra": {
+		"scripts-description": {
+			"test": "Run unit tests",
+			"standards:check": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
+			"standards:fix": "Fix coding standards warnings/errors automatically with PHP Code Beautifier",
+			"makepot-audit": "Generate i18n/languages/flutterwave-payments.pot file and run audit",
+			"makepot": "Generate i18n/languages/flutterwave-payments.pot file"
+		}
+	},
+	"minimum-stability": "stable",
+	"require": {
+		"ext-json": "*",
+		"ext-openssl": "*"
+	}
+}
