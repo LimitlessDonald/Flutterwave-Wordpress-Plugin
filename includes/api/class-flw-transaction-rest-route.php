@@ -136,7 +136,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 
 		if ( is_wp_error( $response ) ) {
 
-			if( isset( $response_body['status'] ) && 'error' === $response_body['status'] ) {
+			if ( isset( $response_body['status'] ) && 'error' === $response_body['status'] ) {
 				return rest_ensure_response(
 					new WP_REST_Response(
 						null,
@@ -149,7 +149,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 			}
 		} else {
 
-			if( isset( $response_body['status'] ) && 'error' === $response_body['status'] ) {
+			if ( isset( $response_body['status'] ) && 'error' === $response_body['status'] ) {
 				return rest_ensure_response(
 					new WP_REST_Response(
 						null,
@@ -398,8 +398,8 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 	/**
 	 * Update WordPress.
 	 *
-	 * @param [int]  $post_id post identifier.
-	 * @param [array]  $data data to add.
+	 * @param [int]   $post_id post identifier.
+	 * @param [array] $data data to add.
 	 *
 	 * @return void
 	 */

@@ -14,8 +14,8 @@ use Flutterwave\WordPress\Exception\ApiException;
  */
 final class Client {
 
-	const BASE_URL                   = 'https://api.flutterwave.com/';
-	const VERSION                    = 'v3';
+	const BASE_URL = 'https://api.flutterwave.com/';
+	const VERSION  = 'v3';
 	/**
 	 * Instance
 	 *
@@ -86,7 +86,7 @@ final class Client {
 	 *
 	 * @param string $url the endpoint.
 	 * @param string $method http verb.
-	 * @param array $data  data to be sent.
+	 * @param array  $data  data to be sent.
 	 *
 	 * @return array|\WP_Error
 	 */

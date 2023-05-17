@@ -255,8 +255,8 @@ class FLW_Webhook_Rest_Route extends WP_REST_Controller {
 	/**
 	 * Update WordPress.
 	 *
-	 * @param [int]  $post_id  The post id.
-	 * @param [array]  $data The data array.
+	 * @param [int]   $post_id  The post id.
+	 * @param [array] $data The data array.
 	 *
 	 * @return void
 	 */

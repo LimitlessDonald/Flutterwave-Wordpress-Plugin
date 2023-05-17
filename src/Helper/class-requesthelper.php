@@ -15,7 +15,7 @@ final class RequestHelper {
 	/**
 	 * Generate Payment Hash.
 	 *
-	 * @param array $payload the payload.
+	 * @param array       $payload the payload.
 	 * @param string|null $secret_key the secret key.
 	 *
 	 * @return string

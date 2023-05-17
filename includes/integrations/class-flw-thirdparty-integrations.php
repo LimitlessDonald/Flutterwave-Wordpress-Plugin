@@ -123,7 +123,7 @@ class FLW_Thirdparty_Integrations {
 	/**
 	 * Fetches admin option settings from the db.
 	 *
-	 * @param [string]  $attr The option.
+	 * @param [string] $attr The option.
 	 *
 	 * @return mixed  The value of the option fetched.
 	 */

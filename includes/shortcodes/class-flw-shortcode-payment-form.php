@@ -37,7 +37,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	/**
 	 * Initialize shortcode.
 	 *
-	 * @param array $attributes  the attribute array.
+	 * @param array  $attributes  the attribute array.
 	 * @param string $type the type of shortcode.
 	 *
 	 * @since 1.0.6
@@ -49,7 +49,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	/**
 	 * Set button Attribute.
 	 *
-	 * @param [string]  $content The content.
+	 * @param [string] $content The content.
 	 *
 	 * @return void
 	 */
@@ -193,7 +193,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	 * Build Custom Fields.
 	 *
 	 * @param string $fields The fields.
-	 * @param array $attr  The attributes.
+	 * @param array  $attr  The attributes.
 	 *
 	 * @return array
 	 */
@@ -233,10 +233,10 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	/**
 	 * Handle Currency Fields.
 	 *
-	 * @param [string]  $key The api key.
+	 * @param [string] $key The api key.
 	 * @param [array]  $field  Field data.
-	 * @param [string]  $amount Amount.
-	 * @param [string]  $custom_currency Cyrrency.
+	 * @param [string] $amount Amount.
+	 * @param [string] $custom_currency Cyrrency.
 	 * @param [array]  $html_array output array.
 	 *
 	 * @return void
@@ -283,7 +283,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 
 		// handle currency field: assume single currency and amount is set.
-		if ( 'custom_currency' === $field_name  &&  1 === count( $custom_currency_array ) && 0 !== (int) $amount ) {
+		if ( 'custom_currency' === $field_name && 1 === count( $custom_currency_array ) && 0 !== (int) $amount ) {
 			$html_array[] = '<div class="flw_payment_overview">
 									<div class="flw_total_label">Total Amount</div>
 									<div class="flw_amount_to_pay">
@@ -356,8 +356,8 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	 * Handle Regular Fields.
 	 *
 	 * @param string $key The field key.
-	 * @param array $field The field array.
-	 * @param array $html_array The html array.
+	 * @param array  $field The field array.
+	 * @param array  $html_array The html array.
 	 * @param string $default_value The default value.
 	 *
 	 * @return void

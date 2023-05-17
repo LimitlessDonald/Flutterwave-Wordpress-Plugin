@@ -85,7 +85,7 @@ abstract class Abstract_FLW_Shortcode {
 	/**
 	 * Shortcode Constructor.
 	 *
-	 * @param array $attributes Attribute array.
+	 * @param array  $attributes Attribute array.
 	 * @param string $type Shortcode type or Name.
 	 */
 	public function __construct( array $attributes, string $type ) {
@@ -98,7 +98,7 @@ abstract class Abstract_FLW_Shortcode {
 	/**
 	 * Checks if the loggedin user email should be used.
 	 *
-	 * @param [array]  $attr Attributes array.
+	 * @param [array] $attr Attributes array.
 	 *
 	 * @return boolean
 	 */
@@ -111,7 +111,7 @@ abstract class Abstract_FLW_Shortcode {
 	/**
 	 * Get the current user email
 	 *
-	 * @param [array]  $attr The Attribute array.
+	 * @param [array] $attr The Attribute array.
 	 *
 	 * @return string
 	 */

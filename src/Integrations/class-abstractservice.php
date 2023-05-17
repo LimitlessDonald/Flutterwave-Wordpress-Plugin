@@ -132,7 +132,7 @@ abstract class AbstractService {
 	 *
 	 * @param string $url Any endpoint the service provides.
 	 * @param string $method The Method or verb can be POST, PUT, PATCH, HEAD or GET.
-	 * @param array $data The Data for POST and PUT requests.
+	 * @param array  $data The Data for POST and PUT requests.
 	 *
 	 * @return object|mixed
 	 */
