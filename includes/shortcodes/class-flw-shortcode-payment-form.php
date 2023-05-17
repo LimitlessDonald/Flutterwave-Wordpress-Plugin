@@ -95,7 +95,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 			);
 
 			foreach ( $this->allowed_to_exclude  as $keyword ) {
-				if ( in_array( $keyword, $proposed_fields ) ) {
+				if ( in_array( $keyword, $proposed_fields, true ) ) {
 					$attributes[ 'should_collect_' . $keyword ]     = 0;
 					$default_config[ 'should_collect_' . $keyword ] = 0;
 				}
@@ -108,7 +108,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 			$default_fields                 = array_keys( $this->get_field_data_type() );
 			$all_fields                     = array_merge( $default_fields, array_keys( $this->custom_fields ) );
 			foreach ( $custom_form_fields_order_array as $index => $value ) {
-				if ( ! in_array( $value, $all_fields ) ) {
+				if ( ! in_array( $value, $all_fields, true ) ) {
 					unset( $custom_form_fields_order_array[ $index ] );
 				}
 			}
@@ -234,9 +234,9 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	/**
 	 * Handle Special Fields.
 	 *
-	 * @param array $field
-	 * @param array $atts
-	 * @param array $html_array
+	 * @param array $field the field.
+	 * @param array $atts  current attibute tables.
+	 * @param array $html_array html array.
 	 *
 	 * @return void
 	 */
@@ -253,7 +253,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		}
 
 		// handle currency field: assume single currency and amount is set.
-		if ( 'custom_currency' === $field_name &&  1 === count( $custom_currency_array ) && 0 !== (int)$amount ) {
+		if ( 'custom_currency' === $field_name  &&  1 === count( $custom_currency_array ) && 0 !== (int) $amount ) {
 			$html_array[] = '<div class="flw_payment_overview">
 									<div class="flw_total_label">Total Amount</div>
 									<div class="flw_amount_to_pay">
@@ -291,7 +291,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 			}
 		}
 
-		if ( ! isset( $atts[ 'should_collect_' . $field_name ] ) && in_array( $field_name, $this->allowed_to_exclude ) ) {
+		if ( ! isset( $atts[ 'should_collect_' . $field_name ] ) && in_array( $field_name, $this->allowed_to_exclude, true ) ) {
 			// TODO: handle custom_fields.
 			$this->handle_regular_fields( $field_name, $field, $html_array );
 		}
@@ -307,7 +307,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	protected function is_custom_field( string $field_name ): bool {
 		$custom_fields = array_keys( $this->custom_fields );
 
-		return in_array( $field_name, $custom_fields );
+		return in_array( $field_name, $custom_fields, true );
 	}
 
 	/**
@@ -317,9 +317,9 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	 *
 	 * @return bool
 	 */
-	protected function is_special_field( string $field_name ) {
+	protected function is_special_field( string $field_name ): bool {
 		$special_fields = array( 'amount', 'currency', 'custom_currency', 'fullname', 'phone', 'firstname', 'lastname' );
-		return in_array( $field_name, $special_fields );
+		return in_array( $field_name, $special_fields, true );
 	}
 
 	/**
@@ -388,8 +388,8 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	/**
 	 * Prepare Custom Fields.
 	 *
-	 * @param array $fields Custom Fields
-	 * @param array $atts  Attributes
+	 * @param array $fields Custom Fields.
+	 * @param array $atts  Attributes.
 	 *
 	 * @return string
 	 */

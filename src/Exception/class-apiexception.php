@@ -1,7 +1,15 @@
 <?php
+/**
+ * Exception Class
+ *
+ * @package Flutterwave\WordPress\Exception
+ */
 
 namespace Flutterwave\WordPress\Exception;
 
+/**
+ * ApiException class.
+ */
 final class ApiException extends \Exception {
 
 	/**

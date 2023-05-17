@@ -9,6 +9,9 @@ namespace Flutterwave\WordPress\API;
 
 use Flutterwave\WordPress\Exception\ApiException;
 
+/**
+ *  Flutterwave Client class.
+ */
 final class Client {
 
 	const BASE_URL                   = 'https://api.flutterwave.com/';
@@ -42,7 +45,7 @@ final class Client {
 	/**
 	 * Client Header controller.
 	 *
-	 * @param string $secret_key
+	 * @param string $secret_key the api key.
 	 */
 	private function __construct( string $secret_key ) {
 		$this->secret_key = $secret_key;
@@ -56,7 +59,7 @@ final class Client {
 	/**
 	 * Get class instance.
 	 *
-	 * @param string $secret_key
+	 * @param string $secret_key the api key.
 	 *
 	 * @return Client
 	 */
@@ -81,9 +84,9 @@ final class Client {
 	/**
 	 * This is the main request method for the Flutterwave WordPress client
 	 *
-	 * @param string $url
-	 * @param string $method
-	 * @param array $data
+	 * @param string $url the endpoint.
+	 * @param string $method http verb.
+	 * @param array $data  data to be sent.
 	 *
 	 * @return array|\WP_Error
 	 */

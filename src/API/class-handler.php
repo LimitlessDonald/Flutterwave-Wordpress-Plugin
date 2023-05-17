@@ -8,7 +8,6 @@
 namespace Flutterwave\WordPress\API;
 
 use Flutterwave\WordPress\Exception\ApiException;
-use Flutterwave\WordPress\Exception\InvalidRequestException;
 
 /**
  * Flutterwave Handler Class.
@@ -18,10 +17,10 @@ final class Handler {
 	/**
 	 * Handle Errors from the Flutterwave's side.
 	 *
-	 * @param $response
+	 * @param array|WP_Error $response response from Api.
 	 *
 	 * @return void
-	 * @throws ApiException
+	 * @throws ApiException Exception.
 	 */
 	public static function handle_api_errors( $response ) {
 		$response_status_code = \wp_remote_retrieve_response_code( $response );

@@ -14,8 +14,8 @@ final class WebhookHelper {
 	/**
 	 * Compare hashes.
 	 *
-	 * @param string $expected
-	 * @param string $actual
+	 * @param string $expected local hash.
+	 * @param string $actual recieved hash.
 	 *
 	 * @return bool
 	 */
@@ -26,7 +26,7 @@ final class WebhookHelper {
 	/**
 	 * Validate Hook Data.
 	 *
-	 * @param object $hook
+	 * @param object $hook notification sent by flutterwave.
 	 *
 	 * @return bool
 	 */
@@ -34,14 +34,4 @@ final class WebhookHelper {
 		return true;
 	}
 
-	/**
-	 * Serialize Hook Data.
-	 *
-	 * @param object $hook
-	 *
-	 * @return string
-	 */
-	public static function serialize_hook( object $hook ): string {
-		return serialize( $hook );
-	}
 }
