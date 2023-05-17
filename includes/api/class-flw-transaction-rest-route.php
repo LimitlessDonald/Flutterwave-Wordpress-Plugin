@@ -315,7 +315,7 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 				null,
 				302,
 				array(
-					'Location' => $success_url, // or set any other URL you wish to redirect to
+					'Location' => $success_url,
 				)
 			)
 		);
@@ -376,8 +376,8 @@ class FLW_Transaction_Rest_Route extends WP_REST_Controller {
 	/**
 	 * Update WordPress.
 	 *
-	 * @param $post_id
-	 * @param $data
+	 * @param [int]  $post_id post identifier.
+	 * @param [array]  $data data to add.
 	 *
 	 * @return void
 	 */

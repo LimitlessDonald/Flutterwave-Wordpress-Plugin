@@ -72,7 +72,7 @@ class FLW_Thirdparty_Integrations {
 	/**
 	 * Registers Third Party Integration.
 	 *
-	 * @param array $services
+	 * @param array $services list of third party integrations.
 	 *
 	 * @return void
 	 */
@@ -107,7 +107,7 @@ class FLW_Thirdparty_Integrations {
 	/**
 	 * Get a ThirdParty Service.
 	 *
-	 * @param string $service_name
+	 * @param string $service_name the service name.
 	 *
 	 * @return AbstractService|null
 	 */

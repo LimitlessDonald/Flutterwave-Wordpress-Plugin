@@ -13,14 +13,32 @@ defined( 'ABSPATH' ) || exit;
  */
 final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 
+	/**
+	 * Button Text.
+	 *
+	 * @var string
+	 */
 	protected string $button_text = 'Proceed to Flutterwave';
 
+	/**
+	 * Allowed to exclude fields.
+	 *
+	 * @var array
+	 */
 	protected array $allowed_to_exclude = array();
 
+	/**
+	 * Custom Fields.
+	 *
+	 * @var array
+	 */
 	protected array $custom_fields = array();
 
 	/**
 	 * Initialize shortcode.
+	 *
+	 * @param array $attributes  the attribute array.
+	 * @param string $type the type of shortcode.
 	 *
 	 * @since 1.0.6
 	 */
@@ -28,6 +46,13 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		parent::__construct( $attributes, $type );
 	}
 
+	/**
+	 * Set button Attribute.
+	 *
+	 * @param [string]  $content The content.
+	 *
+	 * @return void
+	 */
 	public function set_button_text( $content ) {
 		$btn_text = $content;
 		if ( empty( $btn_text ) ) {
@@ -37,6 +62,11 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 		$this->button_text = ( ! empty( $btn_text ) ) ? $btn_text : $this->button_text;
 	}
 
+	/**
+	 * Get Attributes.
+	 *
+	 * @return array
+	 */
 	public function get_attributes(): array {
 		return $this->attributes;
 	}
@@ -203,17 +233,17 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	/**
 	 * Handle Currency Fields.
 	 *
-	 * @param $key
-	 * @param $field
-	 * @param $amount
-	 * @param $custom_currency
-	 * @param $html_array
+	 * @param [string]  $key The api key.
+	 * @param [array]  $field  Field data.
+	 * @param [string]  $amount Amount.
+	 * @param [string]  $custom_currency Cyrrency.
+	 * @param [array]  $html_array output array.
 	 *
 	 * @return void
 	 */
 	private function handle_currency_field( $key, $field, $amount, $custom_currency, &$html_array ) {
 
-		if ( $key !== 'currency' ) {
+		if ( 'currency' !== $key ) {
 			return;
 		}
 
@@ -224,7 +254,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 			$html_array[] = '<' . esc_html( $field['type'] ) . '  class="' . esc_html( $field['class'] ) . '" id="' . esc_html( $field['id'] ) . '" required>';
 			if ( 'custom_currency' === $field['name'] ) {
 				foreach ( $currencies as $currency ) {
-					$html_array[] = '<option value="' . $currency . '">' . $currency . '</option>';
+					$html_array[] = '<option value="' . esc_attr( $currency ) . '">' . esc_attr( $currency ) . '</option>';
 				}
 			}
 			$html_array[] = '</' . esc_html( $field['type'] ) . '>';
@@ -313,7 +343,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 	/**
 	 * Check if field is special.
 	 *
-	 * @param string $field_name
+	 * @param string $field_name Field name.
 	 *
 	 * @return bool
 	 */
