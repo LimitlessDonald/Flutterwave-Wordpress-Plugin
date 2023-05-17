@@ -108,7 +108,7 @@ class FLW_Admin_Settings {
 			return false;
 		}
 
-		return array_key_exists( 'failed_redirect_url', $options ) && ! empty( $options['failed_redirect_url'] ) && array_key_exists( 'success_redirect_url', $options ) && ! empty( $options['success_redirect_url'] );
+		return array_key_exists( 'failed_redirect_url', $options ) && ! empty( $options['failed_redirect_url'] ) && array_key_exists( 'success_redirect_url', $options ) && ! empty( $options['success_redirect_url'] ) && ! empty( $options['pending_redirect_url'] );
 	}
 
 	/**
