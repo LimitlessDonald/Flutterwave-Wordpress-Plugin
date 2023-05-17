@@ -326,7 +326,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function search_box( $text, $input_id ) {
-		$request = wp_unslash( $_REQUEST );
+		$request = wp_unslash( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.
 		if ( empty( $request['s'] ) && ! $this->has_items() ) { // phpcs:ignore WordPress.Security.NonceVerification.
 			return;
 		}
@@ -347,7 +347,7 @@ class FLW_WP_List_Table {
 		}
 		?>
 <p class="search-box">
-	<label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
+	<label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo esc_attr( $text ); ?>:</label>
 	<input type="search" id="<?php echo esc_attr($input_id); ?>" name="s" value="<?php _admin_search_query(); ?>" />
 		<?php submit_button( $text, 'button', '', false, array( 'id' => 'search-submit' ) ); ?>
 </p>
@@ -395,7 +395,7 @@ class FLW_WP_List_Table {
 		foreach ( $views as $class => $view ) {
 			$views[ $class ] = "\t<li class='$class'>$view";
 		}
-		echo implode( " |</li>\n", $views ) . "</li>\n";
+		echo esc_html(implode( " |</li>\n", $views )) . "</li>\n";
 		echo '</ul>';
 	}
 
@@ -419,8 +419,8 @@ class FLW_WP_List_Table {
 	 * @access protected
 	 */
 	protected function bulk_actions( $which = '' ) {
+		$no_new_actions = $this->actions = $this->get_bulk_actions();
 		if ( is_null( $this->actions ) ) {
-			$no_new_actions = $this->actions = $this->get_bulk_actions();
 			/**
 			 * Filter the list table Bulk Actions drop-down.
 			 *
@@ -467,17 +467,16 @@ class FLW_WP_List_Table {
 	 * @return string|false The action name or False if no action was selected
 	 */
 	public function current_action() {
-
-		$request = wp_unslash( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification.
-		if ( ! empty( $_REQUEST['filter_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.
+		$request = wp_unslash( $_REQUEST ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $request['filter_action'] ) ) {
 			return false;
 		}
 
-		if ( isset( $_REQUEST['action'] ) && -1 !== $_REQUEST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.
+		if ( isset( $request['action'] ) && -1 !== $request['action'] ) {
 			return sanitize_text_field( $request['action'] );
 		}
 
-		if ( isset( $_REQUEST['action2'] ) && -1 !== $_REQUEST['action2'] ) { // phpcs:ignore WordPress.Security.NonceVerification.
+		if ( isset( $request['action2'] ) && -1 !== $request['action2'] ) {
 			return sanitize_text_field( $request['action2'] );
 		}
 
@@ -501,7 +500,7 @@ class FLW_WP_List_Table {
 		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
 		foreach ( $actions as $action => $link ) {
 			++$i;
-			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
+			( $i === $action_count ) ? $sep = '' : $sep = ' | ';
 			$out                          .= "<span class='". esc_attr( $action )."'>". esc_attr( $link ). esc_attr( $sep ) ."</span>";
 		}
 		$out .= '</div>';
@@ -509,87 +508,6 @@ class FLW_WP_List_Table {
 		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details', 'flutterwave-payments' ) . '</span></button>';
 
 		return $out;
-	}
-
-	/**
-	 * Display a monthly dropdown for filtering items
-	 *
-	 * @since  3.1.0
-	 * @access protected
-	 *
-	 * @global wpdb      $wpdb
-	 * @global WP_Locale $wp_locale
-	 */
-	protected function months_dropdown( $post_type ) {
-		global $wpdb, $wp_locale;
-
-		$request = wp_unslash( $_GET ); // phpcs:ignore WordPress.Security.NonceVerification.
-		/**
-		 * Filter whether to remove the 'Months' drop-down from the post list table.
-		 */
-		if ( apply_filters( 'disable_months_dropdown', false, $post_type ) ) {
-			return;
-		}
-
-		$extra_checks = "AND post_status != 'auto-draft'";
-		if ( ! isset( $request['post_status'] ) || 'trash' !== $request['post_status'] ) {
-			$extra_checks .= " AND post_status != 'trash'";
-		} elseif ( isset( $request['post_status'] ) ) {
-			$post_status = sanitize_text_field( $request['post_status'] );
-			$extra_checks = $wpdb->prepare( ' AND post_status = %s', $post_status );
-		}
-
-		$months = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-			SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
-			FROM $wpdb->posts
-			WHERE post_type = %s
-			$extra_checks
-			ORDER BY post_date DESC
-		",
-				$post_type
-			)
-		);
-
-		/**
-		 * Filter the 'Months' drop-down results.
-		 *
-		 * @since 3.7.0
-		 */
-		$months = apply_filters( 'months_dropdown_results', $months, $post_type );
-
-		$month_count = count( $months );
-
-		if ( ! $month_count || ( 1 === $month_count && 0 === $months[0]->month ) ) {
-			return;
-		}
-
-		$m = isset( $_GET['m'] ) ? (int) $_GET['m'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.
-		?>
-		<label for="filter-by-date" class="screen-reader-text"><?php esc_html_e( 'Filter by date', 'flutterwave-payments' ); ?></label>
-		<select name="m" id="filter-by-date">
-			<option<?php selected( $m, 0 ); ?> value="0"><?php esc_html_e( 'All dates', 'flutterwave-payments' ); ?></option>
-		<?php
-		foreach ( $months as $arc_row ) {
-			if ( 0 == $arc_row->year ) {
-				continue;
-			}
-
-			$month = zeroise( $arc_row->month, 2 );
-			$year  = $arc_row->year;
-
-			printf(
-				"<option %s value='%s'>%s</option>\n",
-				selected( $m, $year . $month, false ),
-				esc_attr( $arc_row->year . $month ),
-				/* translators: 1: month name, 2: 4-digit year */
-				sprintf( esc_attr__( '%1$s %2$d', 'flutterwave-payments' ), esc_attr( $wp_locale->get_month( $month ) ), $year )
-			);
-		}
-		?>
-		</select>
-		<?php
 	}
 
 	/**
