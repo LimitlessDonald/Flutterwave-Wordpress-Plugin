@@ -157,7 +157,7 @@ class FLW_WP_List_Table {
 
 		if ( $args['ajax'] ) {
 			// wp_enqueue_script( 'list-table' );.
-			add_action( 'admin_footer', array( $this, '_js_vars' ) );
+			add_action( 'admin_footer', array( $this, 'js_vars' ) );
 		}
 
 		if ( empty( $this->modes ) ) {
@@ -175,7 +175,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function __get( $name ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
+		if ( in_array( $name, $this->compat_fields, true ) ) {
 			return $this->$name;
 		}
 	}
@@ -187,7 +187,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function __set( $name, $value ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
+		if ( in_array( $name, $this->compat_fields, true ) ) {
 			return $this->$name = $value;
 		}
 	}
@@ -199,7 +199,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function __isset( $name ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
+		if ( in_array( $name, $this->compat_fields, true ) ) {
 			return isset( $this->$name );
 		}
 	}
@@ -211,7 +211,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function __unset( $name ) {
-		if ( in_array( $name, $this->compat_fields ) ) {
+		if ( in_array( $name, $this->compat_fields, true ) ) {
 			unset( $this->$name );
 		}
 	}
@@ -223,7 +223,7 @@ class FLW_WP_List_Table {
 	 * @access public
 	 */
 	public function __call( $name, $arguments ) {
-		if ( in_array( $name, $this->compat_methods ) ) {
+		if ( in_array( $name, $this->compat_methods, true ) ) {
 			return call_user_func_array( array( $this, $name ), $arguments );
 		}
 		return false;
@@ -449,7 +449,7 @@ class FLW_WP_List_Table {
 		foreach ( $this->actions as $name => $title ) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
-			echo "\t" . '<option value="' . $name . '"' . $class . '>' . $title . "</option>\n";
+			echo "\t" . '<option value="' . esc_attr( $name ) . '"' . esc_attr( $class ). '>' . esc_attr( $title ) . "</option>\n";
 		}
 
 		echo "</select>\n";
@@ -467,16 +467,18 @@ class FLW_WP_List_Table {
 	 * @return string|false The action name or False if no action was selected
 	 */
 	public function current_action() {
-		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) ) {
+
+		$request = wp_unslash( $_REQUEST );
+		if ( ! empty( $_REQUEST['filter_action'] ) ) {
 			return false;
 		}
 
 		if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
-			return $_REQUEST['action'];
+			return sanitize_text_field( $request['action'] );
 		}
 
 		if ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
-			return $_REQUEST['action2'];
+			return sanitize_text_field( $request['action2'] );
 		}
 
 		return false;
@@ -500,7 +502,7 @@ class FLW_WP_List_Table {
 		foreach ( $actions as $action => $link ) {
 			++$i;
 			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
-			$out                          .= "<span class='$action'>$link$sep</span>";
+			$out                          .= "<span class='". esc_attr( $action )."'>". esc_attr( $link ). esc_attr( $sep ) ."</span>";
 		}
 		$out .= '</div>';
 
@@ -521,6 +523,7 @@ class FLW_WP_List_Table {
 	protected function months_dropdown( $post_type ) {
 		global $wpdb, $wp_locale;
 
+		$request = wp_unslash( $_GET );
 		/**
 		 * Filter whether to remove the 'Months' drop-down from the post list table.
 		 */
@@ -529,10 +532,11 @@ class FLW_WP_List_Table {
 		}
 
 		$extra_checks = "AND post_status != 'auto-draft'";
-		if ( ! isset( $_GET['post_status'] ) || 'trash' !== $_GET['post_status'] ) {
+		if ( ! isset( $request['post_status'] ) || 'trash' !== $request['post_status'] ) {
 			$extra_checks .= " AND post_status != 'trash'";
-		} elseif ( isset( $_GET['post_status'] ) ) {
-			$extra_checks = $wpdb->prepare( ' AND post_status = %s', $_GET['post_status'] );
+		} elseif ( isset( $request['post_status'] ) ) {
+			$post_status = sanitize_text_field( $request['post_status'] );
+			$extra_checks = $wpdb->prepare( ' AND post_status = %s', $post_status );
 		}
 
 		$months = $wpdb->get_results(
@@ -580,7 +584,7 @@ class FLW_WP_List_Table {
 				selected( $m, $year . $month, false ),
 				esc_attr( $arc_row->year . $month ),
 				/* translators: 1: month name, 2: 4-digit year */
-				sprintf( __( '%1$s %2$d', 'flutterwave-payments' ), $wp_locale->get_month( $month ), $year )
+				sprintf( esc_attr__( '%1$s %2$d', 'flutterwave-payments' ), $wp_locale->get_month( $month ), $year )
 			);
 		}
 		?>
@@ -653,13 +657,13 @@ class FLW_WP_List_Table {
 						admin_url( 'edit-comments.php' )
 					)
 				),
-				$approved_comments_number,
-				$pending_comments ? $approved_phrase : $approved_only_phrase
+				esc_attr( $approved_comments_number ),
+				$pending_comments ? esc_attr( $approved_phrase ) : esc_attr( $approved_only_phrase )
 			);
 		} else {
 			printf(
 				'<span class="post-com-count post-com-count-no-comments"><span class="comment-count comment-count-no-comments" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
-				$approved_comments_number,
+				esc_attr( $approved_comments_number ),
 				$pending_comments ? __( 'No approved comments', 'flutterwave-payments' ) : __( 'No comments', 'flutterwave-payments' )
 			);
 		}
@@ -676,13 +680,13 @@ class FLW_WP_List_Table {
 						admin_url( 'edit-comments.php' )
 					)
 				),
-				$pending_comments_number,
-				$pending_phrase
+				esc_attr( $pending_comments_number ),
+				esc_attr( $pending_phrase )
 			);
 		} else {
 			printf(
 				'<span class="post-com-count post-com-count-pending post-com-count-no-pending"><span class="comment-count comment-count-no-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
-				$pending_comments_number,
+				esc_attr( $pending_comments_number ),
 				$approved_comments ? __( 'No pending comments', 'flutterwave-payments' ) : __( 'No comments', 'flutterwave-payments' )
 			);
 		}
@@ -1059,15 +1063,15 @@ class FLW_WP_List_Table {
 		}
 
 		foreach ( $columns as $column_key => $column_display_name ) {
-			$class = array( 'manage-column', "column-$column_key" );
+			$class = array( 'manage-column', "column-". esc_attr( $column_key ) );
 
-			if ( in_array( $column_key, $hidden ) ) {
+			if ( in_array( $column_key, $hidden, true ) ) {
 				$class[] = 'hidden';
 			}
 
 			if ( 'cb' === $column_key ) {
 				$class[] = 'check-column';
-			} elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) ) {
+			} elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ), true ) ) {
 				$class[] = 'num';
 			}
 
@@ -1088,7 +1092,7 @@ class FLW_WP_List_Table {
 					$class[] = $desc_first ? 'asc' : 'desc';
 				}
 
-				$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';
+				$column_display_name = '<a href="' . esc_url( add_query_arg( compact( 'orderby', 'order' ), $current_url ) ) . '"><span>' . esc_attr( $column_display_name ) . '</span><span class="sorting-indicator"></span></a>';
 			}
 
 			$tag   = ( 'cb' === $column_key ) ? 'td' : 'th';
@@ -1099,7 +1103,7 @@ class FLW_WP_List_Table {
 				$class = "class='" . join( ' ', $class ) . "'";
 			}
 
-			echo "<$tag $scope $id $class>$column_display_name</$tag>";
+			echo "<". esc_attr( $tag ) . esc_attr( $scope ) . esc_attr( $id ) . esc_attr(  $class  ) > esc_html( $column_display_name ) . "</". esc_attr( $tag ) . ">";
 		}
 	}
 
@@ -1126,7 +1130,7 @@ class FLW_WP_List_Table {
 	<tbody id="the-list"
 		<?php
 		if ( $singular ) {
-			echo " data-wp-lists='list:$singular'";
+			echo " data-wp-lists='list:" . esc_attr( $singular )."'";
 		}
 		?>
 		>
@@ -1199,7 +1203,7 @@ class FLW_WP_List_Table {
 		if ( $this->has_items() ) {
 			$this->display_rows();
 		} else {
-			echo '<tr class="no-items"><td class="colspanchange" colspan="' . $this->get_column_count() . '">';
+			echo '<tr class="no-items"><td class="colspanchange" colspan="' . esc_attr( $this->get_column_count() ) . '">';
 			$this->no_items();
 			echo '</td></tr>';
 		}
@@ -1234,15 +1238,23 @@ class FLW_WP_List_Table {
 	 *
 	 * @param object $item the iterm.
 	 * @param string $column_name the column name.
+	 *
+	 * @return mixed
 	 */
-	protected function column_default( $item, $column_name ) {}
+	protected function column_default( $item, $column_name ) {
+		return '';
+	}
 
 	/**
 	 * Column cb.
 	 *
 	 * @param object $item
+	 *
+	 * @return string
 	 */
-	protected function column_cb( $item ) {}
+	protected function column_cb( $item ): string {
+		return '';
+	}
 
 	/**
 	 * Generates the columns for a single row of the table
@@ -1261,7 +1273,7 @@ class FLW_WP_List_Table {
 				$classes .= ' has-row-actions column-primary';
 			}
 
-			if ( in_array( $column_name, $hidden ) ) {
+			if ( in_array( $column_name, $hidden , true ) ) {
 				$classes .= ' hidden';
 			}
 
@@ -1273,25 +1285,25 @@ class FLW_WP_List_Table {
 
 			if ( 'cb' === $column_name ) {
 				echo '<th scope="row" class="check-column">';
-				echo $this->column_cb( $item );
+				echo esc_html($this->column_cb( $item ));
 				echo '</th>';
 			} elseif ( method_exists( $this, '_column_' . $column_name ) ) {
-				echo call_user_func(
+				echo esc_html(call_user_func(
 					array( $this, '_column_' . $column_name ),
 					$item,
 					$classes,
 					$data,
 					$primary
-				);
+				));
 			} elseif ( method_exists( $this, 'column_' . $column_name ) ) {
 				echo "<td $attributes>";
-				echo call_user_func( array( $this, 'column_' . $column_name ), $item );
-				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo esc_html(call_user_func( array( $this, 'column_' . $column_name ), $item ));
+				echo esc_html($this->handle_row_actions( $item, $column_name, $primary ));
 				echo '</td>';
 			} else {
 				echo "<td $attributes>";
-				echo $this->column_default( $item, $column_name );
-				echo $this->handle_row_actions( $item, $column_name, $primary );
+				echo esc_html($this->column_default( $item, $column_name ));
+				echo esc_html( $this->handle_row_actions( $item, $column_name, $primary ) );
 				echo '</td>';
 			}
 		}
@@ -1300,10 +1312,15 @@ class FLW_WP_List_Table {
 	/**
 	 * Generates and display row actions links for the list table.
 	 *
+	 * @param $item
+	 * @param [string]  $column_name  Column name.
+	 * @param [string]  $primary  Default Column name.
+	 *
+	 * @return string
 	 * @since  4.3.0
 	 * @access protected
 	 */
-	protected function handle_row_actions( $item, $column_name, $primary ) {
+	protected function handle_row_actions( $item, $column_name, $primary ): string {
 		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __( 'Show more details', 'flutterwave-payments' ) . '</span></button>' : '';
 	}
 
@@ -1317,7 +1334,7 @@ class FLW_WP_List_Table {
 		$this->prepare_items();
 
 		ob_start();
-		if ( ! empty( $_REQUEST['no_placeholder'] ) ) {
+		if ( ! empty( $_REQUEST['no_placeholder'] ) ) {// phpcs:ignore WordPress.Security.NonceVerification
 			$this->display_rows();
 		} else {
 			$this->display_rows_or_placeholder();
@@ -1348,7 +1365,7 @@ class FLW_WP_List_Table {
 	 *
 	 * @access public
 	 */
-	public function _js_vars() {
+	public function js_vars() {
 		$args = array(
 			'class'  => get_class( $this ),
 			'screen' => array(
