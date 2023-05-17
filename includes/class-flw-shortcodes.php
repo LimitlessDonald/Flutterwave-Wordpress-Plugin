@@ -123,6 +123,9 @@ class FLW_Shortcodes {
 	/**
 	 * Generates Donation page from shortcode.
 	 *
+	 * @param [array] $attr attributes array.
+	 * @param [string] $content button text.
+	 *
 	 * @return string      Pay Now button html content.
 	 */
 	public static function donation_page_shortcode( $attr, $content ): string { //phpcs:ignore.
@@ -148,6 +151,9 @@ class FLW_Shortcodes {
 
 	/**
 	 * Render Regular Form.
+	 *
+	 * @param [array] $attr attributes array.
+	 * @param [string] $content button text.
 	 *
 	 * @return void
 	 */
