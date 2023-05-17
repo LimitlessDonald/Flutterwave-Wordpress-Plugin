@@ -502,7 +502,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-effects-shake' );
-		wp_enqueue_script( 'flw_pay_js', FLW_DIR_URL . 'assets/js/flw.js', array( 'jquery', 'jquery-effects-core' ), FLW_PAY_VERSION, false );
+		wp_enqueue_script( 'flw_pay_js', FLW_DIR_URL . 'assets/js/flw.min.js', array( 'jquery', 'jquery-effects-core' ), FLW_PAY_VERSION, false );
 		wp_localize_script( 'flw_pay_js', 'flw_pay_options', $args );
 	}
 }

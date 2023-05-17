@@ -117,7 +117,7 @@ final class FLW_Shortcode_Donation_Form extends Abstract_FLW_Shortcode {
 
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-effects-shake' );
-		wp_enqueue_script( 'flw_donation_js', FLW_DIR_URL . 'assets/js/flw-donation.js', array( 'jquery', 'jquery-effects-shake' ), FLW_PAY_VERSION, true );
+		wp_enqueue_script( 'flw_donation_js', FLW_DIR_URL . 'assets/js/flw-donation.min.js', array( 'jquery', 'jquery-effects-shake' ), FLW_PAY_VERSION, true );
 
 		wp_localize_script( 'flw_donation_js', 'flw_pay_options', $args );
 	}

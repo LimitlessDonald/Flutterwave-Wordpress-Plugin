@@ -8,14 +8,14 @@ jQuery(function ($) {
 	 */
 	const buildConfigObj = function (form) {
 		let formData = $(form).data();
-		let amount = formData.amount || $(form).find('#flw-amount').val();
-		let email = formData.email || $(form).find('#flw-customer-email').val();
+		let amount = formData.amount?.replace(/"|'/g, '') || $(form).find('#flw-amount').val();
+		let email = formData.email?.replace(/"|'/g, '') || $(form).find('#flw-customer-email').val();
 		let firstname =
-			formData.firstname || $(form).find('#flw-first-name').val();
+			formData.firstname?.replace(/"|'/g, '') || $(form).find('#flw-first-name').val();
 		let lastname =
-			formData.lastname || $(form).find('#flw-last-name').val();
+			formData.lastname?.replace(/"|'/g, '') || $(form).find('#flw-last-name').val();
 		let formCurrency =
-			formData.currency || $(form).find('#flw-currency').val();
+			formData.currency?.replace(/"|'/g, '') || $(form).find('#flw-currency').val();
 		let formId = form.attr('id');
 		let txref = 'WP_' + formId.toUpperCase() + '_' + new Date().valueOf();
 		let setCountry; //set country
@@ -69,43 +69,6 @@ jQuery(function ($) {
 				$('#flw-overlay-text').addClass('flw-overlay-text');
 				flw_overlay.show();
 				redirectTo(response.url);
-			}
-		});
-	};
-
-	/**
-	 * Sends payment response from GetPaid to the process payment endpoint
-	 *
-	 * @param object Response object from GetPaid
-	 *
-	 * @return void
-	 */
-	const sendPaymentRequestResponse = function (res, form) {
-		let args = {
-			action: 'process_payment',
-			flw_sec_code: $(form).find('#flw_sec_code').val(),
-		};
-
-		let dataObj = Object.assign({}, args, res.tx);
-
-		$.post(flw_pay_options.cb_url, dataObj).success(function (data) {
-			var response = data;
-			redirectUrl = response.redirect_url;
-
-			if (redirectUrl === '') {
-				var responseMsg =
-					res.tx.paymentType === 'account'
-						? res.tx.acctvalrespmsg
-						: res.tx.vbvrespmessage;
-				$(form)
-					.find('#notice')
-					.text(responseMsg)
-					.removeClass(function () {
-						return $(form).find('#notice').attr('class');
-					})
-					.addClass(response.status);
-			} else {
-				setTimeout(redirectTo, 5000, redirectUrl);
 			}
 		});
 	};
