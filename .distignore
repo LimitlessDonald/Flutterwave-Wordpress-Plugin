@@ -31,7 +31,7 @@ phpcs.xml
 phpcbf.xml
 .eslintignore
 build/*.map
-phpunit.xml.dist
+phpunit.xml
 playwright.config.js
 .gitpod.yml
 /node_modules
