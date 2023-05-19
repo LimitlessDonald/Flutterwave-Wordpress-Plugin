@@ -36,5 +36,5 @@ playwright.config.js
 .gitpod.yml
 /node_modules
 /vendor
-flutterwave-payments.zip
+rave-payment-forms.zip
 
