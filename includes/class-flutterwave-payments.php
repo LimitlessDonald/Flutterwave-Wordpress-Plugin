@@ -230,10 +230,10 @@ final class Flutterwave_Payments {
 	public function get_payment_url() {
 		check_ajax_referer( 'flw-rave-pay-nonce', 'flw_sec_code' );
 
-		$amount          = isset( $_POST['amount'] ) ? sanitize_text_field( wp_unslash($_POST['amount']) ) : null;
-		$email           = isset( $_POST['customer']['email'] ) ? sanitize_email( wp_unslash($_POST['customer']['email']) ) : null;
-		$country         = isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash($_POST['country'] ) ) : 'NGN';
-		$form_id         = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash($_POST['form_id'] ) ) : null;
+		$amount          = isset( $_POST['amount'] ) ? sanitize_text_field( wp_unslash( $_POST['amount'] ) ) : null;
+		$email           = isset( $_POST['customer']['email'] ) ? sanitize_email( wp_unslash( $_POST['customer']['email'] ) ) : null;
+		$country         = isset( $_POST['country'] ) ? sanitize_text_field( wp_unslash( $_POST['country'] ) ) : 'NGN';
+		$form_id         = isset( $_POST['form_id'] ) ? sanitize_text_field( wp_unslash( $_POST['form_id'] ) ) : null;
 		$tx_ref          = 'WP_' . $form_id . wp_rand( 20, 15003 ) . '_' . time();
 		$currency        = isset( $_POST['currency'] ) ? sanitize_text_field( wp_unslash( $_POST['currency'] ) ) : null;
 		$name            = isset( $_POST['customer']['name'] ) ? sanitize_text_field( wp_unslash( $_POST['customer']['name'] ) ) : null;
