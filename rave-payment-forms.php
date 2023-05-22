@@ -10,7 +10,7 @@
  * Author URI: https://developer.flutterwave.com/
  * Copyright: Â© 2023 Flutterwave Technology Solutions
  * License: MIT License
- * Text Domain: flutterwave-payments
+ * Text Domain: rave-payment-forms
  * Domain Path: i18n/languages
  * Requires at least:      5.6
  * Requires PHP:           7.4
@@ -30,5 +30,4 @@ if ( ! class_exists( 'Flutterwave_Payments' ) ) {
 	require_once dirname( FLW_PAY_PLUGIN_FILE ) . '/includes/class-flutterwave-payments.php';
 	$flw_pay_class = Flutterwave_Payments::get_instance();
 }
-
 
