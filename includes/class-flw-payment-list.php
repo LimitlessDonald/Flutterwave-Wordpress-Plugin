@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once ABSPATH . 'wp-admin/includes/template.php';
 
-if ( !class_exists( 'WP_List_Table' ) ) {
+if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-screen.php';
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
