@@ -8,3 +8,8 @@ Security updates and libraty enhancements. This release add the necessary enhanc
 - [ADDED] Transaction Endpoint to handle Payment Requests and Confirmation.
 - [CHANGED] Payment Checkout to redirect users to a page hosted by Flutterwave.
 - [CHANGED] Payment Shortcodes User Experience and Features.
+
+## 1.0.7 | 29-08-2023
+Update admin settings view for Transactions.
+### Version Changes
+- [FIXED] Missing WP_List_Table implementation.
