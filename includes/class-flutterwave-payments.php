@@ -122,7 +122,6 @@ final class Flutterwave_Payments {
 			FLW_Shortcodes::get_instance();
 		}
 		$this->settings = FLW_Admin_Settings::get_instance();
-		FLW_Payment_List::get_instance();
 		$this->api_client = Client::get_instance( $this->get_option( 'secret_key' ) );
 
 		if ( is_admin() ) {
