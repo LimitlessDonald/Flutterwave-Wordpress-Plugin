@@ -34,5 +34,5 @@ if ( ! empty( $atts['custom_currency'] ) ) {
 	</form>
 </div>
 <div id="flutterwave-overlay" style="display:none">
-	<div id="flw-overlay-text">You would be redirected to the payment page soon. please do not close this page.</div>
+	<div id="flw-overlay-text"><p>Redirecting to payment page</p> <p>Please do not close this page</p></div>
 </div>
