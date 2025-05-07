@@ -289,7 +289,7 @@ final class FLW_Shortcode_Payment_Form extends Abstract_FLW_Shortcode {
 			$html_array[] = '<div class="flw_payment_overview">
 									<div class="flw_total_label">Total Amount</div>
 									<div class="flw_amount_to_pay">
-										<div>' . esc_attr( (float) $amount ) . esc_attr( $custom_currency_array[0] ) . '</div>
+										<div>'. esc_attr( $custom_currency_array[0] ).' ' . esc_attr( (float) $amount )  . '</div>
 									</div>
 							</div>';
 		}
