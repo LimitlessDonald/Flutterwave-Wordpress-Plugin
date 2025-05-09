@@ -1,4 +1,11 @@
 # Changelog
+## 1.0.8 | 07-05-2025
+Minor visual changes by @LimitlessDonald
+
+### Version Changes
+- [CHANGED] Made currency displayed before amount in form , also included space .
+- [CHANGED] Made visual and textual changes to overlay(the one that appears after clicking pay button) styling and text.
+
 ## 1.0.7 | 29-08-2023
 Update admin settings view for Transactions.
 

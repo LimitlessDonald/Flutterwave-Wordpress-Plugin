@@ -1,6 +1,6 @@
 {
 	"name": "rave-payment-forms",
-	"version": "1.0.7",
+	"version": "1.0.8",
 	"description": "Official Flutterwave Payment Plugin for WordPress",
 	"main": "index.js",
 	"scripts": {

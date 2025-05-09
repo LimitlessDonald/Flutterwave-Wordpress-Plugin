@@ -3,7 +3,7 @@
  * Plugin Name: Flutterwave Payments
  * Plugin URI: http://flutterwave.com/
  * Description: Flutterwave payment gateway forms, accept local and international payments securely.
- * Version: 1.0.7
+ * Version: 1.0.8
  * Requires at least: 5.2
  * Requires PHP: 7.4
  * Author: Flutterwave Developers
